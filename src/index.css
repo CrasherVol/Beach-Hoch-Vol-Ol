@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom utilities */
+.cursor-none { cursor: none; }
+.cursor-ball { position: fixed; left:0; top:0; translate:-50% -50%; font-size:26px; z-index:100; pointer-events:none; filter:drop-shadow(0 4px 10px rgba(0,0,0,.2)) }
+.palms { position: fixed; bottom: 8px; inset-inline: 12px; display:flex; justify-content:space-between; opacity:.25; pointer-events:none; z-index:5; font-size:64px }
+.hero-logo { @apply max-w-[220px] w-[40%] min-w-[120px] rounded-2xl shadow-soft; }
+@media (prefers-reduced-motion: reduce) {
+  .cursor-none { cursor:auto; }
+  .cursor-ball { display:none; }
+}
+
+
+/* Globaler Sand-Hintergrund */
+.bg-sand{background-image:url('/assets/bg-sand.jpg');background-size:cover;background-position:center;background-attachment:fixed}
+.hero-logo{max-width:220px;width:40%;min-width:120px;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.hero-logo.glow{animation:logoGlow 3.2s ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(56,189,248,.55)) drop-shadow(0 0 10px rgba(251,191,36,.6))}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(56,189,248,.35)) drop-shadow(0 0 4px rgba(251,191,36,.35))}50%{filter:drop-shadow(0 0 20px rgba(56,189,248,.75)) drop-shadow(0 0 16px rgba(251,191,36,.8))}}
+
+/* Chips, Buttons, Glass, Gradient-Text */
+.chip{ @apply bg-white/80 text-slate-900 px-3 py-1 rounded-full shadow-soft; }
+
+.btn-primary{ @apply px-5 py-3 rounded-xl text-white bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-soft hover:scale-[1.02] transition; }
+.btn-white{   @apply px-5 py-3 rounded-xl bg-white text-slate-900 shadow-soft hover:scale-[1.02] transition; }
+
+.glass{ backdrop-filter: blur(8px); background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.08)); border: 1px solid rgba(255,255,255,.35); }
+.grad-text{ background: linear-gradient(90deg, #22d3ee, #fbbf24); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Countdown Pulse Effekt */
+@keyframes pulseSlow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.85; }
+}
+.animate-pulse-slow {
+  animation: pulseSlow 2.5s ease-in-out infinite;
+}
+
+.count-pulse {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.count-pulse:hover {
+  transform: scale(1.06);
+  box-shadow: 0 10px 28px rgba(251, 191, 36, 0.3);
+}
+
+/* Dresscode Animations & UI */
+.float-slow   { animation: floatY 6s ease-in-out infinite; }
+.float-slower { animation: floatY 8s ease-in-out infinite; }
+.delay-150    { animation-delay: .15s; }
+.delay-300    { animation-delay: .3s; }
+
+@keyframes floatY {
+  0%,100% { transform: translateY(0) }
+  50%     { transform: translateY(-10px) }
+}
+
+.swatch { @apply inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-soft border; }
+.swatch-dot { @apply w-4 h-4 inline-block rounded-full border; }
+
+.tab { @apply px-4 py-2 rounded-xl bg-white shadow-soft border text-slate-900 hover:scale-[1.02] transition; }
+.tab-active { @apply text-white border-transparent bg-gradient-to-tr from-emerald-500 to-orange-400; }
+
+.idea-card { @apply flex items-center gap-3 p-4 rounded-2xl bg-white/80 backdrop-blur-sm shadow-soft hover:scale-[1.01] transition; }
+.hover\:tilt-slight:hover { transform: rotate(.6deg) scale(1.01); }
+
+@keyframes logoPop {
+  0% { transform: scale(0.8); opacity: 0; filter: brightness(0.6); }
+  60% { transform: scale(1.05); opacity: 1; filter: brightness(1.2); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.animate-logoPop {
+  animation: logoPop 1.4s ease-out forwards;
+}
+
+.grad-text {
+  background: linear-gradient(to right, #22d3ee, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@keyframes sunPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+    filter: brightness(1.15);
+  }
+}
