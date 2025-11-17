@@ -2,27 +2,73 @@ import Card from '../components/Card.jsx'
 import SEO from '../components/SEO.jsx'
 
 export default function Ablauf() {
+  // 👉 Datum auf 13.03. & Startzeit 18:00
   const dateStr = new Intl.DateTimeFormat('de-DE', { dateStyle: 'full' }).format(
-    new Date('2026-02-13T17:00:00+01:00')
+    new Date('2026-03-13T18:00:00+01:00')
   )
-
-  const timeline = [
-    { time: '17:00', title: 'Eintreffen & Welcome-Drink', icon: '🍹', color: 'from-emerald-400 to-cyan-400' },
-    { time: '18:00', title: 'Begrüßung Volker & Olga', icon: '💍', color: 'from-orange-400 to-pink-400' },
-    { time: '18:15', title: 'Fingerfood-Buffet öffnet', icon: '🥗', color: 'from-yellow-400 to-orange-300' },
-    { time: '19:30', title: 'Fotos, Beachvolleyball & Chill', icon: '🏐', color: 'from-cyan-400 to-sky-400' },
-    { time: '21:00', title: 'Dessert & Anstoßen', icon: '🍰', color: 'from-pink-400 to-rose-400' },
-    { time: 'Open End', title: 'Musik & Strandfeuer (wetterabhängig)', icon: '🔥', color: 'from-amber-500 to-red-400' },
-  ]
+  // 👉 Ablauf startet ab 18:00, ohne Essens-Programm
+ const timeline = [
+  {
+    time: "18:00",
+    timeLabel: "18:00",
+    title: "Beachen, chillen & Spiele (Beachvolleyball und andere kleinere Spiele)",
+    icon: "🏖️",
+    color: "from-sky-400 to-emerald-400",
+  },
+  {
+    time: "18:00",
+    timeLabel: "18:00",
+    title: "Eintreffen & Welcome-Drink",
+    icon: "🍹",
+    color: "from-emerald-400 to-cyan-400",
+  },
+  {
+    time: "18:30",
+    timeLabel: "18:30",
+    title: "Begrüßung Olga und Volker",
+    icon: "💍",
+    color: "from-orange-400 to-pink-400",
+  },
+  {
+    time: "19:30",
+    timeLabel: "19:30",
+    title: "Fotos, Beachvolleyball & Chill",
+    icon: "🏐",
+    color: "from-cyan-400 to-sky-400",
+  },
+  {
+    time: "21:00",
+    timeLabel: "21:00",
+    title: "Musik, Drinks & Strandfeeling",
+    icon: "🎵",
+    color: "from-pink-400 to-rose-400",
+  },
+  {
+    time: "2:00",
+    timeLabel: "2:00",
+    title: "Alles Schöne hat ein Ende",
+    icon: "🔥",
+    color: "from-amber-500 to-red-400",
+  },
+];
 
   return (
     <div className="page py-8">
-      <SEO title="Ablauf" description="Zeitplan, Fingerfood & Getränke für den Abend." />
+      <SEO
+        title="Ablauf"
+        description="Zeitplan & Getränke für den Abend – Start um 18 Uhr, ohne Essen."
+      />
+
       <h2 className="text-3xl font-extrabold mb-2 text-center grad-text">
         🌴 Ablauf – {dateStr} 🌅
       </h2>
+
       <p className="text-center text-slate-600 mb-6 max-w-[640px] mx-auto">
         Der Abend soll sich anfühlen wie ein Urlaubstag mit Freunden – ohne Stress, dafür mit "Sonne im Herzen", Lachen & Musik.
+        <br />
+        <span className="font-semibold">
+          Es gibt kein Essen vor Ort, nur Drinks – plant gerne ein, vorher etwas zu essen.
+        </span>
       </p>
 
       {/* Timeline */}
@@ -48,7 +94,9 @@ export default function Ablauf() {
             {/* Card */}
             <Card>
               <div className="flex flex-col text-center md:text-left">
-                <span className="text-sm uppercase tracking-wide text-slate-500">{item.time}</span>
+                <span className="text-sm uppercase tracking-wide text-slate-500">
+                  {item.timeLabel}
+                </span>
                 <h3 className="text-xl font-semibold mt-1 text-slate-800">{item.title}</h3>
               </div>
             </Card>
@@ -56,14 +104,13 @@ export default function Ablauf() {
         ))}
       </div>
 
-      {/* Essen & Getränke */}
+      {/* Getränke & Stimmung (Essen entfernt) */}
       <div className="mt-12 grid lg:grid-cols-2 gap-6">
-        <Card title="🍴 Essen & Getränke">
+        <Card title="🍹 Getränke (kein Essen geplant)">
           <ul className="list-disc pl-6 text-slate-700 leading-relaxed">
-            <li>Es gibt <b>nur Fingerfood</b> und <b>Getränke</b>.</li>
-            <li>Vegetarische Optionen vorhanden 🥦</li>
-            <li>Bitte Allergien in der Anmeldung angeben 🍰</li>
-            <li>Drinks: Fruchtig, spritzig, sommerlich – mit & ohne Alkohol 🍸</li>
+            <li>Es gibt an diesem Abend <b>kein Essen</b>.</li>
+            <li>Wir sorgen für kühle Drinks – mit & ohne Alkohol.</li>
+            <li>Es ist perfekt, wenn ihr vorher etwas esst oder euch selbst etwas Kleines mitbringt.</li>
           </ul>
         </Card>
 

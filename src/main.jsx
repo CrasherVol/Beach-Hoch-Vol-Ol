@@ -10,18 +10,24 @@ import Dresscode from './pages/Dresscode.jsx'
 import Ablauf from './pages/Ablauf.jsx'
 import Anmeldung from './pages/Anmeldung.jsx'
 import Hotels from './pages/Hotels.jsx'
+import Admin from './pages/Admin.jsx'   // 👈 hier importiert
 import './index.css'
 
 const router = createBrowserRouter([
-  { path: '/', element: <App />, children: [
-    { index: true, element: <Home /> },
-    { path: 'anfahrt', element: <Anfahrt /> },
-    { path: 'bluebeach', element: <BlueBeach /> },
-    { path: 'dresscode', element: <Dresscode /> },
-    { path: 'ablauf', element: <Ablauf /> },
-    { path: 'anmeldung', element: <Anmeldung /> },
-    { path: 'hotels', element: <Hotels /> },
-  ]}
+  {
+    path: '/',
+    element: <App />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'anfahrt', element: <Anfahrt /> },
+      { path: 'bluebeach', element: <BlueBeach /> },
+      { path: 'dresscode', element: <Dresscode /> },
+      { path: 'ablauf', element: <Ablauf /> },
+      { path: 'anmeldung', element: <Anmeldung /> },
+      { path: 'hotels', element: <Hotels /> },
+      { path: 'admin', element: <Admin /> },   // 👈 neue Admin-Route
+    ],
+  },
 ])
 
 createRoot(document.getElementById('root')).render(

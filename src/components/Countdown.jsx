@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-export const EVENT_DATE = new Date('2026-02-13T17:00:00+01:00')
+export const EVENT_DATE = new Date('2026-03-13T18:00:00+01:00')
 
 export default function Countdown({ size = 'lg' }) {
   const [now, setNow] = useState(new Date())

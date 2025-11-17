@@ -29,19 +29,21 @@ export default function Hotels(){
       ]
     },
     {
-      name: 'Ringhotel Parkhotel Witten ***',
-      logoText: 'Parkhotel Witten',
-      addr: 'Bergerstraße 23, 58452 Witten',
-      price: 'EZ ab 72 € · DZ ab 92 €',
-      distance: 'ca. 5 km | ~10 Min mit dem Auto',
-      link: 'https://riepe.com/witten/',
-      map: 'https://www.google.com/maps/search/?api=1&query=Ringhotel+Parkhotel+Witten',
-      note: 'Zentral, nahe Bahnhof; Dachcafé mit Aussicht',
-      imgs: [
-        'https://riepe.com/wp-content/uploads/2015/08/zimmer-1024x768.jpg',
-        'https://riepe.com/wp-content/uploads/2015/08/restaurant-1-1024x768.jpg',
-        'https://riepe.com/wp-content/uploads/2015/08/panoramacafe-1024x768.jpg'
-      ]
+    name: 'Ringhotel Parkhotel Witten ***',
+    logoText: 'Parkhotel Witten',
+    addr: 'Bergerstraße 23, 58452 Witten',
+    price: 'EZ ab 72 € · DZ ab 92 €',
+    distance: 'ca. 5 km | ~10 Min mit dem Auto',
+    link: 'https://riepe.com/witten/',
+    map: 'https://www.google.com/maps/search/?api=1&query=Ringhotel+Parkhotel+Witten',
+    note: 'Zentral, nahe Bahnhof; Dachcafé mit Aussicht',
+    imgs: [
+      '/ringhotel-parkhotel-standardzimmer01.jpg',
+      '/ringhotel-parkhotel-tenne01.jpg',
+      '/ringhotel-parkhotel-doppelzimmer01.jpg',
+      '/ringhotel-parkhotel-restaurant02.jpg',
+      '/ringhotel-parkhotel-pool02.jpg'
+    ]
     },
     {
       name: 'Hotel Haus Hohenstein',
@@ -53,7 +55,7 @@ export default function Hotels(){
       map: 'https://www.google.com/maps/search/?api=1&query=Haus+Hohenstein+Witten',
       note: 'Am Hohenstein-Wald, viel Natur',
       imgs: [
-        'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/8a/40/6a/haus-hohenstein.jpg?w=1200&h=-1&s=1',
+        ' .jpg"',
         'https://images.unsplash.com/photo-1519710884009-0e5890894a85?q=80&w=1600&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1501117716987-c8e2a3a67a0d?q=80&w=1600&auto=format&fit=crop'
       ]
