@@ -1,3 +1,5 @@
+// Dummy update to trigger Vercel deployment
+
 // /api/rsvp.js
 import { Resend } from 'resend'
 import { put, list } from '@vercel/blob'
