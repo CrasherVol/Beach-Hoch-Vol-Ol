@@ -32,7 +32,7 @@ function toCSV(rows) {
   return head + "\n" + body;
 }
 
-export default function Admin() {
+export default function admin() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
@@ -89,8 +89,8 @@ export default function Admin() {
 
   return (
     <div className="page py-6">
-      <SEO title="Admin" description="RSVP-Übersicht & Export" />
-      <h2 className="text-2xl font-bold mb-4">Admin – RSVPs</h2>
+      <SEO title="admin" description="RSVP-Übersicht & Export" />
+      <h2 className="text-2xl font-bold mb-4">admin – RSVPs</h2>
 
       {/* Statusmeldungen */}
       {loading && <p className="text-slate-500 mb-4">Lade Einträge…</p>}
@@ -215,4 +215,3 @@ export default function Admin() {
     </div>
   );
 }
-n
