@@ -1,5 +1,3 @@
-// Dummy update to trigger Vercel deployment
-
 // /api/rsvp.js
 import { Resend } from 'resend'
 import { put, list } from '@vercel/blob'
@@ -157,50 +155,77 @@ ID:             ${entry.id}
 </div>
 `
 
-      // 1 Blob pro RSVP → keine Race Conditions
-      await put(`rsvps/${entry.id}.json`, JSON.stringify(entry), {
-        access: 'private',
-        contentType: 'application/json',
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      })
+      // 🔹 1 Blob pro RSVP → robust, crasht aber nicht, wenn Token fehlt/fehlerhaft
+      try {
+        if (process.env.BLOB_READ_WRITE_TOKEN) {
+          await put(`rsvps/${entry.id}.json`, JSON.stringify(entry), {
+            access: 'private',
+            contentType: 'application/json',
+            token: process.env.BLOB_READ_WRITE_TOKEN,
+          })
+        } else {
+          console.warn('BLOB_READ_WRITE_TOKEN fehlt – RSVPs werden nicht persistent gespeichert.')
+        }
+      } catch (err) {
+        console.error('Fehler beim Speichern in Blob:', err)
+        // nicht weiterwerfen, damit die Funktion nicht crasht
+      }
 
-      // E-Mail senden via Resend
-      const resend = new Resend(process.env.RESEND_API_KEY)
-      await resend.emails.send({
-        from: process.env.MAIL_FROM,
-        to: process.env.MAIL_TO,
-        subject: `Neue RSVP: ${entry.name} (${entry.persons})`,
-        text: textBody,
-        html: htmlBody,
-      })
+      // 🔹 E-Mail senden via Resend – auch hier robust
+      try {
+        if (process.env.RESEND_API_KEY && process.env.MAIL_FROM && process.env.MAIL_TO) {
+          const resend = new Resend(process.env.RESEND_API_KEY)
+          await resend.emails.send({
+            from: process.env.MAIL_FROM,
+            to: process.env.MAIL_TO,
+            subject: `Neue RSVP: ${entry.name} (${entry.persons})`,
+            text: textBody,
+            html: htmlBody,
+          })
+        } else {
+          console.warn('RESEND_API_KEY oder MAIL_FROM/MAIL_TO fehlen – keine Mail versendet.')
+        }
+      } catch (err) {
+        console.error('Fehler beim Senden der E-Mail:', err)
+        // auch hier: nicht crasht, nur loggen
+      }
 
+      // ✅ Wenn wir hier sind, war die Eingabe ok – egal, ob Mail/Blob geklappt haben
       return res.status(201).json({ ok: true, id: entry.id })
     }
 
     if (req.method === 'GET') {
-      // Alle RSVP-Blobs listen (bei vielen: optional limit/pagination)
+      // Wenn kein Blob-Token gesetzt ist → leere Liste statt Crash
+      if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        console.warn('BLOB_READ_WRITE_TOKEN fehlt – gebe leere RSVP-Liste zurück.')
+        return res.status(200).json([])
+      }
+
+      // Alle RSVP-Blobs listen
       const { blobs } = await list({
         prefix: 'rsvps/',
         token: process.env.BLOB_READ_WRITE_TOKEN,
       })
 
       // Neueste zuerst
-      blobs.sort(
-        (a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)
-      )
+      blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt))
 
-      // Inhalte laden (kleine Menge → ok)
+      // Inhalte laden (bei Fehlern Eintrag überspringen)
       const rows = []
       for (const b of blobs) {
-        const r = await fetch(b.url)
-        rows.push(await r.json())
+        try {
+          const r = await fetch(b.url)
+          rows.push(await r.json())
+        } catch (err) {
+          console.error('Fehler beim Laden eines RSVP-Blobs:', err)
+        }
       }
       return res.status(200).json(rows)
     }
 
     return res.status(405).json({ error: 'Method not allowed' })
   } catch (e) {
-    console.error(e)
+    console.error('Unerwarteter Fehler in /api/rsvp:', e)
     return res.status(500).json({ error: 'Server error' })
   }
 }
