@@ -105,6 +105,19 @@ export default function App() {
             >
               Hotels
             </NavLink>
+
+            {/* 👉 Neuer Menüpunkt: FAQ */}
+            <NavLink
+              to="/faq"
+              className={({ isActive }) =>
+                `px-3 py-2 rounded-xl ${
+                  isActive ? 'bg-indigo-50' : 'hover:bg-white/70'
+                }`
+              }
+            >
+              FAQ
+            </NavLink>
+
             <NavLink
               to="/anmeldung"
               className="px-3 py-2 rounded-xl text-white bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-soft hover:scale-[1.02] transition"
@@ -115,13 +128,14 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-[1100px] mx-auto px-4">
-        <Outlet />
-      </main>
+  <main className="relative z-10 max-w-[1100px] mx-auto px-4">
+  <Outlet />
+</main>
+
 
       <footer className="mt-10 bg-white/60 border-t border-white/60">
         <div className="max-w-[1100px] mx-auto px-4 py-6">
-          © {new Date().getFullYear()} Volker & Olga · BlueBeach Witten
+          © 2026 Volker & Olga · BlueBeach Witten
         </div>
       </footer>
     </div>

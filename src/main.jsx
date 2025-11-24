@@ -10,7 +10,8 @@ import Dresscode from './pages/Dresscode.jsx'
 import Ablauf from './pages/Ablauf.jsx'
 import Anmeldung from './pages/Anmeldung.jsx'
 import Hotels from './pages/Hotels.jsx'
-import Admin from './pages/admin.jsx'   // 👈 hier importiert
+import Admin from './pages/admin.jsx'   // Admin-Seite
+import Faq from './pages/Faq.jsx'       // 👈 NEU: FAQ-Seite
 import './index.css'
 
 const router = createBrowserRouter([
@@ -25,7 +26,8 @@ const router = createBrowserRouter([
       { path: 'ablauf', element: <Ablauf /> },
       { path: 'anmeldung', element: <Anmeldung /> },
       { path: 'hotels', element: <Hotels /> },
-      { path: 'admin', element: <Admin /> },   // 👈 neue Admin-Route
+      { path: 'faq', element: <Faq /> },     // 👈 NEU: FAQ-Route
+      { path: 'admin', element: <Admin /> }, // Admin-Route
     ],
   },
 ])
@@ -37,5 +39,3 @@ createRoot(document.getElementById('root')).render(
     </HelmetProvider>
   </React.StrictMode>
 )
-
-

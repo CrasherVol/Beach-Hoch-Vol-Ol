@@ -6,57 +6,58 @@ export default function Ablauf() {
   const dateStr = new Intl.DateTimeFormat('de-DE', { dateStyle: 'full' }).format(
     new Date('2026-03-13T18:00:00+01:00')
   )
-  // 👉 Ablauf startet ab 18:00, ohne Essens-Programm
- const timeline = [
-  {
-    time: "18:00",
-    timeLabel: "18:00",
-    title: "Beachen, chillen & Spiele (Beachvolleyball und andere kleinere Spiele)",
-    icon: "🏖️",
-    color: "from-sky-400 to-emerald-400",
-  },
-  {
-    time: "18:00",
-    timeLabel: "18:00",
-    title: "Eintreffen & Welcome-Drink",
-    icon: "🍹",
-    color: "from-emerald-400 to-cyan-400",
-  },
-  {
-    time: "18:30",
-    timeLabel: "18:30",
-    title: "Begrüßung Olga und Volker",
-    icon: "💍",
-    color: "from-orange-400 to-pink-400",
-  },
-  {
-    time: "19:30",
-    timeLabel: "19:30",
-    title: "Fotos, Beachvolleyball & Chill",
-    icon: "🏐",
-    color: "from-cyan-400 to-sky-400",
-  },
-  {
-    time: "21:00",
-    timeLabel: "21:00",
-    title: "Musik, Drinks & Strandfeeling",
-    icon: "🎵",
-    color: "from-pink-400 to-rose-400",
-  },
-  {
-    time: "2:00",
-    timeLabel: "2:00",
-    title: "Alles Schöne hat ein Ende",
-    icon: "🔥",
-    color: "from-amber-500 to-red-400",
-  },
-];
+
+  // 👉 Ablauf: klar nach Uhrzeiten sortiert, mit einem durchgehenden "Vibe"-Slot
+  const timeline = [
+    {
+      time: '18:00',
+      timeLabel: 'ab 18:00',
+      title: 'Ankommen, Welcome-Drink & erstes Anstoßen',
+      icon: '🍹',
+      color: 'from-emerald-400 to-cyan-400',
+    },
+    {
+      time: '18:30',
+      timeLabel: 'ca. 18:30',
+      title: 'Begrüßung von Olga & Volker – ein paar Worte & Cheers',
+      icon: '💍',
+      color: 'from-orange-400 to-pink-400',
+    },
+    {
+      time: '19:00',
+      timeLabel: 'ab 19:00',
+      title: 'weiter gehts mit Musik, Drinks & Strandfeeling und leckeren Getränken ',
+      icon: '🎵',
+      color: 'from-pink-400 to-rose-400',
+    },
+    {
+      time: '19:30',
+      timeLabel: 'ca. 19:30',
+      title: 'Fotos, Beachvolleyball & Feiern – wer mag, spielt im Sand',
+      icon: '🏐',
+      color: 'from-cyan-400 to-sky-400',
+    },
+    {
+      time: '20:00–02:00',
+      timeLabel: '20:00 – 02:00',
+      title: 'Beachen, chillen, quatschen – einfach Zeit miteinander',
+      icon: '🏖️',
+      color: 'from-sky-400 to-emerald-400',
+    },
+    {
+      time: '02:00',
+      timeLabel: 'gegen 02:00',
+      title: 'Alles Schöne hat ein Ende',
+      icon: '🔥',
+      color: 'from-amber-500 to-red-400',
+    },
+  ]
 
   return (
     <div className="page py-8">
       <SEO
         title="Ablauf"
-        description="Zeitplan & Getränke für den Abend – Start um 18 Uhr, ohne Essen."
+        description="Zeitplan für unseren Abend im BlueBeach – locker, beachy & ohne Essensprogramm, dafür mit viel Zeit für euch."
       />
 
       <h2 className="text-3xl font-extrabold mb-2 text-center grad-text">
@@ -64,10 +65,13 @@ export default function Ablauf() {
       </h2>
 
       <p className="text-center text-slate-600 mb-6 max-w-[640px] mx-auto">
-        Der Abend soll sich anfühlen wie ein Urlaubstag mit Freunden – ohne Stress, dafür mit "Sonne im Herzen", Lachen & Musik.
+        Der Abend soll sich anfühlen wie ein Urlaubstag mit Freunden – ohne Stress,
+        dafür mit <span className="font-semibold">Sonne im Herzen</span>, Lachen &
+        Musik.
         <br />
         <span className="font-semibold">
-          Es gibt kein Essen vor Ort, nur Drinks – plant gerne ein, vorher etwas zu essen.
+          Es gibt kein Essen vor Ort, nur Drinks – plant gern ein, vorher etwas zu
+          essen oder euch ggf. etwas Kleines mitzubringen.
         </span>
       </p>
 
@@ -97,29 +101,39 @@ export default function Ablauf() {
                 <span className="text-sm uppercase tracking-wide text-slate-500">
                   {item.timeLabel}
                 </span>
-                <h3 className="text-xl font-semibold mt-1 text-slate-800">{item.title}</h3>
+                <h3 className="text-xl font-semibold mt-1 text-slate-800">
+                  {item.title}
+                </h3>
               </div>
             </Card>
           </div>
         ))}
       </div>
 
-      {/* Getränke & Stimmung (Essen entfernt) */}
+      {/* Getränke & Stimmung */}
       <div className="mt-12 grid lg:grid-cols-2 gap-6">
-        <Card title="🍹 Getränke (kein Essen geplant)">
+        <Card title="🍹 Drinks statt Dinner">
           <ul className="list-disc pl-6 text-slate-700 leading-relaxed">
-            <li>Es gibt an diesem Abend <b>kein Essen</b>.</li>
-            <li>Wir sorgen für kühle Drinks – mit & ohne Alkohol.</li>
-            <li>Es ist perfekt, wenn ihr vorher etwas esst oder euch selbst etwas Kleines mitbringt.</li>
+            <li>
+              Es gibt an diesem Abend <b>kein Menü &amp; kein Buffet</b>.
+            </li>
+            <li>
+              Wir sorgen für kühle Drinks – mit &amp; ohne Alkohol: Bier, Wein, Longdrinks,
+              Softdrinks &amp; Wasser.
+            </li>
+            <li>
+              Am entspanntesten ist es, wenn ihr davor etwas esst oder euch bei Bedarf
+              selbst einen kleinen Snack mitbringt.
+            </li>
           </ul>
         </Card>
 
         <Card title="🎶 Stimmung & Highlights">
           <ul className="list-disc pl-6 text-slate-700 leading-relaxed">
-            <li>Fotospot unter Palmen 📸</li>
-            <li>Chill-Area mit Liegestühlen 🏖️</li>
-            <li>Kleine Spiele & Beachvolleyball 🏐</li>
-            <li>Musik mit Sommerfeeling 🎵</li>
+            <li>Fotospots unter Palmen & im Sand 📸</li>
+            <li>Chill-Area mit Liegestühlen & Lichterketten 🏖️</li>
+            <li>Beachvolleyball & kleine Spiele – wer mag, macht mit 🏐</li>
+            <li>Sommer-Playlist, Bar-Feeling & gute Gespräche 🎵</li>
           </ul>
         </Card>
       </div>
