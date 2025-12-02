@@ -1,6 +1,5 @@
 // /api/rsvp.js
 import { Resend } from "resend";
-import { put, list } from "@vercel/blob";
 import { Redis } from "@upstash/redis";
 
 // 👇 Redis-Client – gleiche ENV-Variablen wie im anderen Projekt
@@ -40,23 +39,27 @@ export default async function handler(req, res) {
 
       const normEmail = String(email).trim().toLowerCase();
       const now = new Date().toISOString();
-      const userKey = `rsvp:beach:user:${normEmail}`;
 
-      // 🔍 Prüfen, ob es für diese E-Mail schon einen Eintrag gibt
+      const emailsSetKey = "rsvp:beach:emails";
+      const entryKey = `rsvp:beach:entry:${normEmail}`;
+
+      // 🔍 Bisherigen Eintrag für diese Mail laden (falls vorhanden)
       let existing = null;
       try {
-        existing = await redis.hgetall(userKey);
+        const raw = await redis.get(entryKey);
+        if (raw) {
+          existing = JSON.parse(raw);
+        }
       } catch (err) {
-        console.error("Fehler beim Lesen aus Redis:", err);
+        console.error("Fehler beim Lesen existierender RSVP aus Redis:", err);
       }
 
-      const hasExisting =
-        existing && Object.keys(existing).length > 0 && existing.id;
+      const hasExisting = !!(existing && existing.id);
 
       const id = hasExisting ? existing.id : makeId();
       const createdAt = hasExisting
-        ? existing.createdAt || now
-        : now; // Ursprüngliche Erstellzeit
+        ? existing.createdAt || existing.ts || now
+        : now; // ursprüngliche Erstellzeit
       const version = hasExisting ? Number(existing.version || "1") + 1 : 1;
       const updatedAt = now;
       const changed = hasExisting; // true, wenn es eine Änderung ist
@@ -199,24 +202,15 @@ ID:             ${entry.id}
 </div>
 `;
 
-      // 🔹 1 Blob pro E-Mail → durch gleiche ID wird bei Updates überschrieben
+      // 🔹 RSVP in Redis speichern (1 Eintrag pro E-Mail)
       try {
-        if (process.env.BLOB_READ_WRITE_TOKEN) {
-          await put(`rsvps/${id}.json`, JSON.stringify(entry), {
-            access: "private",
-            contentType: "application/json",
-            token: process.env.BLOB_READ_WRITE_TOKEN,
-          });
-        } else {
-          console.warn(
-            "BLOB_READ_WRITE_TOKEN fehlt – RSVPs werden nicht persistent gespeichert."
-          );
-        }
+        await redis.set(entryKey, JSON.stringify(entry));
+        await redis.sadd(emailsSetKey, normEmail);
       } catch (err) {
-        console.error("Fehler beim Speichern in Blob:", err);
+        console.error("Fehler beim Speichern in Redis:", err);
       }
 
-      // 🔹 E-Mail senden via Resend
+      // 🔹 E-Mail senden via Resend (wie gehabt)
       try {
         if (
           process.env.RESEND_API_KEY &&
@@ -240,51 +234,39 @@ ID:             ${entry.id}
         console.error("Fehler beim Senden der E-Mail:", err);
       }
 
-      // 🔹 Mapping in Redis speichern (für spätere Updates)
-      try {
-        await redis.hset(userKey, {
-          id,
-          email: normEmail,
-          createdAt,
-          updatedAt,
-          version: String(version),
-        });
-      } catch (err) {
-        console.error("Fehler beim Schreiben in Redis:", err);
-      }
-
-      // ✅ Wenn wir hier sind, war die Eingabe ok – egal, ob Mail/Blob/Redis geklappt haben
+      // ✅ Antwort an Frontend
       return res.status(201).json({ ok: true, id, changed });
     }
 
     if (req.method === "GET") {
-      // Wenn kein Blob-Token gesetzt ist → leere Liste statt Crash
-      if (!process.env.BLOB_READ_WRITE_TOKEN) {
-        console.warn(
-          "BLOB_READ_WRITE_TOKEN fehlt – gebe leere RSVP-Liste zurück."
-        );
-        return res.status(200).json([]);
+      const emailsSetKey = "rsvp:beach:emails";
+
+      let emails = [];
+      try {
+        emails = await redis.smembers(emailsSetKey);
+      } catch (err) {
+        console.error("Fehler beim Lesen der E-Mail-Liste aus Redis:", err);
       }
 
-      // Alle RSVP-Blobs listen
-      const { blobs } = await list({
-        prefix: "rsvps/",
-        token: process.env.BLOB_READ_WRITE_TOKEN,
-      });
-
-      // Neueste Uploads zuerst
-      blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-
-      // Inhalte laden
       const rows = [];
-      for (const b of blobs) {
+      for (const email of emails || []) {
         try {
-          const r = await fetch(b.url);
-          rows.push(await r.json());
+          const entryKey = `rsvp:beach:entry:${email}`;
+          const raw = await redis.get(entryKey);
+          if (!raw) continue;
+          const parsed = JSON.parse(raw);
+          rows.push(parsed);
         } catch (err) {
-          console.error("Fehler beim Laden eines RSVP-Blobs:", err);
+          console.error("Fehler beim Laden eines RSVP-Eintrags:", err);
         }
       }
+
+      // Neueste zuerst (nach updatedAt oder ts)
+      rows.sort((a, b) => {
+        const ta = new Date(a.updatedAt || a.createdAt || a.ts || 0).getTime();
+        const tb = new Date(b.updatedAt || b.createdAt || b.ts || 0).getTime();
+        return tb - ta;
+      });
 
       return res.status(200).json(rows);
     }
