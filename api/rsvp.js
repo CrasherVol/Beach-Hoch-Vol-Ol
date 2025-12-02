@@ -249,26 +249,47 @@ ID:             ${entry.id}
       }
 
       const rows = [];
+      const raws = [];
+
       for (const email of emails || []) {
         try {
           const entryKey = `rsvp:beach:entry:${email}`;
           const raw = await redis.get(entryKey);
+
+          raws.push({
+            email,
+            type: typeof raw,
+            raw,
+          });
+
           if (!raw) continue;
-          const parsed = JSON.parse(raw);
-          rows.push(parsed);
+
+          try {
+            const parsed = JSON.parse(raw);
+            rows.push(parsed);
+          } catch (err) {
+            console.error(
+              "JSON.parse-Fehler für",
+              email,
+              "raw=",
+              raw,
+              "err=",
+              err
+            );
+          }
         } catch (err) {
           console.error("Fehler beim Laden eines RSVP-Eintrags:", err);
         }
       }
 
-      // Neueste zuerst (nach updatedAt oder ts)
-      rows.sort((a, b) => {
-        const ta = new Date(a.updatedAt || a.createdAt || a.ts || 0).getTime();
-        const tb = new Date(b.updatedAt || b.createdAt || b.ts || 0).getTime();
-        return tb - ta;
+      return res.status(200).json({
+        debug: true,
+        emails,
+        raws,
+        rowsCount: rows.length,
+        rows,
       });
-
-      return res.status(200).json(rows);
+    
     }
 
     return res.status(405).json({ error: "Method not allowed" });
