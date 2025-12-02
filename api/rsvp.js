@@ -27,6 +27,9 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
 
   try {
+    // ------------------------------------------------------------------
+    // POST  → speichern / aktualisieren
+    // ------------------------------------------------------------------
     if (req.method === "POST") {
       const { name, email, persons, allergies, message, extraNames } =
         req.body || {};
@@ -47,7 +50,9 @@ export default async function handler(req, res) {
       let existing = null;
       try {
         const raw = await redis.get(entryKey);
-        if (raw) {
+        if (raw && typeof raw === "object") {
+          existing = raw;
+        } else if (raw && typeof raw === "string") {
           existing = JSON.parse(raw);
         }
       } catch (err) {
@@ -204,7 +209,8 @@ ID:             ${entry.id}
 
       // 🔹 RSVP in Redis speichern (1 Eintrag pro E-Mail)
       try {
-        await redis.set(entryKey, JSON.stringify(entry));
+        // Wichtig: direkt das Objekt speichern, nicht nochmal JSON.stringify
+        await redis.set(entryKey, entry);
         await redis.sadd(emailsSetKey, normEmail);
       } catch (err) {
         console.error("Fehler beim Speichern in Redis:", err);
@@ -238,6 +244,9 @@ ID:             ${entry.id}
       return res.status(201).json({ ok: true, id, changed });
     }
 
+    // ------------------------------------------------------------------
+    // GET  → alle RSVPs für Admin laden
+    // ------------------------------------------------------------------
     if (req.method === "GET") {
       const emailsSetKey = "rsvp:beach:emails";
 
@@ -249,49 +258,47 @@ ID:             ${entry.id}
       }
 
       const rows = [];
-      const raws = [];
 
       for (const email of emails || []) {
         try {
           const entryKey = `rsvp:beach:entry:${email}`;
           const raw = await redis.get(entryKey);
-
-          raws.push({
-            email,
-            type: typeof raw,
-            raw,
-          });
-
           if (!raw) continue;
 
-          try {
-            const parsed = JSON.parse(raw);
-            rows.push(parsed);
-          } catch (err) {
-            console.error(
-              "JSON.parse-Fehler für",
-              email,
-              "raw=",
-              raw,
-              "err=",
-              err
-            );
+          // Upstash gibt meistens direkt ein Objekt zurück
+          if (typeof raw === "object") {
+            rows.push(raw);
+          } else if (typeof raw === "string") {
+            // Fallback: falls irgendwann mal JSON-String gespeichert wurde
+            try {
+              rows.push(JSON.parse(raw));
+            } catch (err) {
+              console.error(
+                "Konnte Eintrag nicht parsen, überspringe:",
+                email,
+                "raw=",
+                raw
+              );
+            }
           }
         } catch (err) {
           console.error("Fehler beim Laden eines RSVP-Eintrags:", err);
         }
       }
 
-      return res.status(200).json({
-        debug: true,
-        emails,
-        raws,
-        rowsCount: rows.length,
-        rows,
+      // Neueste zuerst (nach updatedAt oder ts)
+      rows.sort((a, b) => {
+        const ta = new Date(a.updatedAt || a.createdAt || a.ts || 0).getTime();
+        const tb = new Date(b.updatedAt || b.createdAt || b.ts || 0).getTime();
+        return tb - ta;
       });
-    
+
+      return res.status(200).json(rows);
     }
 
+    // ------------------------------------------------------------------
+    // andere Methoden blocken
+    // ------------------------------------------------------------------
     return res.status(405).json({ error: "Method not allowed" });
   } catch (e) {
     console.error("Unerwarteter Fehler in /api/rsvp:", e);
