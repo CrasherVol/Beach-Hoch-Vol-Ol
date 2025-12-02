@@ -172,15 +172,26 @@ export default function admin() {
 
               return (
                 <Card key={r.id || i} title={`${r.name} (${r.persons})`}>
-                  <div>
-                    <b>E-Mail:</b>{" "}
-                    <a
-                      href={`mailto:${r.email}`}
-                      className="text-emerald-600 hover:underline"
-                    >
-                      {r.email}
-                    </a>
-                  </div>
+ {/* NEU: Hinweis, falls Eintrag geändert wurde */}
+  {r.changed && (
+    <div className="text-xs text-amber-600 font-semibold mb-1">
+      Geändert am{" "}
+      {r.updatedAt
+        ? new Date(r.updatedAt).toLocaleString("de-DE")
+        : "–"}
+      {r.version && ` (Version ${r.version})`}
+    </div>
+  )}
+
+  <div>
+    <b>E-Mail:</b>{" "}
+    <a
+      href={`mailto:${r.email}`}
+      className="text-emerald-600 hover:underline"
+    >
+      {r.email}
+    </a>
+  </div>
 
                   {extra.length > 0 && (
                     <div style={{ marginTop: 4 }}>

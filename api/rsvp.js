@@ -1,67 +1,101 @@
 // /api/rsvp.js
-import { Resend } from 'resend'
-import { put, list } from '@vercel/blob'
+import { Resend } from "resend";
+import { put, list } from "@vercel/blob";
+import { Redis } from "@upstash/redis";
+
+// 👇 Redis-Client – gleiche ENV-Variablen wie im anderen Projekt
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 // Hilfsfunktion: simple ID
-const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
 // kleine Helper-Funktion gegen kaputtes HTML
-function escapeHtml(str = '') {
+function escapeHtml(str = "") {
   return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }
 
 export default async function handler(req, res) {
   // CORS (optional, hilfreich lokal)
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-  if (req.method === 'OPTIONS') return res.status(200).end()
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") return res.status(200).end();
 
   try {
-    if (req.method === 'POST') {
-      const {
-        name,
-        email,
-        persons,
-        allergies,
-        message,
-        extraNames, // 👈 Mitgäste
-      } = req.body || {}
+    if (req.method === "POST") {
+      const { name, email, persons, allergies, message, extraNames } =
+        req.body || {};
 
       if (!name || !email || !persons) {
-        return res.status(400).json({
-          error: 'Missing fields: name, email, persons',
-        })
+        return res
+          .status(400)
+          .json({ error: "Missing fields: name, email, persons" });
       }
+
+      const normEmail = String(email).trim().toLowerCase();
+      const now = new Date().toISOString();
+      const userKey = `rsvp:beach:user:${normEmail}`;
+
+      // 🔍 Prüfen, ob es für diese E-Mail schon einen Eintrag gibt
+      let existing = null;
+      try {
+        existing = await redis.hgetall(userKey);
+      } catch (err) {
+        console.error("Fehler beim Lesen aus Redis:", err);
+      }
+
+      const hasExisting =
+        existing && Object.keys(existing).length > 0 && existing.id;
+
+      const id = hasExisting ? existing.id : makeId();
+      const createdAt = hasExisting
+        ? existing.createdAt || now
+        : now; // Ursprüngliche Erstellzeit
+      const version = hasExisting ? Number(existing.version || "1") + 1 : 1;
+      const updatedAt = now;
+      const changed = hasExisting; // true, wenn es eine Änderung ist
+
+      const extraList = Array.isArray(extraNames)
+        ? extraNames.filter(Boolean)
+        : [];
 
       const entry = {
-        id: makeId(),
+        id,
         name,
-        email,
+        email: normEmail,
         persons: Number(persons),
-        allergies: allergies || '',
-        message: message || '',
-        extraNames: Array.isArray(extraNames)
-          ? extraNames.filter(Boolean) // leere Strings rausfiltern
-          : [],
-        ts: new Date().toISOString(),
-      }
+        allergies: allergies || "",
+        message: message || "",
+        extraNames: extraList,
+        // für Abwärtskompatibilität: ts = erste Erstellung
+        ts: createdAt,
+        createdAt,
+        updatedAt,
+        changed,
+        version,
+      };
 
-      const tsDisplay = new Date(entry.ts).toLocaleString('de-DE', {
-        timeZone: 'Europe/Berlin',
-      })
+      const tsDisplay = new Date(updatedAt).toLocaleString("de-DE", {
+        timeZone: "Europe/Berlin",
+      });
 
-      const mitgaesteList = entry.extraNames
-      const mitgaesteText = mitgaesteList.length
-        ? mitgaesteList.map((n, i) => `• Person ${i + 2}: ${n}`).join('\n')
-        : '— keine weiteren Namen angegeben —'
+      const mitgaesteText = extraList.length
+        ? extraList.map((n, i) => `• Person ${i + 2}: ${n}`).join("\n")
+        : "— keine weiteren Namen angegeben —";
 
-      // 📝 Schöner Text-Body
+      const statusText = changed
+        ? "AKTUALISIERTE Anmeldung"
+        : "Neue Anmeldung";
+
+      // 📝 Text-Body
       const textBody = `
-Neue Zusage für die Beach Wedding
+${statusText} für die Beach Wedding
 
 Basisdaten
 ──────────
@@ -75,25 +109,35 @@ ${mitgaesteText}
 
 Trinker oder Fahrer?
 ────────────────────
-${entry.allergies || '— keine Angabe —'}
+${entry.allergies || "— keine Angabe —"}
 
 Nachricht
 ─────────
-${entry.message || '— keine Nachricht —'}
+${entry.message || "— keine Nachricht —"}
 
 Meta
 ────
-Zeit:           ${tsDisplay}
+Erstellt am:    ${new Date(createdAt).toLocaleString("de-DE", {
+        timeZone: "Europe/Berlin",
+      })}
+Zuletzt geändert: ${tsDisplay}
+Version:        ${version}
 ID:             ${entry.id}
-`.trim()
+`.trim();
 
       // ✨ HTML-Version – hübsch formatiert
       const htmlBody = `
 <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.5; color: #111827;">
-  <h2 style="margin-bottom: 0.5rem;">Neue Zusage für die Beach Wedding 🎉</h2>
+  <h2 style="margin-bottom: 0.5rem;">
+    ${statusText} für die Beach Wedding 🎉
+  </h2>
   <p style="margin-top: 0; color: #6b7280; font-size: 0.9rem;">
-    Eingang: ${tsDisplay}<br/>
-    ID: ${entry.id}
+    Erstellt: ${new Date(createdAt).toLocaleString("de-DE", {
+      timeZone: "Europe/Berlin",
+    })}<br/>
+    Zuletzt geändert: ${tsDisplay}<br/>
+    ID: ${entry.id}<br/>
+    Version: ${version}
   </p>
 
   <h3 style="margin-top: 1.5rem; margin-bottom: 0.25rem;">Basisdaten</h3>
@@ -116,14 +160,14 @@ ID:             ${entry.id}
 
   <h3 style="margin-top: 1.5rem; margin-bottom: 0.25rem;">Weitere Gäste</h3>
   ${
-    mitgaesteList.length
+    extraList.length
       ? `<ul style="margin: 0 0 0.75rem 1.1rem; padding: 0;">
-          ${mitgaesteList
+          ${extraList
             .map(
               (n, i) =>
                 `<li>Person ${i + 2}: <strong>${escapeHtml(n)}</strong></li>`
             )
-            .join('')}
+            .join("")}
         </ul>`
       : `<p style="margin: 0 0 0.75rem 0; color: #6b7280;">
            Keine weiteren Namen angegeben.
@@ -153,79 +197,101 @@ ID:             ${entry.id}
     Diese E-Mail wurde automatisch vom Anmeldeformular der Beach Wedding generiert.
   </p>
 </div>
-`
+`;
 
-      // 🔹 1 Blob pro RSVP → robust, crasht aber nicht, wenn Token fehlt/fehlerhaft
+      // 🔹 1 Blob pro E-Mail → durch gleiche ID wird bei Updates überschrieben
       try {
         if (process.env.BLOB_READ_WRITE_TOKEN) {
-          await put(`rsvps/${entry.id}.json`, JSON.stringify(entry), {
-            access: 'private',
-            contentType: 'application/json',
+          await put(`rsvps/${id}.json`, JSON.stringify(entry), {
+            access: "private",
+            contentType: "application/json",
             token: process.env.BLOB_READ_WRITE_TOKEN,
-          })
+          });
         } else {
-          console.warn('BLOB_READ_WRITE_TOKEN fehlt – RSVPs werden nicht persistent gespeichert.')
+          console.warn(
+            "BLOB_READ_WRITE_TOKEN fehlt – RSVPs werden nicht persistent gespeichert."
+          );
         }
       } catch (err) {
-        console.error('Fehler beim Speichern in Blob:', err)
-        // nicht weiterwerfen, damit die Funktion nicht crasht
+        console.error("Fehler beim Speichern in Blob:", err);
       }
 
-      // 🔹 E-Mail senden via Resend – auch hier robust
+      // 🔹 E-Mail senden via Resend
       try {
-        if (process.env.RESEND_API_KEY && process.env.MAIL_FROM && process.env.MAIL_TO) {
-          const resend = new Resend(process.env.RESEND_API_KEY)
+        if (
+          process.env.RESEND_API_KEY &&
+          process.env.MAIL_FROM &&
+          process.env.MAIL_TO
+        ) {
+          const resend = new Resend(process.env.RESEND_API_KEY);
           await resend.emails.send({
             from: process.env.MAIL_FROM,
             to: process.env.MAIL_TO,
-            subject: `Neue RSVP: ${entry.name} (${entry.persons})`,
+            subject: `${statusText}: ${entry.name} (${entry.persons})`,
             text: textBody,
             html: htmlBody,
-          })
+          });
         } else {
-          console.warn('RESEND_API_KEY oder MAIL_FROM/MAIL_TO fehlen – keine Mail versendet.')
+          console.warn(
+            "RESEND_API_KEY oder MAIL_FROM/MAIL_TO fehlen – keine Mail versendet."
+          );
         }
       } catch (err) {
-        console.error('Fehler beim Senden der E-Mail:', err)
-        // auch hier: nicht crasht, nur loggen
+        console.error("Fehler beim Senden der E-Mail:", err);
       }
 
-      // ✅ Wenn wir hier sind, war die Eingabe ok – egal, ob Mail/Blob geklappt haben
-      return res.status(201).json({ ok: true, id: entry.id })
+      // 🔹 Mapping in Redis speichern (für spätere Updates)
+      try {
+        await redis.hset(userKey, {
+          id,
+          email: normEmail,
+          createdAt,
+          updatedAt,
+          version: String(version),
+        });
+      } catch (err) {
+        console.error("Fehler beim Schreiben in Redis:", err);
+      }
+
+      // ✅ Wenn wir hier sind, war die Eingabe ok – egal, ob Mail/Blob/Redis geklappt haben
+      return res.status(201).json({ ok: true, id, changed });
     }
 
-    if (req.method === 'GET') {
+    if (req.method === "GET") {
       // Wenn kein Blob-Token gesetzt ist → leere Liste statt Crash
       if (!process.env.BLOB_READ_WRITE_TOKEN) {
-        console.warn('BLOB_READ_WRITE_TOKEN fehlt – gebe leere RSVP-Liste zurück.')
-        return res.status(200).json([])
+        console.warn(
+          "BLOB_READ_WRITE_TOKEN fehlt – gebe leere RSVP-Liste zurück."
+        );
+        return res.status(200).json([]);
       }
 
       // Alle RSVP-Blobs listen
       const { blobs } = await list({
-        prefix: 'rsvps/',
+        prefix: "rsvps/",
         token: process.env.BLOB_READ_WRITE_TOKEN,
-      })
+      });
 
-      // Neueste zuerst
-      blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt))
+      // Neueste Uploads zuerst
+      blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
 
-      // Inhalte laden (bei Fehlern Eintrag überspringen)
-      const rows = []
+      // Inhalte laden
+      const rows = [];
       for (const b of blobs) {
         try {
-          const r = await fetch(b.url)
-          rows.push(await r.json())
+          const r = await fetch(b.url);
+          rows.push(await r.json());
         } catch (err) {
-          console.error('Fehler beim Laden eines RSVP-Blobs:', err)
+          console.error("Fehler beim Laden eines RSVP-Blobs:", err);
         }
       }
-      return res.status(200).json(rows)
+
+      return res.status(200).json(rows);
     }
 
-    return res.status(405).json({ error: 'Method not allowed' })
+    return res.status(405).json({ error: "Method not allowed" });
   } catch (e) {
-    console.error('Unerwarteter Fehler in /api/rsvp:', e)
-    return res.status(500).json({ error: 'Server error' })
+    console.error("Unerwarteter Fehler in /api/rsvp:", e);
+    return res.status(500).json({ error: "Server error" });
   }
 }
