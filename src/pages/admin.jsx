@@ -1,5 +1,5 @@
 // src/pages/admin.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Card from "../components/Card.jsx";
 import SEO from "../components/SEO.jsx";
 
@@ -14,6 +14,10 @@ function toCSV(rows) {
       message: "",
       extraNames: "",
       ts: "",
+      createdAt: "",
+      updatedAt: "",
+      changed: "",
+      version: "",
     }
   );
   const esc = (v) => String(v ?? "").replace(/"/g, '""');
@@ -22,7 +26,6 @@ function toCSV(rows) {
     .map((r) =>
       headers
         .map((h) => {
-          // Arrays (z.B. extraNames) als kommagetrennte Liste
           const value = Array.isArray(r[h]) ? r[h].join(", ") : r[h];
           return `"${esc(value)}"`;
         })
@@ -32,10 +35,27 @@ function toCSV(rows) {
   return head + "\n" + body;
 }
 
-export default function admin() {
+function formatDate(value) {
+  if (!value) return "–";
+  try {
+    return new Date(value).toLocaleString("de-DE", {
+      dateStyle: "short",
+      timeStyle: "short",
+    });
+  } catch {
+    return String(value);
+  }
+}
+
+export default function Admin() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
+  const [sortConfig, setSortConfig] = useState({
+    key: "created",
+    direction: "desc",
+  });
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const load = async () => {
@@ -58,33 +78,136 @@ export default function admin() {
     load();
   }, []);
 
-  const download = () => {
+  const handleDelete = async (email) => {
+    const ok = window.confirm(
+      `Eintrag mit E-Mail "${email}" wirklich dauerhaft löschen?`
+    );
+    if (!ok) return;
+
+    try {
+      const res = await fetch("/api/rsvp", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) {
+        throw new Error("Löschen fehlgeschlagen");
+      }
+      setList((prev) => prev.filter((r) => r.email !== email));
+    } catch (e) {
+      console.error(e);
+      alert("Konnte Eintrag nicht löschen.");
+    }
+  };
+
+  const handleDownload = () => {
     if (!list.length) return;
     const csv = toCSV(list);
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "rsvp-export.csv";
+    a.download = "rsvp-export.csv"; // Excel-kompatibel
     a.click();
     URL.revokeObjectURL(a.href);
   };
 
-  const totalRsvps = list.length;
-  const totalPersons = list.reduce(
-    (sum, r) => sum + (Number(r.persons) || 0),
-    0
-  );
-  const totalExtra = list.reduce(
-    (sum, r) =>
-      sum + (Array.isArray(r.extraNames) ? r.extraNames.length : 0),
-    0
-  );
-  const lastTs = list[0]?.ts;
-  const lastTsDisplay = lastTs
-    ? new Date(lastTs).toLocaleString("de-DE", {
-        dateStyle: "short",
-        timeStyle: "short",
-      })
+  const handleSort = (key) => {
+    setSortConfig((prev) => {
+      if (prev.key === key) {
+        return {
+          key,
+          direction: prev.direction === "asc" ? "desc" : "asc",
+        };
+      }
+      return { key, direction: "asc" };
+    });
+  };
+
+  const sortIndicator = (key) => {
+    if (sortConfig.key !== key) return "↕";
+    return sortConfig.direction === "asc" ? "▲" : "▼";
+  };
+
+  const derived = useMemo(() => {
+    const totalRsvps = list.length;
+    const totalPersons = list.reduce(
+      (sum, r) => sum + (Number(r.persons) || 0),
+      0
+    );
+    const totalExtra = list.reduce(
+      (sum, r) =>
+        sum + (Array.isArray(r.extraNames) ? r.extraNames.length : 0),
+      0
+    );
+
+    // "Absagen": Hier interpretieren wir Einträge mit persons === 0 oder status "cancelled"
+    const cancellations = list.filter(
+      (r) =>
+        String(r.status).toLowerCase() === "cancelled" ||
+        Number(r.persons) === 0
+    ).length;
+
+    const lastCreated =
+      list[0]?.createdAt || list[0]?.ts || list[0]?.updatedAt || null;
+
+    return {
+      totalRsvps,
+      totalPersons,
+      totalExtra,
+      cancellations,
+      lastCreated,
+    };
+  }, [list]);
+
+  const filteredAndSorted = useMemo(() => {
+    const normSearch = search.trim().toLowerCase();
+
+    const filtered = list.filter((r) => {
+      if (!normSearch) return true;
+      const haystack = [
+        r.name,
+        r.email,
+        r.message,
+        ...(Array.isArray(r.extraNames) ? r.extraNames : []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(normSearch);
+    });
+
+    const getSortValue = (r, key) => {
+      switch (key) {
+        case "name":
+          return (r.name || "").toLowerCase();
+        case "email":
+          return (r.email || "").toLowerCase();
+        case "persons":
+          return Number(r.persons) || 0;
+        case "extra":
+          return Array.isArray(r.extraNames) ? r.extraNames.length : 0;
+        case "created":
+          return new Date(r.createdAt || r.ts || 0).getTime();
+        case "updated":
+          return new Date(r.updatedAt || r.createdAt || r.ts || 0).getTime();
+        default:
+          return r[key] ?? "";
+      }
+    };
+
+    const sorted = [...filtered].sort((a, b) => {
+      const aVal = getSortValue(a, sortConfig.key);
+      const bVal = getSortValue(b, sortConfig.key);
+      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    return sorted;
+  }, [list, sortConfig, search]);
+
+  const lastTsDisplay = derived.lastCreated
+    ? formatDate(derived.lastCreated)
     : "–";
 
   return (
@@ -94,35 +217,34 @@ export default function admin() {
 
       {/* Statusmeldungen */}
       {loading && <p className="text-slate-500 mb-4">Lade Einträge…</p>}
-      {err && (
-        <p className="text-red-600 mb-4">
-          {err}
-        </p>
-      )}
+      {err && <p className="text-red-600 mb-4">{err}</p>}
 
       {!loading && !err && (
         <>
-          {/* Dashboard-Kacheln */}
           {list.length > 0 ? (
             <>
-              <div className="grid gap-4 md:grid-cols-3 mb-4">
+              {/* Dashboard-Kacheln */}
+              <div className="grid gap-4 md:grid-cols-4 mb-4">
                 <Card>
                   <div className="flex flex-col">
                     <span className="text-xs uppercase tracking-wide text-slate-500 mb-1">
-                      Zusagen
+                      Anmeldungen
                     </span>
                     <span className="text-2xl font-semibold">
-                      {totalRsvps}
+                      {derived.totalRsvps}
                     </span>
                   </div>
                 </Card>
                 <Card>
                   <div className="flex flex-col">
                     <span className="text-xs uppercase tracking-wide text-slate-500 mb-1">
-                      Gesamtpersonen
+                      Teilnehmerzahl
                     </span>
                     <span className="text-2xl font-semibold">
-                      {totalPersons}
+                      {derived.totalPersons}
+                    </span>
+                    <span className="text-xs text-slate-400 mt-1">
+                      (Basis + eingetragene Personen)
                     </span>
                   </div>
                 </Card>
@@ -132,27 +254,208 @@ export default function admin() {
                       Mitgäste gesamt
                     </span>
                     <span className="text-2xl font-semibold">
-                      {totalExtra}
+                      {derived.totalExtra}
+                    </span>
+                  </div>
+                </Card>
+                <Card>
+                  <div className="flex flex-col">
+                    <span className="text-xs uppercase tracking-wide text-slate-500 mb-1">
+                      Absagen
+                    </span>
+                    <span className="text-2xl font-semibold">
+                      {derived.cancellations}
                     </span>
                     <span className="text-xs text-slate-400 mt-1">
-                      (zusätzlich eingetragene Namen)
+                      (persons = 0 oder status = &quot;cancelled&quot;)
                     </span>
                   </div>
                 </Card>
               </div>
 
-              <div className="mb-4 flex flex-wrap items-center gap-3">
-                <p className="text-sm text-slate-500">
-                  Letzte Anmeldung: {lastTsDisplay}
-                </p>
-                <button
-                  className="btn primary"
-                  onClick={download}
-                  disabled={!list.length}
-                >
-                  CSV exportieren
-                </button>
+              {/* Toolbar */}
+              <div className="mb-4 flex flex-wrap items-center gap-3 justify-between">
+                <div className="flex flex-col text-sm text-slate-500">
+                  <span>Letzte Anmeldung: {lastTsDisplay}</span>
+                  <span>Gesamt: {derived.totalRsvps} Einträge</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    placeholder="Suche nach Name, E-Mail, Nachricht…"
+                    className="px-3 py-2 rounded-xl border border-slate-200 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white/80"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                  <button
+                    className="btn primary"
+                    onClick={handleDownload}
+                    disabled={!list.length}
+                  >
+                    CSV / Excel Export
+                  </button>
+                </div>
               </div>
+
+              {/* Tabelle */}
+              <Card>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-slate-50 text-left">
+                        <th className="p-2 border-b">
+                          <button
+                            type="button"
+                            className="flex items-center gap-1"
+                            onClick={() => handleSort("name")}
+                          >
+                            Name <span className="text-xs">{sortIndicator("name")}</span>
+                          </button>
+                        </th>
+                        <th className="p-2 border-b">
+                          <button
+                            type="button"
+                            className="flex items-center gap-1"
+                            onClick={() => handleSort("email")}
+                          >
+                            E-Mail{" "}
+                            <span className="text-xs">
+                              {sortIndicator("email")}
+                            </span>
+                          </button>
+                        </th>
+                        <th className="p-2 border-b text-right">
+                          <button
+                            type="button"
+                            className="flex items-center gap-1 ml-auto"
+                            onClick={() => handleSort("persons")}
+                          >
+                            Personen{" "}
+                            <span className="text-xs">
+                              {sortIndicator("persons")}
+                            </span>
+                          </button>
+                        </th>
+                        <th className="p-2 border-b text-right">
+                          <button
+                            type="button"
+                            className="flex items-center gap-1 ml-auto"
+                            onClick={() => handleSort("extra")}
+                          >
+                            Mitgäste{" "}
+                            <span className="text-xs">
+                              {sortIndicator("extra")}
+                            </span>
+                          </button>
+                        </th>
+                        <th className="p-2 border-b">Trinker/Fahrer</th>
+                        <th className="p-2 border-b">Nachricht</th>
+                        <th className="p-2 border-b">
+                          <button
+                            type="button"
+                            className="flex items-center gap-1"
+                            onClick={() => handleSort("created")}
+                          >
+                            Erstellt{" "}
+                            <span className="text-xs">
+                              {sortIndicator("created")}
+                            </span>
+                          </button>
+                        </th>
+                        <th className="p-2 border-b">
+                          <button
+                            type="button"
+                            className="flex items-center gap-1"
+                            onClick={() => handleSort("updated")}
+                          >
+                            Geändert{" "}
+                            <span className="text-xs">
+                              {sortIndicator("updated")}
+                            </span>
+                          </button>
+                        </th>
+                        <th className="p-2 border-b text-center">Aktion</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredAndSorted.map((r, i) => {
+                        const extra = Array.isArray(r.extraNames)
+                          ? r.extraNames
+                          : [];
+                        const created = r.createdAt || r.ts;
+                        const updated = r.updatedAt;
+
+                        return (
+                          <tr
+                            key={r.id || r.email || i}
+                            className="border-b last:border-b-0 hover:bg-slate-50/70"
+                          >
+                            <td className="p-2 align-top">
+                              <div className="font-medium">{r.name}</div>
+                              {r.changed && (
+                                <div className="text-xs text-amber-600">
+                                  geändert (Version {r.version || 1})
+                                </div>
+                              )}
+                            </td>
+                            <td className="p-2 align-top">
+                              <a
+                                href={`mailto:${r.email}`}
+                                className="text-emerald-600 hover:underline break-all"
+                              >
+                                {r.email}
+                              </a>
+                            </td>
+                            <td className="p-2 align-top text-right">
+                              {r.persons || 0}
+                            </td>
+                            <td className="p-2 align-top text-right">
+                              {extra.length || 0}
+                            </td>
+                            <td className="p-2 align-top">
+                              {r.allergies ? r.allergies : "–"}
+                            </td>
+                            <td className="p-2 align-top max-w-xs">
+                              {r.message ? (
+                                <span className="line-clamp-3">
+                                  {r.message}
+                                </span>
+                              ) : (
+                                "–"
+                              )}
+                            </td>
+                            <td className="p-2 align-top">
+                              {formatDate(created)}
+                            </td>
+                            <td className="p-2 align-top">
+                              {updated ? formatDate(updated) : "–"}
+                            </td>
+                            <td className="p-2 align-top text-center">
+                              <button
+                                className="text-xs px-2 py-1 rounded-full border border-red-300 text-red-600 hover:bg-red-50"
+                                onClick={() => handleDelete(r.email)}
+                              >
+                                Löschen
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+
+                      {filteredAndSorted.length === 0 && (
+                        <tr>
+                          <td
+                            colSpan={9}
+                            className="p-4 text-center text-slate-500"
+                          >
+                            Keine Einträge für die aktuelle Suche.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
             </>
           ) : (
             <Card>
@@ -161,66 +464,6 @@ export default function admin() {
               </p>
             </Card>
           )}
-
-          {/* Detail-Liste */}
-          <div className="grid2" style={{ marginTop: 12 }}>
-            {list.map((r, i) => {
-              const extra = Array.isArray(r.extraNames) ? r.extraNames : [];
-              const ts = r.ts
-                ? new Date(r.ts).toLocaleString("de-DE")
-                : "–";
-
-              return (
-                <Card key={r.id || i} title={`${r.name} (${r.persons})`}>
- {/* NEU: Hinweis, falls Eintrag geändert wurde */}
-  {r.changed && (
-    <div className="text-xs text-amber-600 font-semibold mb-1">
-      Geändert am{" "}
-      {r.updatedAt
-        ? new Date(r.updatedAt).toLocaleString("de-DE")
-        : "–"}
-      {r.version && ` (Version ${r.version})`}
-    </div>
-  )}
-
-  <div>
-    <b>E-Mail:</b>{" "}
-    <a
-      href={`mailto:${r.email}`}
-      className="text-emerald-600 hover:underline"
-    >
-      {r.email}
-    </a>
-  </div>
-
-                  {extra.length > 0 && (
-                    <div style={{ marginTop: 4 }}>
-                      <b>Mitgäste:</b>
-                      <ul className="list-disc pl-5">
-                        {extra.map((n, idx) => (
-                          <li key={idx}>{n}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {r.allergies && (
-                    <div style={{ marginTop: 4 }}>
-                      <b>Trinker/Fahrer:</b> {r.allergies}
-                    </div>
-                  )}
-                  {r.message && (
-                    <div style={{ marginTop: 4 }}>
-                      <b>Nachricht:</b> {r.message}
-                    </div>
-                  )}
-                  <div style={{ marginTop: 4 }}>
-                    <b>Zeit:</b> {ts}
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
         </>
       )}
     </div>

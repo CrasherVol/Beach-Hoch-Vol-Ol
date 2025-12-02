@@ -244,6 +244,32 @@ ID:             ${entry.id}
       return res.status(201).json({ ok: true, id, changed });
     }
 
+        // ------------------------------------------------------------------
+    // DELETE  → Eintrag per E-Mail löschen
+    // ------------------------------------------------------------------
+    if (req.method === "DELETE") {
+      try {
+        const { email } = req.body || {};
+        if (!email) {
+          return res
+            .status(400)
+            .json({ error: "E-Mail zum Löschen erforderlich" });
+        }
+
+        const normEmail = String(email).trim().toLowerCase();
+        const emailsSetKey = "rsvp:beach:emails";
+        const entryKey = `rsvp:beach:entry:${normEmail}`;
+
+        await redis.del(entryKey);
+        await redis.srem(emailsSetKey, normEmail);
+
+        return res.status(200).json({ ok: true });
+      } catch (err) {
+        console.error("Fehler beim Löschen eines RSVP-Eintrags:", err);
+        return res.status(500).json({ error: "Delete failed" });
+      }
+    }
+
     // ------------------------------------------------------------------
     // GET  → alle RSVPs für Admin laden
     // ------------------------------------------------------------------
