@@ -26,6 +26,10 @@ export default function Anmeldung() {
   // 🔊 Sad Violin Audio
   const sadAudioRef = useRef(null);
 
+  // 🔊 Happy Song Audio
+const happyAudioRef = useRef(null);
+
+
   // 💧 Happy-Regen (Zusage)
   const triggerRainHappy = () => {
     // nur bei Zusage Regen starten
@@ -209,24 +213,37 @@ export default function Anmeldung() {
         throw new Error(data.error || "Fehler beim Senden");
       }
 
-      // Effekte nach erfolgreichem Speichern: Regen + ggf. Sad Violin
-      if (payload.attend === "yes") {
-        // Happy-Regen
-        triggerRainHappy();
-      } else if (payload.attend === "no") {
-        // Trauriger Regen
-        triggerRainSad();
+// Effekte nach erfolgreichem Speichern: Regen + Musik
+if (payload.attend === "yes") {
+  // 🎉 Happy-Regen
+  triggerRainHappy();
 
-        // 🎻 Sad Violin abspielen
-        if (sadAudioRef.current) {
-          try {
-            sadAudioRef.current.currentTime = 0;
-            sadAudioRef.current.play();
-          } catch (err) {
-            console.warn("Sad Violin konnte nicht abgespielt werden:", err);
-          }
-        }
-      }
+  // 🎶 Happy Song abspielen
+  if (happyAudioRef.current) {
+    try {
+      happyAudioRef.current.currentTime = 0;
+      happyAudioRef.current.play();
+    } catch (err) {
+      console.warn("Happy Song konnte nicht abgespielt werden:", err);
+    }
+  }
+
+} else if (payload.attend === "no") {
+  // 😭 Trauriger Regen
+  triggerRainSad();
+
+  // 🎻 Sad Violin abspielen
+  if (sadAudioRef.current) {
+    try {
+      sadAudioRef.current.currentTime = 0;
+      sadAudioRef.current.play();
+    } catch (err) {
+      console.warn("Sad Violin konnte nicht abgespielt werden:", err);
+    }
+  }
+}
+
+
 
       setSent(true);
     } catch (err) {
@@ -241,8 +258,13 @@ export default function Anmeldung() {
 
   return (
     <>
-      {/* Audio für Sad Violin */}
-      <audio ref={sadAudioRef} src="/sad-violin.mp3" preload="auto" />
+     {/* Audio für Sad Violin */}
+<audio ref={sadAudioRef} src="/sad-violin.mp3" preload="auto" />
+
+{/* Audio für Happy Song */}
+<audio ref={happyAudioRef} src="/happysong.mp3" preload="auto" />
+
+
 
       {/* SEO je nach Status */}
       {sent ? (
