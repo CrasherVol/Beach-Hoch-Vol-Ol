@@ -8,6 +8,9 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
+// 🔐 Admin-API-Key aus Environment
+const ADMIN_API_KEY = process.env.ADMIN_API_KEY;
+
 // Hilfsfunktion: simple ID
 const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
@@ -22,13 +25,29 @@ function escapeHtml(str = "") {
 export default async function handler(req, res) {
   // CORS (optional, hilfreich lokal)
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-admin-key");
   if (req.method === "OPTIONS") return res.status(200).end();
+
+  // 🔐 Helper für Admin-Endpunkte (GET/DELETE)
+  const requireAdmin = () => {
+    if (!ADMIN_API_KEY) {
+      res
+        .status(500)
+        .json({ error: "ADMIN_API_KEY ist auf dem Server nicht gesetzt." });
+      return false;
+    }
+    const headerKey = req.headers["x-admin-key"];
+    if (!headerKey || headerKey !== ADMIN_API_KEY) {
+      res.status(401).json({ error: "Nicht autorisiert." });
+      return false;
+    }
+    return true;
+  };
 
   try {
     // ------------------------------------------------------------------
-    // POST  → speichern / aktualisieren
+    // POST  → speichern / aktualisieren (öffentlich)
     // ------------------------------------------------------------------
     if (req.method === "POST") {
       const { name, email, persons, allergies, message, extraNames } =
@@ -209,7 +228,6 @@ ID:             ${entry.id}
 
       // 🔹 RSVP in Redis speichern (1 Eintrag pro E-Mail)
       try {
-        // Wichtig: direkt das Objekt speichern, nicht nochmal JSON.stringify
         await redis.set(entryKey, entry);
         await redis.sadd(emailsSetKey, normEmail);
       } catch (err) {
@@ -244,10 +262,12 @@ ID:             ${entry.id}
       return res.status(201).json({ ok: true, id, changed });
     }
 
-        // ------------------------------------------------------------------
-    // DELETE  → Eintrag per E-Mail löschen
+    // ------------------------------------------------------------------
+    // DELETE  → Eintrag per E-Mail löschen (nur Admin)
     // ------------------------------------------------------------------
     if (req.method === "DELETE") {
+      if (!requireAdmin()) return;
+
       try {
         const { email } = req.body || {};
         if (!email) {
@@ -271,9 +291,16 @@ ID:             ${entry.id}
     }
 
     // ------------------------------------------------------------------
-    // GET  → alle RSVPs für Admin laden
+    // GET  → alle RSVPs für Admin laden (nur Admin)
     // ------------------------------------------------------------------
     if (req.method === "GET") {
+      if (!requireAdmin()) return;
+
+      // Wenn nur Login getestet wird
+      if (req.query.authCheck) {
+        return res.status(200).json({ ok: true });
+      }
+
       const emailsSetKey = "rsvp:beach:emails";
 
       let emails = [];
@@ -291,11 +318,9 @@ ID:             ${entry.id}
           const raw = await redis.get(entryKey);
           if (!raw) continue;
 
-          // Upstash gibt meistens direkt ein Objekt zurück
           if (typeof raw === "object") {
             rows.push(raw);
           } else if (typeof raw === "string") {
-            // Fallback: falls irgendwann mal JSON-String gespeichert wurde
             try {
               rows.push(JSON.parse(raw));
             } catch (err) {

@@ -1,159 +1,164 @@
-import Card from '../components/Card.jsx'
-import SEO from '../components/SEO.jsx'
+import Card from "../components/Card.jsx";
+import SEO from "../components/SEO.jsx";
 
 export default function Ablauf() {
   // 👉 Datum auf 13.03. & Startzeit 18:00
-  const dateStr = new Intl.DateTimeFormat('de-DE', { dateStyle: 'full' }).format(
-    new Date('2026-03-13T18:00:00+01:00')
-  )
+  const dateStr = new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "full",
+  }).format(new Date("2026-03-13T18:00:00+01:00"));
 
   // 👉 Ablauf: klar nach Uhrzeiten sortiert, mit einem durchgehenden "Vibe"-Slot
   const timeline = [
     {
-      time: '18:00',
-      timeLabel: 'ab 18:00',
-      title: 'Ankommen, Welcome-Drink & erstes Anstoßen',
-      icon: '🍹',
-      color: 'from-emerald-400 to-cyan-400',
+      time: "18:00",
+      timeLabel: "ab 18:00",
+      title: "Ankommen, Welcome-Drink & erstes Anstoßen",
+      icon: "🍹",
+      color: "from-emerald-400 to-cyan-400",
     },
     {
-      time: '18:30',
-      timeLabel: 'ca. 18:30',
-      title: 'Begrüßung von Olga & Volker – ein paar Worte & Cheers',
-      icon: '💍',
-      color: 'from-orange-400 to-pink-400',
+      time: "18:30",
+      timeLabel: "ca. 18:30",
+      title: "Begrüßung von Olga & Volker – ein paar Worte & Cheers",
+      icon: "💍",
+      color: "from-orange-400 to-pink-400",
     },
     {
-      time: '19:00',
-      timeLabel: 'ab 19:00',
-      title: 'weiter gehts mit Musik, Drinks & Strandfeeling und leckeren Getränken ',
-      icon: '🎵',
-      color: 'from-pink-400 to-rose-400',
+      time: "19:00",
+      timeLabel: "ab 19:00",
+      title:
+        "weiter gehts mit Musik, Drinks & Strandfeeling und leckeren Getränken ",
+      icon: "🎵",
+      color: "from-pink-400 to-rose-400",
     },
     {
-      time: '19:30',
-      timeLabel: 'ca. 19:30',
-      title: 'Fotos, Beachvolleyball & Feiern – wer mag, spielt im Sand',
-      icon: '🏐',
-      color: 'from-cyan-400 to-sky-400',
+      time: "19:30",
+      timeLabel: "ca. 19:30",
+      title: "Fotos, Beachvolleyball & Feiern – wer mag, spielt im Sand",
+      icon: "🏐",
+      color: "from-cyan-400 to-sky-400",
     },
     {
-      time: '20:00–02:00',
-      timeLabel: '20:00 – 02:00',
-      title: 'Beachen, chillen, quatschen – einfach Zeit miteinander',
-      icon: '🏖️',
-      color: 'from-sky-400 to-emerald-400',
+      time: "20:00–02:00",
+      timeLabel: "20:00 – 02:00",
+      title: "Beachen, chillen, quatschen – einfach Zeit miteinander",
+      icon: "🏖️",
+      color: "from-sky-400 to-emerald-400",
     },
     {
-      time: '02:00',
-      timeLabel: 'gegen 02:00',
-      title: 'Alles Schöne hat ein Ende',
-      icon: '🔥',
-      color: 'from-amber-500 to-red-400',
+      time: "02:00",
+      timeLabel: "gegen 02:00",
+      title: "Alles Schöne hat ein Ende",
+      icon: "🔥",
+      color: "from-amber-500 to-red-400",
     },
-  ]
+  ];
 
   return (
-    <div className="page py-8">
+    <div className="page py-6 sm:py-8 px-4 sm:px-5 md:px-6">
       <SEO
         title="Ablauf"
         description="Zeitplan für unseren Abend im BlueBeach – locker, beachy & ohne Essensprogramm, dafür mit viel Zeit für euch."
       />
 
-      <h2 className="text-3xl font-extrabold mb-2 text-center grad-text">
-        🌴 Ablauf – {dateStr} 🌅
-      </h2>
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-2xl sm:text-3xl font-extrabold mb-2 text-center grad-text px-2">
+          🌴 Ablauf – {dateStr} 🌅
+        </h2>
 
-      <p className="text-center text-slate-600 mb-6 max-w-[640px] mx-auto">
-        Der Abend soll sich anfühlen wie ein Urlaubstag mit Freunden – ohne Stress,
-        dafür mit <span className="font-semibold">Sonne im Herzen</span>, Lachen &
-        Musik.
-        <br />
-        <span className="font-semibold">
-          Es gibt kein Essen vor Ort, nur Drinks – plant gern ein, vorher etwas zu
-          essen oder euch ggf. etwas Kleines mitzubringen.
-        </span>
-      </p>
+        <p className="text-center text-slate-600 mb-6 max-w-[640px] mx-auto text-sm sm:text-base px-2">
+          Der Abend soll sich anfühlen wie ein Urlaubstag mit Freunden – ohne
+          Stress, dafür mit{" "}
+          <span className="font-semibold">Sonne im Herzen</span>, Lachen &
+          Musik.
+          <br />
+          <span className="font-semibold">
+            Es gibt kein Essen vor Ort, nur Drinks – plant gern ein, vorher
+            etwas zu essen oder euch ggf. etwas Kleines mitzubringen.
+          </span>
+        </p>
 
-      {/* Timeline */}
-      <div className="relative max-w-3xl mx-auto mt-8">
-        <div className="absolute left-1/2 -translate-x-1/2 w-1 h-full bg-gradient-to-b from-emerald-200 via-cyan-300 to-orange-300 rounded-full opacity-40" />
-        {timeline.map((item, idx) => (
-          <div
-            key={idx}
-            className={`relative flex flex-col md:flex-row items-center gap-4 md:gap-6 mb-10 ${
-              idx % 2 === 0 ? 'md:flex-row-reverse' : ''
-            }`}
-          >
-            {/* Icon Bubble */}
+        {/* Timeline */}
+        <div className="relative max-w-3xl mx-auto mt-6 sm:mt-8">
+          {/* zentrale Linie nur ab md richtig sichtbar */}
+          <div className="hidden md:block absolute left-1/2 -translate-x-1/2 w-1 h-full bg-gradient-to-b from-emerald-200 via-cyan-300 to-orange-300 rounded-full opacity-40" />
+          {timeline.map((item, idx) => (
             <div
-              className={`relative z-10 flex items-center justify-center w-16 h-16 text-3xl text-white rounded-full shadow-lg bg-gradient-to-tr ${item.color} hover:scale-110 transition`}
+              key={idx}
+              className={`relative flex flex-col md:flex-row items-center gap-3 md:gap-6 mb-8 md:mb-10 ${
+                idx % 2 === 0 ? "md:flex-row-reverse" : ""
+              }`}
             >
-              {item.icon}
-            </div>
-
-            {/* Verbindungslinie */}
-            <div className="hidden md:block absolute left-1/2 top-8 -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-transparent via-white/40 to-transparent" />
-
-            {/* Card */}
-            <Card>
-              <div className="flex flex-col text-center md:text-left">
-                <span className="text-sm uppercase tracking-wide text-slate-500">
-                  {item.timeLabel}
-                </span>
-                <h3 className="text-xl font-semibold mt-1 text-slate-800">
-                  {item.title}
-                </h3>
+              {/* Icon Bubble */}
+              <div
+                className={`relative z-10 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 text-2xl sm:text-3xl text-white rounded-full shadow-lg bg-gradient-to-tr ${item.color} hover:scale-110 transition`}
+              >
+                {item.icon}
               </div>
-            </Card>
-          </div>
-        ))}
-      </div>
 
-      {/* Getränke & Stimmung */}
-      <div className="mt-12 grid lg:grid-cols-2 gap-6">
-        <Card title="🍹 Drinks statt Dinner">
-          <ul className="list-disc pl-6 text-slate-700 leading-relaxed">
-            <li>
-              Es gibt an diesem Abend <b>kein Menü &amp; kein Buffet</b>.
-            </li>
-            <li>
-              Wir sorgen für kühle Drinks – mit &amp; ohne Alkohol: Bier, Wein, Longdrinks,
-              Softdrinks &amp; Wasser.
-            </li>
-            <li>
-              Am entspanntesten ist es, wenn ihr davor etwas esst oder euch bei Bedarf
-              selbst einen kleinen Snack mitbringt.
-            </li>
-          </ul>
-        </Card>
+              {/* Verbindungslinie (nur Desktop, damit Mobile clean bleibt) */}
+              <div className="hidden md:block absolute left-1/2 top-8 -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-transparent via-white/40 to-transparent" />
 
-        <Card title="🎶 Stimmung & Highlights">
-          <ul className="list-disc pl-6 text-slate-700 leading-relaxed">
-            <li>Fotospots unter Palmen & im Sand 📸</li>
-            <li>Chill-Area mit Liegestühlen & Lichterketten 🏖️</li>
-            <li>Beachvolleyball & kleine Spiele – wer mag, macht mit 🏐</li>
-            <li>Sommer-Playlist, Bar-Feeling & gute Gespräche 🎵</li>
-          </ul>
-        </Card>
-      </div>
+              {/* Card */}
+              <Card>
+                <div className="flex flex-col text-center md:text-left">
+                  <span className="text-xs sm:text-sm uppercase tracking-wide text-slate-500">
+                    {item.timeLabel}
+                  </span>
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold mt-1 text-slate-800">
+                    {item.title}
+                  </h3>
+                </div>
+              </Card>
+            </div>
+          ))}
+        </div>
 
-      {/* Deko-Welle unten */}
-      <div className="mt-12">
-        <svg viewBox="0 0 1440 320" className="w-full h-24 opacity-60">
-          <path
-            fill="url(#waveGrad)"
-            fillOpacity="1"
-            d="M0,160L60,149.3C120,139,240,117,360,138.7C480,160,600,224,720,245.3C840,267,960,245,1080,224C1200,203,1320,181,1380,170.7L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
-          ></path>
-          <defs>
-            <linearGradient id="waveGrad" x1="0" x2="1" y1="0" y2="1">
-              <stop stopColor="#22d3ee" />
-              <stop offset="1" stopColor="#fbbf24" />
-            </linearGradient>
-          </defs>
-        </svg>
+        {/* Getränke & Stimmung */}
+        <div className="mt-10 sm:mt-12 grid gap-4 lg:grid-cols-2">
+          <Card title="🍹 Drinks statt Dinner">
+            <ul className="list-disc pl-5 sm:pl-6 text-slate-700 leading-relaxed text-sm sm:text-base">
+              <li>
+                Es gibt an diesem Abend <b>kein Menü &amp; kein Buffet</b>.
+              </li>
+              <li>
+                Wir sorgen für kühle Drinks – mit &amp; ohne Alkohol: Bier,
+                Wein, Longdrinks, Softdrinks &amp; Wasser.
+              </li>
+              <li>
+                Am entspanntesten ist es, wenn ihr davor etwas esst oder euch
+                bei Bedarf selbst einen kleinen Snack mitbringt.
+              </li>
+            </ul>
+          </Card>
+
+          <Card title="🎶 Stimmung & Highlights">
+            <ul className="list-disc pl-5 sm:pl-6 text-slate-700 leading-relaxed text-sm sm:text-base">
+              <li>Fotospots unter Palmen & im Sand 📸</li>
+              <li>Chill-Area mit Liegestühlen & Lichterketten 🏖️</li>
+              <li>Beachvolleyball & kleine Spiele – wer mag, macht mit 🏐</li>
+              <li>Sommer-Playlist, Bar-Feeling & gute Gespräche 🎵</li>
+            </ul>
+          </Card>
+        </div>
+
+        {/* Deko-Welle unten */}
+        <div className="mt-10 sm:mt-12">
+          <svg viewBox="0 0 1440 320" className="w-full h-20 sm:h-24 opacity-60">
+            <path
+              fill="url(#waveGrad)"
+              fillOpacity="1"
+              d="M0,160L60,149.3C120,139,240,117,360,138.7C480,160,600,224,720,245.3C840,267,960,245,1080,224C1200,203,1320,181,1380,170.7L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+            ></path>
+            <defs>
+              <linearGradient id="waveGrad" x1="0" x2="1" y1="0" y2="1">
+                <stop stopColor="#22d3ee" />
+                <stop offset="1" stopColor="#fbbf24" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
       </div>
     </div>
-  )
+  );
 }

@@ -46,16 +46,13 @@ export default function Anmeldung() {
       }
 
       const id = rainIdRef.current++;
-      const emojis = ["❤️", "❤️", "❤️", "❤️", "🏐", "🍹","☀️"];
+      const emojis = ["❤️", "❤️", "❤️", "❤️", "🏐", "🍹", "☀️"];
       const emoji = emojis[Math.floor(Math.random() * emojis.length)];
       const left = Math.random() * 100; // vw
       const delay = Math.random(); // 0–1s
       const size = 1.6 + Math.random() * 1.4; // 1.6–3rem
 
-      setRainDrops((prev) => [
-        ...prev,
-        { id, emoji, left, delay, size },
-      ]);
+      setRainDrops((prev) => [...prev, { id, emoji, left, delay, size }]);
 
       // Drop nach Ende der Animation wieder entfernen
       setTimeout(() => {
@@ -187,9 +184,7 @@ export default function Anmeldung() {
       {sent ? (
         <SEO
           title={
-            f.attend === "no"
-              ? "Danke – Anmeldung"
-              : "Danke – Anmeldung"
+            f.attend === "no" ? "Danke – Anmeldung" : "Danke – Anmeldung"
           }
         />
       ) : (
@@ -242,6 +237,8 @@ export default function Anmeldung() {
           box-shadow: 0 10px 25px rgba(220, 38, 38, 0.5);
           animation: pulse 1.2s infinite;
           text-align: center;
+          max-width: 100%;
+          line-height: 1.3;
         }
         .alarm-button:hover {
           filter: brightness(1.05);
@@ -259,198 +256,205 @@ export default function Anmeldung() {
         }
       `}</style>
 
-      <div className="page py-6">
-        {sent ? (
-          <Card
-            title={
-              f.attend === "no"
-                ? "Danke für deine Rückmeldung!"
-                : "Danke für deine Zusage!"
-            }
-          >
-            {f.attend === "no" ? (
-              <p>
-                Schade, dass du am 26.09. nicht dabei sein kannst – aber
-                danke, dass du uns Bescheid gesagt hast 🧡
-              </p>
-            ) : (
-              <p>
-                Wir haben dich mit <b>{f.persons}</b> Person(en) vermerkt.
-                {hatMitgaeste && (
-                  <>
-                    <br />
-                    Mit dabei: {f.extraNames.filter(Boolean).join(", ")}
-                  </>
-                )}
-              </p>
-            )}
-            <a
-              href="/"
-              className="mt-2 inline-block px-4 py-2 rounded-xl bg-white shadow-soft"
+      <div className="page py-6 sm:py-8 px-4 sm:px-5 md:px-6">
+        <div className="max-w-xl mx-auto">
+          {sent ? (
+            <Card
+              title={
+                f.attend === "no"
+                  ? "Danke für deine Rückmeldung!"
+                  : "Danke für deine Zusage!"
+              }
             >
-              Zur Startseite
-            </a>
-          </Card>
-        ) : (
-          <>
-            <h2 className="text-2xl font-bold mb-3">Anmeldung</h2>
-            <Card>
-              <form
-                onSubmit={onSubmit}
-                className="grid gap-3 max-w-[560px]"
-              >
-                {/* Zusage / Absage Auswahl */}
-                <fieldset className="grid gap-2 mb-1">
-                  <legend className="text-sm font-medium">
-                    Kommst du zur Beach Wedding?
-                  </legend>
-                  <div className="flex flex-wrap gap-3">
-                    <label className="inline-flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="attend"
-                        value="yes"
-                        checked={f.attend === "yes"}
-                        onChange={onChange}
-                      />
-                      <span>Ja, ich / wir kommen 🎉</span>
-                    </label>
-                    <label className="inline-flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="attend"
-                        value="no"
-                        checked={f.attend === "no"}
-                        onChange={onChange}
-                      />
-                      <span>Ich kann leider nicht kommen 😢</span>
-                    </label>
-                  </div>
-
-                  {f.attend === "no" && (
-                    <button
-                      type="button"
-                      className="alarm-button mt-2"
-                    >
-                      🚨 Achtung, du machst einen Fehler –
-                      überdenke dein Handeln! 🚨
-                    </button>
-                  )}
-                </fieldset>
-
-                <label className="grid gap-1">
-                  Name
-                  <input
-                    required
-                    name="name"
-                    value={f.name}
-                    onChange={onChange}
-                    placeholder="Vor- und Nachname"
-                    className="border rounded-xl px-3 py-2 bg-white/90"
-                  />
-                </label>
-
-                <label className="grid gap-1">
-                  E-Mail
-                  <input
-                    required
-                    type="email"
-                    name="email"
-                    value={f.email}
-                    onChange={onChange}
-                    placeholder="du@example.com"
-                    className="border rounded-xl px-3 py-2 bg-white/90"
-                  />
-                </label>
-
-                {/* Personen nur bei Zusage */}
-                {f.attend === "yes" && (
-                  <>
-                    <label className="grid gap-1">
-                      Personen
-                      <input
-                        required
-                        type="number"
-                        name="persons"
-                        min={1}
-                        max={12}
-                        value={f.persons}
-                        onChange={onChange}
-                        className="border rounded-xl px-3 py-2 bg-white/90"
-                      />
-                    </label>
-
-                    {/* Zusätzliche Namen, wenn mehr als 1 Person */}
-                    {f.persons > 1 && (
-                      <div className="grid gap-2 mt-1">
-                        {Array.from({ length: f.persons - 1 }).map(
-                          (_, i) => (
-                            <label key={i} className="grid gap-1">
-                              Name Mitgast {i + 2}
-                              <input
-                                type="text"
-                                value={f.extraNames?.[i] || ""}
-                                onChange={(e) =>
-                                  onExtraNameChange(i, e.target.value)
-                                }
-                                placeholder={`Name der Person ${i + 2}`}
-                                className="border rounded-xl px-3 py-2 bg-white/90"
-                              />
-                            </label>
-                          )
-                        )}
-                      </div>
-                    )}
-                  </>
-                )}
-
-                <label className="grid gap-1">
-                  Trinker oder Fahrer? (optional)
-                  <input
-                    name="allergies"
-                    value={f.allergies}
-                    onChange={onChange}
-                    placeholder="hoffentlich kein Fahrer 😄"
-                    className="border rounded-xl px-3 py-2 bg-white/90"
-                  />
-                </label>
-
-                <label className="grid gap-1">
-                  noch was???
-                  <textarea
-                    name="message"
-                    rows="4"
-                    value={f.message}
-                    onChange={onChange}
-                    placeholder="Gibt’s noch was Wichtiges, was du uns sagen willst?"
-                    className="border rounded-xl px-3 py-2 bg-white/90"
-                  />
-                </label>
-
-                {error && (
-                  <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">
-                    {error}
-                  </p>
-                )}
-
-                <button
-                  disabled={sending}
-                  className="px-4 py-2 rounded-xl text-white bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-soft hover:scale-[1.02] transition disabled:opacity-60"
-                >
-                  {sending
-                    ? "Wird gesendet…"
-                    : f.attend === "no"
-                    ? "Absage senden"
-                    : "Zusage senden"}
-                </button>
-
-                <p className="text-slate-500 text-sm">
-                  Datenschutz: Angaben nur zur Organisation der Feier.
+              {f.attend === "no" ? (
+                <p className="text-sm sm:text-base">
+                  Schade, dass du am 26.09. nicht dabei sein kannst – aber
+                  danke, dass du uns Bescheid gesagt hast 🧡
                 </p>
-              </form>
+              ) : (
+                <p className="text-sm sm:text-base">
+                  Wir haben dich mit <b>{f.persons}</b> Person(en) vermerkt.
+                  {hatMitgaeste && (
+                    <>
+                      <br />
+                      Mit dabei: {f.extraNames.filter(Boolean).join(", ")}
+                    </>
+                  )}
+                </p>
+              )}
+              <a
+                href="/"
+                className="mt-3 inline-block px-4 py-2 rounded-xl bg-white shadow-soft text-sm sm:text-base"
+              >
+                Zur Startseite
+              </a>
             </Card>
-          </>
-        )}
+          ) : (
+            <>
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 text-center sm:text-left">
+                Anmeldung
+              </h2>
+              <Card>
+                <form
+                  onSubmit={onSubmit}
+                  className="grid gap-3 w-full"
+                >
+                  {/* Zusage / Absage Auswahl */}
+                  <fieldset className="grid gap-2 mb-1">
+                    <legend className="text-sm font-medium">
+                      Kommst du zur Beach Wedding?
+                    </legend>
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
+                      <label className="inline-flex items-center gap-2 text-sm">
+                        <input
+                          type="radio"
+                          name="attend"
+                          value="yes"
+                          checked={f.attend === "yes"}
+                          onChange={onChange}
+                        />
+                        <span>Ja, ich / wir kommen 🎉</span>
+                      </label>
+                      <label className="inline-flex items-center gap-2 text-sm">
+                        <input
+                          type="radio"
+                          name="attend"
+                          value="no"
+                          checked={f.attend === "no"}
+                          onChange={onChange}
+                        />
+                        <span>Ich kann leider nicht kommen 😢</span>
+                      </label>
+                    </div>
+
+                    {f.attend === "no" && (
+                      <button
+                        type="button"
+                        className="alarm-button mt-2 text-xs sm:text-sm"
+                      >
+                        🚨 Achtung, du machst einen Fehler – überdenke dein
+                        Handeln! 🚨
+                      </button>
+                    )}
+                  </fieldset>
+
+                  <label className="grid gap-1 text-sm">
+                    Name
+                    <input
+                      required
+                      name="name"
+                      value={f.name}
+                      onChange={onChange}
+                      placeholder="Vor- und Nachname"
+                      className="border rounded-xl px-3 py-2 bg-white/90"
+                    />
+                  </label>
+
+                  <label className="grid gap-1 text-sm">
+                    E-Mail
+                    <input
+                      required
+                      type="email"
+                      name="email"
+                      value={f.email}
+                      onChange={onChange}
+                      placeholder="du@example.com"
+                      className="border rounded-xl px-3 py-2 bg-white/90"
+                    />
+                  </label>
+
+                  {/* Personen nur bei Zusage */}
+                  {f.attend === "yes" && (
+                    <>
+                      <label className="grid gap-1 text-sm">
+                        Personen
+                        <input
+                          required
+                          type="number"
+                          name="persons"
+                          min={1}
+                          max={12}
+                          value={f.persons}
+                          onChange={onChange}
+                          className="border rounded-xl px-3 py-2 bg-white/90"
+                        />
+                      </label>
+
+                      {/* Zusätzliche Namen, wenn mehr als 1 Person */}
+                      {f.persons > 1 && (
+                        <div className="grid gap-2 mt-1">
+                          {Array.from({ length: f.persons - 1 }).map(
+                            (_, i) => (
+                              <label
+                                key={i}
+                                className="grid gap-1 text-sm"
+                              >
+                                Name Mitgast {i + 2}
+                                <input
+                                  type="text"
+                                  value={f.extraNames?.[i] || ""}
+                                  onChange={(e) =>
+                                    onExtraNameChange(i, e.target.value)
+                                  }
+                                  placeholder={`Name der Person ${i + 2}`}
+                                  className="border rounded-xl px-3 py-2 bg-white/90"
+                                />
+                              </label>
+                            )
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
+
+                  <label className="grid gap-1 text-sm">
+                    Trinker oder Fahrer? (optional)
+                    <input
+                      name="allergies"
+                      value={f.allergies}
+                      onChange={onChange}
+                      placeholder="hoffentlich kein Fahrer 😄"
+                      className="border rounded-xl px-3 py-2 bg-white/90"
+                    />
+                  </label>
+
+                  <label className="grid gap-1 text-sm">
+                    noch was???
+                    <textarea
+                      name="message"
+                      rows="4"
+                      value={f.message}
+                      onChange={onChange}
+                      placeholder="Gibt’s noch was Wichtiges, was du uns sagen willst?"
+                      className="border rounded-xl px-3 py-2 bg-white/90"
+                    />
+                  </label>
+
+                  {error && (
+                    <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">
+                      {error}
+                    </p>
+                  )}
+
+                  <button
+                    disabled={sending}
+                    className="mt-1 px-4 py-2 rounded-xl text-white bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-soft hover:scale-[1.02] transition disabled:opacity-60 text-sm sm:text-base"
+                  >
+                    {sending
+                      ? "Wird gesendet…"
+                      : f.attend === "no"
+                      ? "Absage senden"
+                      : "Zusage senden"}
+                  </button>
+
+                  <p className="text-slate-500 text-xs sm:text-sm">
+                    Datenschutz: Angaben nur zur Organisation der Feier.
+                  </p>
+                </form>
+              </Card>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Regen-Overlay, läuft über der ganzen Seite (mobil & Desktop) */}
