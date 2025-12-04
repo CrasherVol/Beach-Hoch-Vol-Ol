@@ -12,12 +12,28 @@
   .cursor-ball { display:none; }
 }
 
+/* Mobile Fix: Palmen dürfen kein horizontales Scrollen erzeugen */
+@media (max-width: 640px) {
+  .palms {
+    inset-inline: 0;       /* ganz an die Kante */
+    font-size: 40px;       /* kleiner fürs Handy */
+    width: 100vw;          /* zwingt sie in die Bildschirmbreite */
+    overflow: hidden;      /* Sicherheit */
+  }
+}
+
 
 /* Globaler Sand-Hintergrund */
 .bg-sand{background-image:url('/assets/bg-sand.jpg');background-size:cover;background-position:center;background-attachment:fixed}
 .hero-logo{max-width:220px;width:40%;min-width:120px;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.15)}
 .hero-logo.glow{animation:logoGlow 3.2s ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(56,189,248,.55)) drop-shadow(0 0 10px rgba(251,191,36,.6))}
 @keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(56,189,248,.35)) drop-shadow(0 0 4px rgba(251,191,36,.35))}50%{filter:drop-shadow(0 0 20px rgba(56,189,248,.75)) drop-shadow(0 0 16px rgba(251,191,36,.8))}}
+
+@media (max-width: 640px) {
+  .bg-sand {
+    background-attachment: scroll !important;
+  }
+}
 
 /* Chips, Buttons, Glass, Gradient-Text */
 .chip{ @apply bg-white/80 text-slate-900 px-3 py-1 rounded-full shadow-soft; }
@@ -91,4 +107,44 @@
     opacity: 1;
     filter: brightness(1.15);
   }
+}
+@media (max-width: 640px) {
+  .sun {
+    filter: blur(2px) brightness(1) !important;
+    box-shadow: none !important;
+  }
+}
+html, body {
+  overflow-x: hidden;
+}
+/* ===== MOBILE FIXES GEGEN HORIZONTALEN OVERFLOW ===== */
+
+/* Hintergrund-Fix für Smartphones */
+@media (max-width: 640px) {
+  .bg-sand {
+    background-attachment: scroll !important;
+  }
+}
+
+/* Palmen dürfen die Seite nicht verbreitern */
+@media (max-width: 640px) {
+  .palms {
+    inset-inline: 0;
+    font-size: 40px;
+    width: 100vw;
+    overflow: hidden;
+  }
+}
+
+/* Sonne entschärfen */
+@media (max-width: 640px) {
+  .sun {
+    box-shadow: none !important;
+    filter: blur(2px) brightness(1) !important;
+  }
+}
+
+/* Sicherheit: Kein Horizontal-Scroll global */
+html, body {
+  overflow-x: hidden;
 }
