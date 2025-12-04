@@ -50,14 +50,17 @@ export default async function handler(req, res) {
     // POST  → speichern / aktualisieren (öffentlich)
     // ------------------------------------------------------------------
     if (req.method === "POST") {
-      const { name, email, persons, allergies, message, extraNames } =
-        req.body || {};
+     const { name, email, persons, allergies, message, extraNames } =
+  req.body || {};
 
-      if (!name || !email || !persons) {
-        return res
-          .status(400)
-          .json({ error: "Missing fields: name, email, persons" });
-      }
+// 0 Personen (Absage) ist erlaubt → wir prüfen nur, ob es überhaupt gesetzt ist
+const personsNum = Number(persons);
+if (!name || !email || Number.isNaN(personsNum)) {
+  return res
+    .status(400)
+    .json({ error: "Missing fields or invalid: name, email, persons" });
+}
+
 
       const normEmail = String(email).trim().toLowerCase();
       const now = new Date().toISOString();
@@ -93,10 +96,10 @@ export default async function handler(req, res) {
         : [];
 
       const entry = {
-        id,
-        name,
-        email: normEmail,
-        persons: Number(persons),
+  id,
+  name,
+  email: normEmail,
+  persons: personsNum,
         allergies: allergies || "",
         message: message || "",
         extraNames: extraList,
