@@ -49,7 +49,7 @@ function formatDate(value) {
 
 export default function Admin() {
   const [list, setList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [sortConfig, setSortConfig] = useState({
     key: "created",
