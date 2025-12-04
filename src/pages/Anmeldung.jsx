@@ -27,7 +27,7 @@ export default function Anmeldung() {
     // nur bei Zusage Regen starten
     if (f.attend !== "yes") return;
 
-    const durationMs = 4000; // wie lange neuer Regen erzeugt wird
+    const durationMs = 8000; // wie lange neuer Regen erzeugt wird
     const intervalMs = 80; // alle wieviel ms ein neues Emoji entsteht
     const start = Date.now();
 
@@ -46,7 +46,7 @@ export default function Anmeldung() {
       }
 
       const id = rainIdRef.current++;
-      const emojis = ["❤️", "❤️", "❤️", "❤️", "🏐", "🍹"];
+      const emojis = ["❤️", "❤️", "❤️", "❤️", "🏐", "🍹","☀️"];
       const emoji = emojis[Math.floor(Math.random() * emojis.length)];
       const left = Math.random() * 100; // vw
       const delay = Math.random(); // 0–1s
