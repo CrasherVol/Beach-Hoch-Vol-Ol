@@ -296,7 +296,7 @@ ID:             ${entry.id}
     if (req.method === "GET") {
       if (!requireAdmin()) return;
 
-      // Wenn nur Login getestet wird
+      // nur zum Login-Test:
       if (req.query.authCheck) {
         return res.status(200).json({ ok: true });
       }
