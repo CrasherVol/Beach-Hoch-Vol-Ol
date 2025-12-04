@@ -46,7 +46,7 @@ export default function Anmeldung() {
       }
 
       const id = rainIdRef.current++;
-      const emojis = ["❤️", "🏐"];
+      const emojis = ["❤️", "❤️", "❤️", "❤️", "🏐", "🍹"];
       const emoji = emojis[Math.floor(Math.random() * emojis.length)];
       const left = Math.random() * 100; // vw
       const delay = Math.random(); // 0–1s
