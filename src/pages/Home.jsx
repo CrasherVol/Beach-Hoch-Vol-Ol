@@ -229,7 +229,7 @@ export default function Home() {
                   {/* Netz-Linie */}
                   <div className="border-t border-dashed border-sky-300 my-3 md:my-4 relative">
                     <div className="absolute left-1/2 -top-5 -translate-x-1/2 bg-sky-100 text-sky-800 text-[11px] sm:text-xs px-3 py-1 rounded-full shadow-soft flex items-center gap-1">
-                      🏐 Netz & Mitte des Abends
+                      🏐 Netz & Start des tollen Arbends
                     </div>
                   </div>
 

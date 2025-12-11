@@ -159,4 +159,46 @@ html, body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+/* 🦀 Krabbe läuft quer über den Bildschirm */
+@keyframes crabWalkLeftToRight {
+  0%   { transform: translateX(-120px) scaleX(1); }
+  100% { transform: translateX(100vw) scaleX(1); }
+}
 
+@keyframes crabWalkRightToLeft {
+  0%   { transform: translateX(calc(100vw + 120px)) scaleX(-1); }
+  100% { transform: translateX(-120px) scaleX(-1); }
+}
+
+.crab-runner {
+  position: fixed;
+  bottom: 14px;
+  font-size: 2.4rem;
+  z-index: 50;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+}
+
+.crab-anim {
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+/* 🐾 Fußstapfen der Krabbe */
+.crab-footprint {
+  position: fixed;
+  bottom: 8px;
+  font-size: 1.2rem;
+  opacity: 0.9;
+  transform: translateX(-50%);
+  pointer-events: none;
+  color: rgba(0, 0, 0, 0.25); /* leicht eingebrückt im Sand */
+  filter: blur(0.5px);
+  z-index: 40;
+  animation: footprintFade 3s forwards;
+}
+
+@keyframes footprintFade {
+  0%   { opacity: 0.9; }
+  60%  { opacity: 0.6; }
+  100% { opacity: 0; }
+}

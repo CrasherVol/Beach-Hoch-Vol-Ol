@@ -2,6 +2,8 @@ import { NavLink, Outlet } from 'react-router-dom'
 // import Sun from './components/Sun.jsx' // Alte Sonne deaktiviert
 import CursorBall from './components/CursorBall.jsx'
 import Palms from './components/Palms.jsx'
+import CrabRunner from "./components/CrabRunner.jsx";
+
 
 export default function App() {
   return (
@@ -31,6 +33,7 @@ export default function App() {
 
       <Palms />
       <CursorBall />
+      <CrabRunner />
 
       {/* NAVBAR – FIXED, immer sichtbar */}
       <header className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-white/60 border-b border-white/60 overflow-hidden">
