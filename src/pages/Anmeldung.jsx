@@ -8,16 +8,15 @@ export default function Anmeldung() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-const [f, setF] = useState({
-  attend: "yes",
-  name: "",
-  phone: "",
-  persons: 1,
-  message: "",
-  allergies: "",
-  extraNames: [],
-});
-
+  const [f, setF] = useState({
+    attend: "yes", // "yes" = Zusage, "no" = Absage
+    name: "",
+    phone: "",
+    persons: 1,
+    message: "",
+    allergies: "",
+    extraNames: [], // zusätzliche Personen
+  });
 
   // State & Refs für den Regen-Effekt
   const [rainDrops, setRainDrops] = useState([]);
@@ -28,8 +27,7 @@ const [f, setF] = useState({
   const sadAudioRef = useRef(null);
 
   // 🔊 Happy Song Audio
-const happyAudioRef = useRef(null);
-
+  const happyAudioRef = useRef(null);
 
   // 💧 Happy-Regen (Zusage)
   const triggerRainHappy = () => {
@@ -211,39 +209,38 @@ const happyAudioRef = useRef(null);
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
+        console.error("RSVP API error:", data);
         throw new Error(data.error || "Fehler beim Senden");
       }
 
-// Effekte nach erfolgreichem Speichern: Regen + Musik
-if (payload.attend === "yes") {
-  // 🎉 Happy-Regen
-  triggerRainHappy();
+      // Effekte nach erfolgreichem Speichern: Regen + Musik
+      if (payload.attend === "yes") {
+        // 🎉 Happy-Regen
+        triggerRainHappy();
 
-  // 🎶 Happy Song abspielen
-  if (happyAudioRef.current) {
-    try {
-      happyAudioRef.current.currentTime = 0;
-      happyAudioRef.current.play();
-    } catch (err) {
-      console.warn("Happy Song konnte nicht abgespielt werden:", err);
-    }
-  }
+        // 🎶 Happy Song abspielen
+        if (happyAudioRef.current) {
+          try {
+            happyAudioRef.current.currentTime = 0;
+            happyAudioRef.current.play();
+          } catch (err) {
+            console.warn("Happy Song konnte nicht abgespielt werden:", err);
+          }
+        }
+      } else if (payload.attend === "no") {
+        // 😭 Trauriger Regen
+        triggerRainSad();
 
-} else if (payload.attend === "no") {
-  // 😭 Trauriger Regen
-  triggerRainSad();
-
-  // 🎻 Sad Violin abspielen
-  if (sadAudioRef.current) {
-    try {
-      sadAudioRef.current.currentTime = 0;
-      sadAudioRef.current.play();
-    } catch (err) {
-      console.warn("Sad Violin konnte nicht abgespielt werden:", err);
-    }
-  }
-}
-
+        // 🎻 Sad Violin abspielen
+        if (sadAudioRef.current) {
+          try {
+            sadAudioRef.current.currentTime = 0;
+            sadAudioRef.current.play();
+          } catch (err) {
+            console.warn("Sad Violin konnte nicht abgespielt werden:", err);
+          }
+        }
+      }
 
       setSent(true);
     } catch (err) {
@@ -258,13 +255,11 @@ if (payload.attend === "yes") {
 
   return (
     <>
-     {/* Audio für Sad Violin */}
-<audio ref={sadAudioRef} src="/sad-violin.mp3" preload="auto" />
+      {/* Audio für Sad Violin */}
+      <audio ref={sadAudioRef} src="/sad-violin.mp3" preload="auto" />
 
-{/* Audio für Happy Song */}
-<audio ref={happyAudioRef} src="/happysong.mp3" preload="auto" />
-
-
+      {/* Audio für Happy Song */}
+      <audio ref={happyAudioRef} src="/happysong.mp3" preload="auto" />
 
       {/* SEO je nach Status */}
       {sent ? (
@@ -436,20 +431,19 @@ if (payload.attend === "yes") {
                     />
                   </label>
 
-<label className="grid gap-1 text-sm">
-  Handynummer
-  <input
-    required
-    type="tel"
-    name="phone"
-    value={f.phone}
-    onChange={onChange}
-    placeholder="z. B. 0151 12345678"
-    className="border rounded-xl px-3 py-2 bg-white/90"
-    pattern="^[0-9+\s-]{6,}$"
-  />
-</label>
-
+                  <label className="grid gap-1 text-sm">
+                    Handynummer
+                    <input
+                      required
+                      type="tel"
+                      name="phone"
+                      value={f.phone}
+                      onChange={onChange}
+                      placeholder="z. B. 0151 12345678"
+                      className="border rounded-xl px-3 py-2 bg-white/90"
+                      pattern="^[0-9+\\s-]{6,}$"
+                    />
+                  </label>
 
                   {/* Personen nur bei Zusage */}
                   {f.attend === "yes" && (
