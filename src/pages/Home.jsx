@@ -55,7 +55,7 @@ export default function Home() {
     <div className="home bg-slate-50 min-h-screen">
       <SEO
         title="Volker ❤ Olga – Beach Wedding"
-        description="Ein Abend wie Urlaub: Sonne, Sand & Liebe im BlueBeach Witten. Fingerfood, Drinks, Freunde — 13.03.2026."
+        description="Ein Abend wie Urlaub: Sonne, Sand & Liebe im BlueBeach Witten. Drinks, Freunde — 13.03.2026."
       />
 
       <main className="max-w-6xl mx-auto px-4 sm:px-5 md:px-6 pb-12">
@@ -123,9 +123,9 @@ export default function Home() {
                 📅 {date}
               </button>
 
-              <span className="chip">🍹 Fingerfood & Drinks</span>
+              <span className="chip">🍹 Drinks</span>
               <span className="chip">🏐 Beachvolleyball · wer mag</span>
-              <span className="chip">💛 Dresscode: Elegant & Beachy</span>
+              <span className="chip">💛 Dresscode: sportlich Elegant</span>
             </div>
 
             {/* Countdown – gläsernes Panel */}
@@ -171,7 +171,7 @@ export default function Home() {
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-600">
                     Wir stehen, sitzen und tanzen im Sand. Barfuß ist
-                    ausdrücklich erlaubt (und empfohlen).
+                    ausdrücklich erlaubt aber kein Muss.
                   </p>
                 </div>
               </div>
@@ -196,8 +196,8 @@ export default function Home() {
                     Bar & Drinks – Strandfeeling + Musik
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-600">
-                    Fingerfood & Drinks, entspannte Musik – wir starten
-                    locker rein und steigern langsam Richtung Strandparty.
+                    Drinks, entspannte Musik – wir starten
+                    locker rein und steigern langsam Richtung Vollgas.
                   </p>
                 </div>
               </div>
@@ -210,7 +210,7 @@ export default function Home() {
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-600">
                     Lachen, tanzen, quatschen, im Sand sitzen – Hauptsache
-                    zusammen. Alles darf, nichts muss.
+                    zusammen. Fast alles darf, nichts muss, ausser manchmal.
                   </p>
                 </div>
               </div>
@@ -304,17 +304,17 @@ export default function Home() {
 
           {/* Info-Kacheln (1/3) */}
           <div className="space-y-4">
-            <Card title="Dresscode: Elegant & Beachy">
+            <Card title="Dresscode: sportlich Elegant">
               <p className="text-xs sm:text-sm text-slate-700">
-                Leichte Sommerstoffe, Pastell- und Naturtöne, bequeme Schuhe
-                für den Sand. Eher „Beach Chic“ als ganz formell – Hauptsache,
-                ihr fühlt euch wohl.
+                Hochzeit und Strand ... Was trag ich nur??? Einfach was euch in den Kopf kommt... bequeme Schuhe
+                für den Sand und lockeres Outfit. Eher „Beach Chic“ als ganz formell – Hauptsache,
+                ihr fühlt euch wohl und es ist nicht das was ihr sonst so tragt...
               </p>
               <div className="mt-2 flex flex-wrap gap-2 text-[11px] sm:text-xs">
-                <span className="chip">Leinen</span>
-                <span className="chip">Chiffon</span>
-                <span className="chip">Sand- & Koralltöne</span>
-                <span className="chip">Sonnenhut & Shades</span>
+                <span className="chip">Kleider</span>
+                <span className="chip">Hemden</span>
+                <span className="chip">Beachfarben</span>
+                <span className="chip">Sonnenhut, auch wenn die Sonne nur im Herzen scheint</span>
               </div>
               <a
                 href="/dresscode"
@@ -329,11 +329,10 @@ export default function Home() {
                 <li>18:00 – Ankommen & Welcome-Drink im Sand</li>
                 <li>19:00 – Ein paar Worte & kleiner offizieller Teil</li>
                 <li>
-                  Danach – Essen, Beachgames, Fotos, Musik & Strandfeeling
+                  Danach – Beachgames, Fotos, Musik & Strandfeeling
                 </li>
                 <li>
-                  Open End – wir genießen den Abend, solange die Füße
-                  mitmachen 😉
+                  Alles schöne hat ein Ende und diesmal gehts ab 2 Uhr ins Bett 😉
                 </li>
               </ul>
               <div className="mt-3 flex flex-wrap gap-2">

@@ -116,18 +116,17 @@ export default function Ablauf() {
 
         {/* Getränke & Stimmung */}
         <div className="mt-10 sm:mt-12 grid gap-4 lg:grid-cols-2">
-          <Card title="🍹 Drinks statt Dinner">
+          <Card title="🍹 Drinks und komplett gemietete Beachfelder statt Dinner">
             <ul className="list-disc pl-5 sm:pl-6 text-slate-700 leading-relaxed text-sm sm:text-base">
               <li>
-                Es gibt an diesem Abend <b>kein Menü &amp; kein Buffet</b>.
+                Es gibt an diesem Abend <b>kein Menü</b>.
               </li>
               <li>
                 Wir sorgen für kühle Drinks – mit &amp; ohne Alkohol: Bier,
                 Wein, Longdrinks, Softdrinks &amp; Wasser.
               </li>
               <li>
-                Am entspanntesten ist es, wenn ihr davor etwas esst oder euch
-                bei Bedarf selbst einen kleinen Snack mitbringt.
+                Am entspanntesten ist es, wenn ihr davor etwas esst.
               </li>
             </ul>
           </Card>

@@ -3,25 +3,34 @@ import Card from "../components/Card.jsx";
 import SEO from "../components/SEO.jsx";
 
 const faqs = [
+  // Geschenke
+  {
+    question: "Geschenke",
+    answer:
+      'Wir heiraten zweimal (Keine Angst - zweitmal die selbe Person, nur einmal in Georgien und einmal in Deutschland).. unser Konto bekommt gerade Sonnenbrand – 🤵 Daher freuen wir uns am meisten über einen eleganten Umschlag, der unsere Hochzeitsfonds mit ein paar Strandtaler ergänzt.“',
+    icon: "",
+    tag: "Was Schenke ich?",
+  },
+
   // Beach & Outfit
   {
     question: "Was soll ich anziehen?",
     answer:
-      'Denkt an eine Mischung aus „schön“ und „bequem im Sand“. Leichte Stoffe (Leinen, Chiffon, Baumwolle), gerne sommerliche oder neutrale Farben. Hohe Hacken sind im Sand eher unpraktisch – flache Schuhe oder Sandalen sind perfekt. Barfuß ist absolut willkommen.',
+      'Ich sage immer: Sportlich Elegant ;-) Denkt an eine Mischung aus „schön“ und „bequem im Sand“. Gerne sommerliche. Hohe Hacken sind im Sand eher unpraktisch – flache Schuhe oder Sandalen sind perfekt. Barfuß ist auch eine Alternative.',
     icon: "👗",
     tag: "Outfit & Sand",
   },
   {
     question: "Gibt es einen Dresscode?",
     answer:
-      'Es gibt keinen strengen Dresscode. „Elegant & beachy“ passt perfekt – also gern schön angezogen, aber nicht steif. Alles, worin ihr euch gut bewegen und im Sand stehen könnt, ist ideal.',
+      'Es gibt keinen strengen Dresscode. Sportlich elegantes Auftreten. Sei Kreativ und wir schauen mal ob wir dich reinlassen.',
     icon: "🌴",
     tag: "Outfit & Sand",
   },
   {
     question: "Kann man barfuß spielen?",
     answer:
-      "Ja! Der Sand ist genau dafür da. Ihr könnt barfuß laufen und Beachvolleyball spielen. Wenn ihr empfindliche Füße habt, könnt ihr auch leichte Sportschuhe oder Strandsocken mitbringen.",
+      "Ja klar! Der Sand ist genau dafür da. Ansonsten ein paar Socken, dann bleiben die Füße wärmer, wenn ihr nicht so viel lauft...",
     icon: "🦶",
     tag: "Outfit & Sand",
   },
@@ -51,33 +60,13 @@ const faqs = [
   {
     question: "Welche anderen Spiele gibt es?",
     answer:
-      "Neben Beachvolleyball wird es kleinere Spiele geben (z.B. Wurfspiele, kleine Teamaktionen). Alles ganz locker und freiwillig – ihr entscheidet selbst, ob ihr spielt, tanzt oder einfach chillt.",
+      "Neben Beachvolleyball wird es kleinere Spiele geben. Alles ganz locker und freiwillig – ihr entscheidet selbst, ob ihr spielt, tanzt oder einfach chillt.",
     icon: "🎯",
     tag: "Beachvolleyball & Spiele",
   },
-  {
-    question: "Kann ich einfach nur zuschauen & chillen?",
-    answer:
-      "Klar! Der Abend soll sich wie Urlaub anfühlen. Du kannst jederzeit einfach in der Chill-Area sitzen, quatschen, Drinks genießen und dem Sand beim Leuchten zusehen.",
-    icon: "🛋️",
-    tag: "Beachvolleyball & Spiele",
-  },
-
+ 
   // Drinks & Organisation
-  {
-    question: "Gibt es Essen vor Ort?",
-    answer:
-      "Nein, es ist bewusst kein Essen eingeplant. Es gibt nur Drinks. Bitte esst vorher etwas oder bringt euch bei Bedarf einen kleinen Snack mit. So bleibt der Abend leicht & unkompliziert.",
-    icon: "🍴",
-    tag: "Drinks & Organisation",
-  },
-  {
-    question: "Muss ich eigene Getränke mitbringen?",
-    answer:
-      "Nein, bitte nichts mitbringen. Vor Ort gibt es eine Bar mit alkoholfreien und alkoholischen Getränken. Ihr müsst euch um nichts kümmern – außer ums Genießen.",
-    icon: "🍹",
-    tag: "Drinks & Organisation",
-  },
+
   {
     question: "Wie lange geht die Feier?",
     answer:
@@ -88,7 +77,7 @@ const faqs = [
   {
     question: "Gibt es Parkplätze?",
     answer:
-      "Ja, es gibt Parkmöglichkeiten in der Nähe des BlueBeach. Plant ein bisschen extra Zeit ein und bildet gern Fahrgemeinschaften, wenn es für euch passt.",
+      "Ja, es gibt Parkmöglichkeiten in der Nähe des BlueBeach. Plant ein bisschen extra Zeit ein und bildet gern Fahrgemeinschaften, dann könnt ihr auch unsere Drinks genießen.",
     icon: "🅿️",
     tag: "Drinks & Organisation",
   },
@@ -104,28 +93,28 @@ const faqs = [
   {
     question: "Sind Kinder willkommen?",
     answer:
-      "Wenn ihr Kinder mitbringen möchtet, gebt uns bitte vorher kurz Bescheid. Grundsätzlich ist die Stimmung eher auf einen Abend mit Erwachsenen ausgelegt, aber wir finden gemeinsam eine gute Lösung.",
+      "Da es sich um eine abendliche Veranstaltung mit alkoholischen Getränken handelt, bitte die Kinder bei Oma/Opa oder Kindermädchen lassen",
     icon: "🧸",
     tag: "Sonstiges",
   },
   {
     question: "Darf ich meinen Hund mitbringen?",
     answer:
-      "Bitte bringt Hunde nur mit, wenn ihr das vorher mit uns abgestimmt habt. Durch Sand, Musik und viele Menschen kann es für Tiere schnell stressig werden.",
+      "Nein, Hunde oder andere Haustiere sind auf der Veranstaltung nicht erwünscht",
     icon: "🐾",
     tag: "Sonstiges",
   },
   {
     question: "Was ist, wenn das Wetter schlecht ist?",
     answer:
-      "Das BlueBeach hat Indoor-Bereiche mit Sand – wir feiern also auf jeden Fall mit Beachfeeling, auch wenn das Wetter draußen nicht mitspielt.",
+      "Es findet alles drinnen in der Halle statt. Wir holen das Beach/Sand Feeling in die Halle",
     icon: "🌦️",
     tag: "Sonstiges",
   },
   {
     question: "Gibt es einen festen Programmzwang?",
     answer:
-      "Es gibt ein paar Eckpunkte (Begrüßung, Fotos, vielleicht kleine Aktionen), aber der Abend soll sich frei und leicht anfühlen. Ihr dürft alles – müsst nichts.",
+      "Es gibt ein paar Eckpunkte (Begrüßung, Fotos, vielleicht kleine Aktionen), aber der Abend soll sich frei und leicht anfühlen. Ihr dürft fast alles...",
     icon: "✨",
     tag: "Sonstiges",
   },

@@ -8,15 +8,16 @@ export default function Anmeldung() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-  const [f, setF] = useState({
-    attend: "yes", // "yes" = Zusage, "no" = Absage
-    name: "",
-    email: "",
-    persons: 1,
-    message: "",
-    allergies: "",
-    extraNames: [], // zusätzliche Personen
-  });
+const [f, setF] = useState({
+  attend: "yes",
+  name: "",
+  phone: "",
+  persons: 1,
+  message: "",
+  allergies: "",
+  extraNames: [],
+});
+
 
   // State & Refs für den Regen-Effekt
   const [rainDrops, setRainDrops] = useState([]);
@@ -244,7 +245,6 @@ if (payload.attend === "yes") {
 }
 
 
-
       setSent(true);
     } catch (err) {
       console.error(err);
@@ -436,18 +436,20 @@ if (payload.attend === "yes") {
                     />
                   </label>
 
-                  <label className="grid gap-1 text-sm">
-                    E-Mail
-                    <input
-                      required
-                      type="email"
-                      name="email"
-                      value={f.email}
-                      onChange={onChange}
-                      placeholder="du@example.com"
-                      className="border rounded-xl px-3 py-2 bg-white/90"
-                    />
-                  </label>
+<label className="grid gap-1 text-sm">
+  Handynummer
+  <input
+    required
+    type="tel"
+    name="phone"
+    value={f.phone}
+    onChange={onChange}
+    placeholder="z. B. 0151 12345678"
+    className="border rounded-xl px-3 py-2 bg-white/90"
+    pattern="^[0-9+\s-]{6,}$"
+  />
+</label>
+
 
                   {/* Personen nur bei Zusage */}
                   {f.attend === "yes" && (

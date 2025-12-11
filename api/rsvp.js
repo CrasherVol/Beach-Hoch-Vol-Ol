@@ -50,25 +50,24 @@ export default async function handler(req, res) {
     // POST  → speichern / aktualisieren (öffentlich)
     // ------------------------------------------------------------------
     if (req.method === "POST") {
-     const { name, email, persons, allergies, message, extraNames } =
-  req.body || {};
+      const { name, phone, persons, allergies, message, extraNames } =
+        req.body || {};
 
-// 0 Personen (Absage) ist erlaubt → wir prüfen nur, ob es überhaupt gesetzt ist
-const personsNum = Number(persons);
-if (!name || !email || Number.isNaN(personsNum)) {
-  return res
-    .status(400)
-    .json({ error: "Missing fields or invalid: name, email, persons" });
-}
+      // 0 Personen (Absage) ist erlaubt → wir prüfen nur, ob es überhaupt gesetzt ist
+      const personsNum = Number(persons);
+      if (!name || !phone || Number.isNaN(personsNum)) {
+        return res.status(400).json({
+          error: "Missing fields or invalid: name, phone, persons",
+        });
+      }
 
-
-      const normEmail = String(email).trim().toLowerCase();
+      const normPhone = String(phone).trim();
       const now = new Date().toISOString();
 
-      const emailsSetKey = "rsvp:beach:emails";
-      const entryKey = `rsvp:beach:entry:${normEmail}`;
+      const phonesSetKey = "rsvp:beach:phones";
+      const entryKey = `rsvp:beach:entry:${normPhone}`;
 
-      // 🔍 Bisherigen Eintrag für diese Mail laden (falls vorhanden)
+      // 🔍 Bisherigen Eintrag für diese Nummer laden (falls vorhanden)
       let existing = null;
       try {
         const raw = await redis.get(entryKey);
@@ -96,10 +95,10 @@ if (!name || !email || Number.isNaN(personsNum)) {
         : [];
 
       const entry = {
-  id,
-  name,
-  email: normEmail,
-  persons: personsNum,
+        id,
+        name,
+        phone: normPhone,
+        persons: personsNum,
         allergies: allergies || "",
         message: message || "",
         extraNames: extraList,
@@ -130,7 +129,7 @@ ${statusText} für die Beach Wedding
 Basisdaten
 ──────────
 Name:           ${entry.name}
-E-Mail:         ${entry.email}
+Telefon:        ${entry.phone}
 Personen:       ${entry.persons}
 
 Weitere Gäste
@@ -178,8 +177,8 @@ ID:             ${entry.id}
         <td>${escapeHtml(entry.name)}</td>
       </tr>
       <tr>
-        <td style="padding: 2px 8px 2px 0; font-weight: 600;">E-Mail:</td>
-        <td>${escapeHtml(entry.email)}</td>
+        <td style="padding: 2px 8px 2px 0; font-weight: 600;">Telefon:</td>
+        <td>${escapeHtml(entry.phone)}</td>
       </tr>
       <tr>
         <td style="padding: 2px 8px 2px 0; font-weight: 600;">Personen:</td>
@@ -229,10 +228,10 @@ ID:             ${entry.id}
 </div>
 `;
 
-      // 🔹 RSVP in Redis speichern (1 Eintrag pro E-Mail)
+      // 🔹 RSVP in Redis speichern (1 Eintrag pro Telefonnummer)
       try {
         await redis.set(entryKey, entry);
-        await redis.sadd(emailsSetKey, normEmail);
+        await redis.sadd(phonesSetKey, normPhone);
       } catch (err) {
         console.error("Fehler beim Speichern in Redis:", err);
       }
@@ -266,25 +265,25 @@ ID:             ${entry.id}
     }
 
     // ------------------------------------------------------------------
-    // DELETE  → Eintrag per E-Mail löschen (nur Admin)
+    // DELETE  → Eintrag per Telefonnummer löschen (nur Admin)
     // ------------------------------------------------------------------
     if (req.method === "DELETE") {
       if (!requireAdmin()) return;
 
       try {
-        const { email } = req.body || {};
-        if (!email) {
+        const { phone } = req.body || {};
+        if (!phone) {
           return res
             .status(400)
-            .json({ error: "E-Mail zum Löschen erforderlich" });
+            .json({ error: "Telefonnummer zum Löschen erforderlich" });
         }
 
-        const normEmail = String(email).trim().toLowerCase();
-        const emailsSetKey = "rsvp:beach:emails";
-        const entryKey = `rsvp:beach:entry:${normEmail}`;
+        const normPhone = String(phone).trim();
+        const phonesSetKey = "rsvp:beach:phones";
+        const entryKey = `rsvp:beach:entry:${normPhone}`;
 
         await redis.del(entryKey);
-        await redis.srem(emailsSetKey, normEmail);
+        await redis.srem(phonesSetKey, normPhone);
 
         return res.status(200).json({ ok: true });
       } catch (err) {
@@ -304,20 +303,23 @@ ID:             ${entry.id}
         return res.status(200).json({ ok: true });
       }
 
-      const emailsSetKey = "rsvp:beach:emails";
+      const phonesSetKey = "rsvp:beach:phones";
 
-      let emails = [];
+      let phones = [];
       try {
-        emails = await redis.smembers(emailsSetKey);
+        phones = await redis.smembers(phonesSetKey);
       } catch (err) {
-        console.error("Fehler beim Lesen der E-Mail-Liste aus Redis:", err);
+        console.error(
+          "Fehler beim Lesen der Telefonliste aus Redis:",
+          err
+        );
       }
 
       const rows = [];
 
-      for (const email of emails || []) {
+      for (const phone of phones || []) {
         try {
-          const entryKey = `rsvp:beach:entry:${email}`;
+          const entryKey = `rsvp:beach:entry:${phone}`;
           const raw = await redis.get(entryKey);
           if (!raw) continue;
 
@@ -329,7 +331,7 @@ ID:             ${entry.id}
             } catch (err) {
               console.error(
                 "Konnte Eintrag nicht parsen, überspringe:",
-                email,
+                phone,
                 "raw=",
                 raw
               );

@@ -1,5 +1,7 @@
 import Card from "../components/Card.jsx";
 import SEO from "../components/SEO.jsx";
+import CocktailList from '../components/CocktailList.jsx'
+
 
 export default function BlueBeach() {
   return (
@@ -43,6 +45,8 @@ export default function BlueBeach() {
             chillen können.
           </p>
         </section>
+
+        <CocktailList />
 
         {/* BILDER-TEASER */}
         <section className="mb-6 sm:mb-8">

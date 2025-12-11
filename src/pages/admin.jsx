@@ -8,7 +8,7 @@ function toCSV(rows) {
     rows[0] || {
       id: "",
       name: "",
-      email: "",
+      phone: "",
       persons: "",
       allergies: "",
       message: "",
@@ -104,9 +104,9 @@ export default function Admin() {
     load();
   }, [authenticated, adminKey]);
 
-  const handleDelete = async (email) => {
+  const handleDelete = async (phone) => {
     const ok = window.confirm(
-      `Eintrag mit E-Mail "${email}" wirklich dauerhaft löschen?`
+      `Eintrag mit Telefonnummer "${phone}" wirklich dauerhaft löschen?`
     );
     if (!ok) return;
 
@@ -117,12 +117,12 @@ export default function Admin() {
           "Content-Type": "application/json",
           "x-admin-key": adminKey,
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ phone }),
       });
       if (!res.ok) {
         throw new Error("Löschen fehlgeschlagen");
       }
-      setList((prev) => prev.filter((r) => r.email !== email));
+      setList((prev) => prev.filter((r) => r.phone !== phone));
     } catch (e) {
       console.error(e);
       alert("Konnte Eintrag nicht löschen.");
@@ -244,7 +244,7 @@ export default function Admin() {
       if (!normSearch) return true;
       const haystack = [
         r.name,
-        r.email,
+        r.phone,
         r.message,
         ...(Array.isArray(r.extraNames) ? r.extraNames : []),
       ]
@@ -279,8 +279,8 @@ export default function Admin() {
       switch (key) {
         case "name":
           return (r.name || "").toLowerCase();
-        case "email":
-          return (r.email || "").toLowerCase();
+        case "phone":
+          return (r.phone || "").toLowerCase();
         case "persons":
           return Number(r.persons) || 0;
         case "extra":
@@ -481,7 +481,7 @@ export default function Admin() {
                   {/* Suche + Export */}
                   <input
                     type="text"
-                    placeholder="Suche nach Name, E-Mail, Nachricht…"
+                    placeholder="Suche nach Name, Telefon, Nachricht…"
                     className="px-3 py-2 rounded-xl border border-slate-200 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white/80 min-w-[220px]"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
@@ -518,11 +518,11 @@ export default function Admin() {
                           <button
                             type="button"
                             className="flex items-center gap-1"
-                            onClick={() => handleSort("email")}
+                            onClick={() => handleSort("phone")}
                           >
-                            E-Mail{" "}
+                            Telefon{" "}
                             <span className="text-xs">
-                              {sortIndicator("email")}
+                              {sortIndicator("phone")}
                             </span>
                           </button>
                         </th>
@@ -590,7 +590,7 @@ export default function Admin() {
 
                         return (
                           <tr
-                            key={r.id || r.email || i}
+                            key={r.id || r.phone || i}
                             className="border-b last:border-b-0 hover:bg-slate-50/70"
                           >
                             <td className="p-2 align-top">
@@ -602,12 +602,16 @@ export default function Admin() {
                               )}
                             </td>
                             <td className="p-2 align-top">
-                              <a
-                                href={`mailto:${r.email}`}
-                                className="text-emerald-600 hover:underline break-all"
-                              >
-                                {r.email}
-                              </a>
+                              {r.phone ? (
+                                <a
+                                  href={`tel:${r.phone}`}
+                                  className="text-emerald-600 hover:underline break-all"
+                                >
+                                  {r.phone}
+                                </a>
+                              ) : (
+                                "–"
+                              )}
                             </td>
                             <td className="p-2 align-top text-right">
                               {r.persons || 0}
@@ -652,7 +656,7 @@ export default function Admin() {
                             <td className="p-2 align-top text-center">
                               <button
                                 className="text-xs px-2 py-1 rounded-full border border-red-300 text-red-600 hover:bg-red-50"
-                                onClick={() => handleDelete(r.email)}
+                                onClick={() => handleDelete(r.phone)}
                               >
                                 Löschen
                               </button>
