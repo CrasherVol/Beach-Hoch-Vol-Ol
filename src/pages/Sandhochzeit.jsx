@@ -39,10 +39,14 @@ export default function SandhochzeitUnterseite() {
             <p className="inline-flex items-center gap-2 rounded-full bg-black/5 px-3 py-1 text-xs font-medium text-black/70">
               <span aria-hidden>🏝️</span> Beachhalle-Edition • Indoor • 100% Sand-Vibes
             </p>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight text-black md:text-4xl">
-              Hochzeit im Sand – aber ohne Meer.
-              <span className="block text-black/70">Dafür mit… Sand. ÜBERALL. 😄</span>
-            </h1>
+           <h1 className="mt-3 font-serif text-3xl md:text-4xl font-semibold tracking-tight leading-tight text-[#3B2F1E]">
+  Hochzeit im Sand – zwar nicht am Meer...
+  <span className="block mt-1 text-[#6B5A44] font-normal tracking-normal">
+    ...aber definitiv MEHR, als du dir vorstellen kannst.
+  </span>
+</h1>
+<div className="mt-3 h-[2px] w-16 rounded-full bg-[#D8C39A]" />
+
           </div>
 
           <div className="flex gap-2">
@@ -60,7 +64,7 @@ export default function SandhochzeitUnterseite() {
           <InfoCard
             title="Keine steifen Regeln"
             emoji="🕺"
-            text="Hier wird nicht geschniegelt – hier wird gelebt. Barfuß ist ein Lifestyle."
+            text="Hier wird nicht geschniegelt – hier wird gelebt."
           />
           <InfoCard
             title="Beachhalle-Feeling"
@@ -91,9 +95,9 @@ export default function SandhochzeitUnterseite() {
             </p>
 
             <p>
-              Während andere Hochzeiten geschniegelt auf Parkett rutschen, tanzen wir barfuß durch die
+              Während andere Hochzeiten geschniegelt auf Parkett rutschen, tanzen wir barfuß oder mit leichten Schuhen durch die
               Dünen. Jeder Schritt knirscht, jede Drehung ist ein Mini-Urlaub, und spätestens nach dem
-              dritten Lied ist klar: Schuhe waren von Anfang an eine schlechte Idee.
+              dritten Lied ist klar: Tanzen im Sand ist anstrengend 💙.
             </p>
 
             <p className="font-medium text-black/85">
@@ -144,7 +148,7 @@ export default function SandhochzeitUnterseite() {
 
             <div className="mt-5 flex flex-wrap gap-2">
               <Tag>Indoor Beach Vibes</Tag>
-              <Tag>Barfuß-Approved</Tag>
+              <Tag>Barfuß-erlaubt aber kein muss</Tag>
               <Tag>Sand auf der Theke</Tag>
               <Tag>Sand auf der Tanzfläche</Tag>
             </div>
