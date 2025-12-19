@@ -167,7 +167,7 @@ export default function Home() {
         <div className="mt-2 flex flex-wrap gap-2 text-[11px] sm:text-xs">
           <span className="chip">Tanzfläche: Sand</span>
           <span className="chip">Theke: Sand</span>
-          <span className="chip">Barfuß: sehr erlaubt</span>
+          <span className="chip">Spielwiese Sand</span>
         </div>
       </div>
 
