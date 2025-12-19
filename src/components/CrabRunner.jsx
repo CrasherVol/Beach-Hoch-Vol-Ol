@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function CrabRunner() {
   const [runId, setRunId] = useState(0);
@@ -6,79 +6,84 @@ export default function CrabRunner() {
   const [isRunning, setIsRunning] = useState(false);
   const [prints, setPrints] = useState([]);
 
+  const runTimeout = useRef(null);
+  const printInterval = useRef(null);
+
   useEffect(() => {
     const walkDuration = 12000;
     const pauseMin = 120000;
     const pauseMax = 240000;
 
-    let timeoutId;
-
     const startRun = () => {
+      // 🧼 Reset
+      setPrints([]);
       setDirection(Math.random() > 0.5 ? "ltr" : "rtl");
       setIsRunning(true);
       setRunId((id) => id + 1);
 
-      const walkStartTime = Date.now();
+      const startTime = Date.now();
 
-      // 🐾 Fußspuren erzeugen, solange die Krabbe läuft
-      const printInterval = setInterval(() => {
-        const elapsed = Date.now() - walkStartTime;
-        if (elapsed > walkDuration) {
-          clearInterval(printInterval);
-          return;
-        }
+      // 🐾 Fußspuren NUR während des Laufs
+      printInterval.current = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        if (elapsed > walkDuration) return;
 
-        // Krabbe bewegt sich kontinuierlich → Position berechnen
-        const progress = elapsed / walkDuration; // 0–1
+        const progress = elapsed / walkDuration;
         const x =
           direction === "ltr"
             ? progress * window.innerWidth
             : window.innerWidth - progress * window.innerWidth;
 
-        const id = Math.random().toString(36).slice(2);
+        const id = crypto.randomUUID();
+
         setPrints((prev) => [...prev, { id, x }]);
 
-        // Fußspur nach 3.5s löschen
+        // Spur nach 3.5s entfernen
         setTimeout(() => {
           setPrints((prev) => prev.filter((p) => p.id !== id));
         }, 3500);
-      }, 200); // alle 200ms neuer Punkt
+      }, 200);
 
-      // Lauf Ende
-      setTimeout(() => {
+      // 🦀 Lauf endet
+      runTimeout.current = setTimeout(() => {
         setIsRunning(false);
+        clearInterval(printInterval.current);
+        setPrints([]);
+
         const nextPause =
           Math.random() * (pauseMax - pauseMin) + pauseMin;
-        timeoutId = setTimeout(startRun, nextPause);
+        runTimeout.current = setTimeout(startRun, nextPause);
       }, walkDuration);
     };
 
-    // erster Start
-    timeoutId = setTimeout(startRun, 7000);
+    // ⏱️ erster Start
+    runTimeout.current = setTimeout(startRun, 7000);
 
-    return () => clearTimeout(timeoutId);
-  }, [direction]);
+    return () => {
+      clearTimeout(runTimeout.current);
+      clearInterval(printInterval.current);
+    };
+  }, []); // ⬅️ WICHTIG: kein dependency mehr
 
   return (
     <>
-      {/* 🐾 Fußspuren */}
-      {prints.map((p) => (
-        <div
-          key={p.id}
-          className="crab-footprint"
-          style={{
-            left: `${p.x}px`,
-          }}
-        >
-          ·
-        </div>
-      ))}
+      {/* 🐾 Fußspuren – NUR wenn der Krebs läuft */}
+      {isRunning &&
+        prints.map((p) => (
+          <div
+            key={p.id}
+            className="crab-footprint"
+            style={{ left: `${p.x}px` }}
+          >
+            ·
+          </div>
+        ))}
 
-      {/* 🦀 Krabbe */}
+      {/* 🦀 Krabbe – fixed + hoher z-index */}
       {isRunning && (
         <div
           key={runId}
-          className="crab-runner crab-anim"
+          className="crab-runner crab-anim fixed bottom-6 left-0 w-screen pointer-events-none z-[60]"
           style={{
             animationName:
               direction === "ltr"

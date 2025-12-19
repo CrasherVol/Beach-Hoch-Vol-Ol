@@ -131,7 +131,7 @@ export default function App() {
       </header>
 
       {/* MAIN: Abstand nach unten wegen fixer Navbar */}
-<main className="relative z-10 max-w-[1100px] mx-auto px-4 pt-12 md:pt-16">
+<main className="relative z-10 max-w-[1100px] mx-auto px-4 pt-16 md:pt-24">
   <Outlet />
 </main>
 
