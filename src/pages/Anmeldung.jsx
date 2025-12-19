@@ -8,15 +8,19 @@ export default function Anmeldung() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
+  // ✅ persons als STRING, damit "" (leer) möglich ist beim Tippen/Löschen
   const [f, setF] = useState({
     attend: "yes", // "yes" = Zusage, "no" = Absage
     name: "",
     phone: "",
-    persons: 1,
+    persons: "1",
     message: "",
     allergies: "",
     extraNames: [], // zusätzliche Personen
   });
+
+  // Helfer: persons jederzeit sicher als Zahl nutzen
+  const personsNum = Math.max(1, Number(f.persons || 1));
 
   // State & Refs für den Regen-Effekt
   const [rainDrops, setRainDrops] = useState([]);
@@ -112,7 +116,7 @@ export default function Anmeldung() {
   };
 
   const onChange = (e) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
 
     // Umschalten zwischen Zusage / Absage
     if (name === "attend") {
@@ -123,16 +127,16 @@ export default function Anmeldung() {
           return {
             ...v,
             attend,
-            persons: 0,
+            persons: "0",
             extraNames: [],
           };
         }
         // Wenn zurück auf Zusage und bisher 0 Personen → auf 1 setzen
-        if (attend === "yes" && (v.persons || 0) === 0) {
+        if (attend === "yes" && Number(v.persons || 0) === 0) {
           return {
             ...v,
             attend,
-            persons: 1,
+            persons: "1",
           };
         }
         return { ...v, attend };
@@ -140,11 +144,19 @@ export default function Anmeldung() {
       return;
     }
 
-    // Spezial-Handling für Personenanzahl (nur bei Zusage)
+    // ✅ Spezial-Handling für Personenanzahl (nur bei Zusage)
     if (name === "persons") {
-      const persons = Number(value) || 1;
-      // mind. 1 Person bei Zusage
-      const safePersons = Math.max(1, persons);
+      // erlaubt "", damit man die 1 löschen und neu tippen kann
+      if (value === "") {
+        setF((v) => ({ ...v, persons: "", extraNames: [] }));
+        return;
+      }
+
+      const n = Number(value);
+      if (Number.isNaN(n)) return;
+
+      const safePersons = Math.max(1, n);
+
       setF((v) => {
         const extraCount = Math.max(0, safePersons - 1);
         const extraNames = Array.from(
@@ -153,7 +165,7 @@ export default function Anmeldung() {
         );
         return {
           ...v,
-          persons: safePersons,
+          persons: String(safePersons),
           extraNames,
         };
       });
@@ -163,7 +175,7 @@ export default function Anmeldung() {
     // Standard-Handling für alle anderen Felder
     setF((v) => ({
       ...v,
-      [name]: type === "number" ? Number(value) : value,
+      [name]: value,
     }));
   };
 
@@ -195,11 +207,15 @@ export default function Anmeldung() {
     setError("");
 
     try {
+      // ✅ persons beim Senden wieder sauber als Zahl setzen
+      const normalizedPersons =
+        f.attend === "no" ? 0 : Math.max(1, Number(f.persons || 1));
+
       // kleine Sicherheitslogik: bei Absage = keine Personen
       const payload =
         f.attend === "no"
           ? { ...f, persons: 0, extraNames: [] }
-          : { ...f };
+          : { ...f, persons: normalizedPersons };
 
       const res = await fetch("/api/rsvp", {
         method: "POST",
@@ -251,7 +267,7 @@ export default function Anmeldung() {
     }
   };
 
-  const hatMitgaeste = f.extraNames?.filter(Boolean).length > 0;
+  const hatMitgaeste = (f.extraNames || []).filter(Boolean).length > 0;
 
   return (
     <>
@@ -263,11 +279,7 @@ export default function Anmeldung() {
 
       {/* SEO je nach Status */}
       {sent ? (
-        <SEO
-          title={
-            f.attend === "no" ? "Danke – Anmeldung" : "Danke – Anmeldung"
-          }
-        />
+        <SEO title={f.attend === "no" ? "Danke – Anmeldung" : "Danke – Anmeldung"} />
       ) : (
         <SEO
           title="Anmeldung"
@@ -352,16 +364,16 @@ export default function Anmeldung() {
             >
               {f.attend === "no" ? (
                 <p className="text-sm sm:text-base">
-                  Schade, dass du am 13.03. nicht dabei sein kannst – aber
-                  danke, dass du uns Bescheid gesagt hast 🧡
+                  Schade, dass du am 13.03. nicht dabei sein kannst – aber danke,
+                  dass du uns Bescheid gesagt hast 🧡
                 </p>
               ) : (
                 <p className="text-sm sm:text-base">
-                  Wir haben dich mit <b>{f.persons}</b> Person(en) vermerkt.
+                  Wir haben dich mit <b>{personsNum}</b> Person(en) vermerkt.
                   {hatMitgaeste && (
                     <>
                       <br />
-                      Mit dabei: {f.extraNames.filter(Boolean).join(", ")}
+                      Mit dabei: {(f.extraNames || []).filter(Boolean).join(", ")}
                     </>
                   )}
                 </p>
@@ -413,8 +425,8 @@ export default function Anmeldung() {
                         type="button"
                         className="alarm-button mt-2 text-xs sm:text-sm"
                       >
-                        🚨 Achtung, du machst einen Fehler – überdenke dein
-                        Handeln! 🚨
+                        🚨 Achtung, du machst einen Fehler – überdenke dein Handeln!
+                        🚨
                       </button>
                     )}
                   </fieldset>
@@ -458,14 +470,20 @@ export default function Anmeldung() {
                           max={12}
                           value={f.persons}
                           onChange={onChange}
+                          onBlur={() => {
+                            // ✅ wenn man leer verlässt -> wieder auf 1 setzen
+                            if (f.persons === "") {
+                              setF((v) => ({ ...v, persons: "1" }));
+                            }
+                          }}
                           className="border rounded-xl px-3 py-2 bg-white/90"
                         />
                       </label>
 
                       {/* Zusätzliche Namen, wenn mehr als 1 Person */}
-                      {f.persons > 1 && (
+                      {personsNum > 1 && (
                         <div className="grid gap-2 mt-1">
-                          {Array.from({ length: f.persons - 1 }).map((_, i) => (
+                          {Array.from({ length: personsNum - 1 }).map((_, i) => (
                             <label key={i} className="grid gap-1 text-sm">
                               Name Mitgast {i + 2}
                               <input
@@ -539,9 +557,7 @@ export default function Anmeldung() {
         {rainDrops.map((drop) => (
           <span
             key={drop.id}
-            className={`rain-emoji ${
-              drop.mood === "sad" ? "rain-emoji-sad" : ""
-            }`}
+            className={`rain-emoji ${drop.mood === "sad" ? "rain-emoji-sad" : ""}`}
             style={{
               left: `${drop.left}vw`,
               animationDelay: `${drop.delay}s`,
