@@ -114,7 +114,11 @@ export default function Home() {
                 <span className="chip">📍 BlueBeach · Witten</span>
 
                 {/* Datum-Button mit Kalenderfunktion */}
-                <button type="button" className="chip" onClick={handleCalendarClick}>
+                <button
+                  type="button"
+                  className="chip"
+                  onClick={handleCalendarClick}
+                >
                   📅 {date}
                 </button>
 
@@ -124,11 +128,18 @@ export default function Home() {
               </div>
 
               {/* Countdown – gläsernes Panel */}
-              <div className="mt-5 sm:mt-6 glass px-5 sm:px-6 py-4 sm:py-5 rounded-2xl w-full max-w-[420px]">
+              {/* FIX: Auf Mobile skaliert + kein Überlaufen; Desktop bleibt unverändert */}
+              <div className="mt-5 sm:mt-6 glass px-5 sm:px-6 py-4 sm:py-5 rounded-2xl w-full max-w-[420px] overflow-hidden">
                 <div className="text-xs sm:text-sm text-white/80 mb-1">
                   Countdown bis zu unserem Abend wie Urlaub
                 </div>
-                <Countdown size="xl" targetDate={eventDate} />
+
+                {/* Wrapper verhindert "rauslaufen" auf kleinen Screens */}
+                <div className="w-full flex justify-center">
+                  <div className="w-full sm:w-auto sm:scale-100 scale-[0.86] origin-center">
+                    <Countdown size="xl" targetDate={eventDate} />
+                  </div>
+                </div>
               </div>
 
               {/* CTAs */}
@@ -140,58 +151,63 @@ export default function Home() {
                   Anfahrt & Infos
                 </a>
               </div>
-{/* Sandhochzeit-Teaser direkt unter den CTAs (breit & klickbar) */}
-<Link
-  to="/sandhochzeit"
-  className="group mt-4 sm:mt-5 block w-full max-w-[860px]"
->
-  <div className="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-[#FFF3D6] via-[#F4D9A7] to-[#EBCB8C] px-5 py-4 sm:px-6 sm:py-5 shadow-[0_18px_40px_rgba(0,0,0,.18)] transition-all hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(0,0,0,.22)]">
-    {/* Glow */}
-    <div className="pointer-events-none absolute -top-10 -right-10 h-44 w-44 rounded-full bg-yellow-200/40 blur-3xl" />
-    <div className="pointer-events-none absolute -bottom-12 -left-12 h-52 w-52 rounded-full bg-white/25 blur-3xl" />
 
-    <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="min-w-0">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/30 px-3 py-1 text-[11px] font-semibold text-black/80">
-          🏝️ Beachhalle • Indoor • Sand überall
-        </div>
+              {/* Sandhochzeit-Teaser direkt unter den CTAs (breit & klickbar) */}
+              <Link
+                to="/sandhochzeit"
+                className="group mt-4 sm:mt-5 block w-full max-w-[860px]"
+              >
+                <div className="relative overflow-hidden rounded-3xl border border-white/25 bg-gradient-to-br from-[#FFF3D6] via-[#F4D9A7] to-[#EBCB8C] px-5 py-4 sm:px-6 sm:py-5 shadow-[0_18px_40px_rgba(0,0,0,.18)] transition-all hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(0,0,0,.22)]">
+                  {/* Glow */}
+                  <div className="pointer-events-none absolute -top-10 -right-10 h-44 w-44 rounded-full bg-yellow-200/40 blur-3xl" />
+                  <div className="pointer-events-none absolute -bottom-12 -left-12 h-52 w-52 rounded-full bg-white/25 blur-3xl" />
 
-        <h3 className="mt-2 text-left text-base sm:text-lg font-extrabold text-black leading-snug">
-          Hochzeit im Sand – aber ohne Meer. Dafür mit… <span className="underline decoration-black/20">Sand. ÜBERALL.</span> 😄
-        </h3>
+                  <div className="relative flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="min-w-0">
+                      <div className="inline-flex items-center gap-2 rounded-full bg-white/30 px-3 py-1 text-[11px] font-semibold text-black/80">
+                        🏝️ Beachhalle • Indoor • Sand überall
+                      </div>
 
-        <p className="mt-1 text-left text-xs sm:text-sm text-black/75">
-          Tanzfläche: Sand. Theke: Sand. Schuhe: optional. Gute Laune: Pflicht.
-        </p>
+                      <h3 className="mt-2 text-left text-base sm:text-lg font-extrabold text-black leading-snug">
+                        Hochzeit im Sand – aber ohne Meer. Dafür mit…{" "}
+                        <span className="underline decoration-black/20">
+                          Sand. ÜBERALL.
+                        </span>{" "}
+                        😄
+                      </h3>
 
-        <div className="mt-2 flex flex-wrap gap-2 text-[11px] sm:text-xs">
-          <span className="chip">Tanzfläche: Sand</span>
-          <span className="chip">Theke: Sand</span>
-          <span className="chip">Spielwiese Sand</span>
-        </div>
-      </div>
+                      <p className="mt-1 text-left text-xs sm:text-sm text-black/75">
+                        Tanzfläche: Sand. Theke: Sand. Schuhe: optional. Gute
+                        Laune: Pflicht.
+                      </p>
 
-      <div className="flex items-center justify-between sm:justify-end gap-3">
-        <span className="hidden sm:inline-flex items-center rounded-2xl bg-black/80 px-4 py-2 text-sm font-semibold text-white">
-          Zur Sand-Seite →
-        </span>
-        <span className="sm:hidden inline-flex items-center justify-between w-full rounded-2xl bg-black/80 px-4 py-2 text-sm font-semibold text-white">
-          Zur Sand-Seite <span className="transition-transform group-hover:translate-x-1">→</span>
-        </span>
-      </div>
-    </div>
-  </div>
-</Link>
+                      <div className="mt-2 flex flex-wrap gap-2 text-[11px] sm:text-xs">
+                        <span className="chip">Tanzfläche: Sand</span>
+                        <span className="chip">Theke: Sand</span>
+                        <span className="chip">Spielwiese Sand</span>
+                      </div>
+                    </div>
 
-
+                    <div className="flex items-center justify-between sm:justify-end gap-3">
+                      <span className="hidden sm:inline-flex items-center rounded-2xl bg-black/80 px-4 py-2 text-sm font-semibold text-white">
+                        Zur Sand-Seite →
+                      </span>
+                      <span className="sm:hidden inline-flex items-center justify-between w-full rounded-2xl bg-black/80 px-4 py-2 text-sm font-semibold text-white">
+                        Zur Sand-Seite{" "}
+                        <span className="transition-transform group-hover:translate-x-1">
+                          →
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         </section>
 
         {/* SECTION: Was dich erwartet + „Spielfeld“ des Abends */}
-       <section className="mt-10 grid gap-6 lg:grid-cols-2 items-stretch">
-
-
+        <section className="mt-10 grid gap-6 lg:grid-cols-2 items-stretch">
           {/* Was dich erwartet – Icons kompakt */}
           <div>
             <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3">
@@ -199,8 +215,9 @@ export default function Home() {
             </h2>
             <p className="text-xs sm:text-sm text-slate-700 mb-4">
               Stell dir eine Mischung aus <strong>Strandbar</strong>,{" "}
-              <strong>Beachvolleyballcourt</strong> und <strong>Sommerparty</strong>{" "}
-              vor – ohne Flug, aber mit ganz viel Sand.
+              <strong>Beachvolleyballcourt</strong> und{" "}
+              <strong>Sommerparty</strong> vor – ohne Flug, aber mit ganz viel
+              Sand.
             </p>
 
             <div className="space-y-3">
@@ -230,175 +247,175 @@ export default function Home() {
                 </div>
               </div>
 
-                      <div className="flex gap-3">
-              <div className="text-2xl">🍹</div>
-              <div>
-                <div className="font-semibold text-xs sm:text-sm">
-                  Bar & Drinks – Strandfeeling + Musik
+              <div className="flex gap-3">
+                <div className="text-2xl">🍹</div>
+                <div>
+                  <div className="font-semibold text-xs sm:text-sm">
+                    Bar & Drinks – Strandfeeling + Musik
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-600">
+                    Drinks, entspannte Musik – wir starten locker rein und steigern
+                    langsam Richtung Vollgas.
+                  </p>
                 </div>
-                <p className="text-[11px] sm:text-xs text-slate-600">
-                  Drinks, entspannte Musik – wir starten locker rein und steigern
-                  langsam Richtung Vollgas.
-                </p>
               </div>
-            </div>
 
-            <div className="flex gap-3">
-              <div className="text-2xl">🎉</div>
-              <div>
-                <div className="font-semibold text-xs sm:text-sm">
-                  Party im Sand – zusammen feiern
+              <div className="flex gap-3">
+                <div className="text-2xl">🎉</div>
+                <div>
+                  <div className="font-semibold text-xs sm:text-sm">
+                    Party im Sand – zusammen feiern
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-600">
+                    Lachen, tanzen, quatschen, im Sand sitzen – Hauptsache zusammen.
+                    Fast alles darf, nichts muss, ausser manchmal.
+                  </p>
                 </div>
-                <p className="text-[11px] sm:text-xs text-slate-600">
-                  Lachen, tanzen, quatschen, im Sand sitzen – Hauptsache zusammen.
-                  Fast alles darf, nichts muss, ausser manchmal.
-                </p>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* „Spielfeld des Abends“ – Beachvolleyball-mäßig */}
-        <div>
-          <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-3">
-            Unser „Spielfeld“ des Abends 🏐
-          </h3>
+          {/* „Spielfeld des Abends“ – Beachvolleyball-mäßig */}
+          <div>
+            <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-3">
+              Unser „Spielfeld“ des Abends 🏐
+            </h3>
 
-          <div className="rounded-3xl bg-white shadow-soft border border-sky-100 p-5 md:p-6">
-            <div className="relative">
-              <div className="border-2 border-sky-300 rounded-2xl p-3 md:p-4">
-                <div className="border-t border-dashed border-sky-300 my-3 md:my-4 relative">
-                  <div className="absolute left-1/2 -top-5 -translate-x-1/2 bg-sky-100 text-sky-800 text-[11px] sm:text-xs px-3 py-1 rounded-full shadow-soft flex items-center gap-1">
-                    🏐 Netz & Start des tollen Abends
+            <div className="rounded-3xl bg-white shadow-soft border border-sky-100 p-5 md:p-6">
+              <div className="relative">
+                <div className="border-2 border-sky-300 rounded-2xl p-3 md:p-4">
+                  <div className="border-t border-dashed border-sky-300 my-3 md:my-4 relative">
+                    <div className="absolute left-1/2 -top-5 -translate-x-1/2 bg-sky-100 text-sky-800 text-[11px] sm:text-xs px-3 py-1 rounded-full shadow-soft flex items-center gap-1">
+                      🏐 Netz & Start des tollen Abends
+                    </div>
+                  </div>
+
+                  <div className="grid grid-rows-3 gap-3 text-[11px] sm:text-xs md:text-sm">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-slate-700">
+                        Warm-up & Ankommen
+                      </span>
+                      <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] sm:text-[11px]">
+                        Empfang & erste Drinks
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-slate-700">
+                        Beachgames & gemeinsame Zeit
+                      </span>
+                      <span className="px-2 py-1 rounded-full bg-sky-50 text-sky-700 text-[10px] sm:text-[11px]">
+                        wer will, spielt mit
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold text-slate-700">
+                        Strandparty & Chillen
+                      </span>
+                      <span className="px-2 py-1 rounded-full bg-rose-50 text-rose-700 text-[10px] sm:text-[11px]">
+                        Musik, Gespräche, Sand
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="grid grid-rows-3 gap-3 text-[11px] sm:text-xs md:text-sm">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-slate-700">
-                      Warm-up & Ankommen
-                    </span>
-                    <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] sm:text-[11px]">
-                      Empfang & erste Drinks
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-slate-700">
-                      Beachgames & gemeinsame Zeit
-                    </span>
-                    <span className="px-2 py-1 rounded-full bg-sky-50 text-sky-700 text-[10px] sm:text-[11px]">
-                      wer will, spielt mit
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-slate-700">
-                      Strandparty & Chillen
-                    </span>
-                    <span className="px-2 py-1 rounded-full bg-rose-50 text-rose-700 text-[10px] sm:text-[11px]">
-                      Musik, Gespräche, Sand
-                    </span>
-                  </div>
+                <div className="hidden md:flex absolute -right-3 -bottom-3 h-12 w-12 rounded-full bg-yellow-200 border-2 border-yellow-400 items-center justify-center text-2xl shadow-soft">
+                  🏐
                 </div>
               </div>
 
-              <div className="hidden md:flex absolute -right-3 -bottom-3 h-12 w-12 rounded-full bg-yellow-200 border-2 border-yellow-400 items-center justify-center text-2xl shadow-soft">
-                🏐
+              <p className="mt-5 text-sm text-slate-600 leading-relaxed">
+                So in etwa wird der Abend: erst ankommen, anstoßen und orientieren –
+                dann ein bisschen Action im Sand für alle, die Lust haben – und
+                anschließend ganz viel Zeit für Strandstimmung, Musik und Feiern.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Divider zwischen Hauptblöcken */}
+        <div className="my-10 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+
+        {/* Split: Galerie links, Infos rechts */}
+        <section className="mt-12 grid gap-6 lg:grid-cols-[2fr,1fr] items-start">
+          {/* Galerie */}
+          <div>
+            <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-3">
+              Ein kleiner Vorgeschmack
+            </h2>
+
+            <div className="grid grid-cols-2 gap-6">
+              {gallery.map((g, i) => (
+                <img
+                  key={i}
+                  src={g.src}
+                  alt={g.alt}
+                  onClick={() => setOpen(g.src)}
+                  className="w-full h-[150px] md:h-[220px] object-cover rounded-3xl shadow-soft cursor-pointer hover:scale-[1.02] transition"
+                />
+              ))}
+            </div>
+
+            <Lightbox src={open} alt="Galerie" onClose={() => setOpen(null)} />
+          </div>
+
+          {/* Info-Kacheln */}
+          <div className="space-y-4">
+            <Card title="Dresscode: sportlich Elegant">
+              <p className="text-xs sm:text-sm text-slate-700">
+                Hochzeit und Strand ... Was trag ich nur??? Einfach was euch in
+                den Kopf kommt... bequeme Schuhe für den Sand und lockeres Outfit.
+                Eher „Beach Chic“ als ganz formell – Hauptsache, ihr fühlt euch
+                wohl und es ist nicht das, was ihr sonst so tragt...
+              </p>
+
+              <div className="mt-2 flex flex-wrap gap-2 text-[11px] sm:text-xs">
+                <span className="chip">Kleider</span>
+                <span className="chip">Hemden</span>
+                <span className="chip">Beachfarben</span>
+                <span className="chip">
+                  Sonnenhut, auch wenn die Sonne nur im Herzen scheint
+                </span>
               </div>
-            </div>
 
-            <p className="mt-5 text-sm text-slate-600 leading-relaxed">
-              So in etwa wird der Abend: erst ankommen, anstoßen und orientieren –
-              dann ein bisschen Action im Sand für alle, die Lust haben – und
-              anschließend ganz viel Zeit für Strandstimmung, Musik und Feiern.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Divider zwischen Hauptblöcken */}
-      <div className="my-10 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
-
-      {/* Split: Galerie links, Infos rechts */}
-      <section className="mt-12 grid gap-6 lg:grid-cols-[2fr,1fr] items-start">
-        {/* Galerie */}
-        <div>
-          <h2 className="text-base sm:text-lg md:text-xl font-semibold mb-3">
-            Ein kleiner Vorgeschmack
-          </h2>
-
-          <div className="grid grid-cols-2 gap-6">
-            {gallery.map((g, i) => (
-              <img
-                key={i}
-                src={g.src}
-                alt={g.alt}
-                onClick={() => setOpen(g.src)}
-                className="w-full h-[150px] md:h-[220px] object-cover rounded-3xl shadow-soft cursor-pointer hover:scale-[1.02] transition"
-              />
-            ))}
-          </div>
-
-          <Lightbox src={open} alt="Galerie" onClose={() => setOpen(null)} />
-        </div>
-
-        {/* Info-Kacheln */}
-        <div className="space-y-4">
-          <Card title="Dresscode: sportlich Elegant">
-            <p className="text-xs sm:text-sm text-slate-700">
-              Hochzeit und Strand ... Was trag ich nur??? Einfach was euch in
-              den Kopf kommt... bequeme Schuhe für den Sand und lockeres Outfit.
-              Eher „Beach Chic“ als ganz formell – Hauptsache, ihr fühlt euch
-              wohl und es ist nicht das, was ihr sonst so tragt...
-            </p>
-
-            <div className="mt-2 flex flex-wrap gap-2 text-[11px] sm:text-xs">
-              <span className="chip">Kleider</span>
-              <span className="chip">Hemden</span>
-              <span className="chip">Beachfarben</span>
-              <span className="chip">
-                Sonnenhut, auch wenn die Sonne nur im Herzen scheint
-              </span>
-            </div>
-
-            <a
-              href="/dresscode"
-              className="inline-block mt-3 text-emerald-600 hover:text-emerald-700 text-xs sm:text-sm"
-            >
-              Mehr zum Dresscode →
-            </a>
-          </Card>
-
-          <Card title="Ablauf & Anfahrt">
-            <ul className="list-disc pl-5 text-xs sm:text-sm text-slate-700 space-y-1">
-              <li>18:00 – Ankommen & Welcome-Drink im Sand</li>
-              <li>19:00 – Ein paar Worte & kleiner offizieller Teil</li>
-              <li>Danach – Beachgames, Fotos, Musik & Strandfeeling</li>
-              <li>Alles Schöne hat ein Ende – ab 2 Uhr wird geschlafen 😉</li>
-            </ul>
-
-            <div className="mt-3 flex flex-wrap gap-2">
-              <a href="/ablauf" className="btn-white text-xs sm:text-sm">
-                Ablauf ansehen
+              <a
+                href="/dresscode"
+                className="inline-block mt-3 text-emerald-600 hover:text-emerald-700 text-xs sm:text-sm"
+              >
+                Mehr zum Dresscode →
               </a>
-              <a href="/anfahrt" className="btn-white text-xs sm:text-sm">
-                Anfahrt & Parken
-              </a>
-            </div>
-          </Card>
-        </div>
-      </section>
+            </Card>
 
-      {/* Abschluss */}
-      <section className="mt-8 sm:mt-10">
-        <p className="text-center text-xs sm:text-sm text-slate-600 px-1">
-          Wir freuen uns riesig darauf, diesen besonderen Abend mit euch zu
-          verbringen –{" "}
-          <strong>im Sand, unter Palmen und mit ganz viel Herz</strong>. 💛
-        </p>
-      </section>
-    </main>
-  </div>
-);
+            <Card title="Ablauf & Anfahrt">
+              <ul className="list-disc pl-5 text-xs sm:text-sm text-slate-700 space-y-1">
+                <li>18:00 – Ankommen & Welcome-Drink im Sand</li>
+                <li>19:00 – Ein paar Worte & kleiner offizieller Teil</li>
+                <li>Danach – Beachgames, Fotos, Musik & Strandfeeling</li>
+                <li>Alles Schöne hat ein Ende – ab 2 Uhr wird geschlafen 😉</li>
+              </ul>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                <a href="/ablauf" className="btn-white text-xs sm:text-sm">
+                  Ablauf ansehen
+                </a>
+                <a href="/anfahrt" className="btn-white text-xs sm:text-sm">
+                  Anfahrt & Parken
+                </a>
+              </div>
+            </Card>
+          </div>
+        </section>
+
+        {/* Abschluss */}
+        <section className="mt-8 sm:mt-10">
+          <p className="text-center text-xs sm:text-sm text-slate-600 px-1">
+            Wir freuen uns riesig darauf, diesen besonderen Abend mit euch zu
+            verbringen –{" "}
+            <strong>im Sand, unter Palmen und mit ganz viel Herz</strong>. 💛
+          </p>
+        </section>
+      </main>
+    </div>
+  );
 }

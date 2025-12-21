@@ -206,41 +206,6 @@ export default function BlueBeach() {
           </Card>
         </section>
 
-        {/* WAS MAN THEORETISCH ALLES MACHEN KANN */}
-        <section className="mb-6 sm:mb-8">
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3">
-            Was kann man im BlueBeach grundsätzlich alles machen?
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card title="Mögliche Eventformate">
-              <ul className="list-disc pl-5 sm:pl-6 text-xs sm:text-sm text-slate-700 space-y-1">
-                <li>Firmenevents, Sommerfeste & Team-Buildings</li>
-                <li>Geburtstage, JGAs & Motto-Strandpartys</li>
-                <li>Beachvolleyball-Turniere & Fun-Olympiaden</li>
-                <li>BBQ-Abende & After-Work-Stranddrinks</li>
-                <li>Kindergeburtstage & Familien-Strandtage</li>
-              </ul>
-            </Card>
-            <Card title="Was das Gelände bietet">
-              <ul className="list-disc pl-5 sm:pl-6 text-xs sm:text-sm text-slate-700 space-y-1">
-                <li>Indoor-Strandhalle mit feinem Sand (wetterunabhängig)</li>
-                <li>Außenbereich mit Sand, Palmen & Sitzbereichen</li>
-                <li>Mehrere Beachcourts für Sport & Spiele</li>
-                <li>Barbereich mit Getränken & Snacks</li>
-                <li>
-                  Nähe zum Kemnader See für noch mehr Urlaubsfeeling
-                </li>
-              </ul>
-            </Card>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-700 mt-3">
-            Auch wenn das BlueBeach für viele verschiedene Formate genutzt
-            werden kann – <strong>für uns steht im Mittelpunkt:</strong> im Sand
-            feiern, spielen, miteinander reden, lachen und einen Abend lang
-            Strandfeeling genießen.
-          </p>
-        </section>
-
         {/* FAKTEN & KONTAKT */}
         <section className="mb-4">
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3">
