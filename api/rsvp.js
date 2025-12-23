@@ -1,8 +1,8 @@
 // /api/rsvp.js
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { Redis } from "@upstash/redis";
 
-// 👇 Redis-Client – gleiche ENV-Variablen wie im anderen Projekt
+// 👇 Redis-Client
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
@@ -20,6 +20,27 @@ function escapeHtml(str = "") {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function envOrEmpty(v) {
+  return typeof v === "string" ? v.trim() : "";
+}
+
+// Gmail-Transport (SMTP)
+function createMailer() {
+  const user = envOrEmpty(process.env.EMAIL_USER);
+  const pass = envOrEmpty(process.env.EMAIL_PASS);
+
+  if (!user || !pass) {
+    throw new Error("EMAIL_USER oder EMAIL_PASS fehlt.");
+  }
+
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: { user, pass },
+  });
 }
 
 export default async function handler(req, res) {
@@ -51,7 +72,7 @@ export default async function handler(req, res) {
     // ------------------------------------------------------------------
     if (req.method === "POST") {
       const {
-        attend, // "yes" | "no" (optional, aber wird vom Frontend gesendet)
+        attend, // "yes" | "no"
         name,
         phone,
         persons,
@@ -60,7 +81,7 @@ export default async function handler(req, res) {
         extraNames,
       } = req.body || {};
 
-      // 0 Personen (Absage) ist erlaubt → wir prüfen nur, ob es überhaupt gesetzt ist
+      // 0 Personen (Absage) ist erlaubt
       const personsNum = Number(persons);
       if (!name || !phone || Number.isNaN(personsNum)) {
         return res.status(400).json({
@@ -74,7 +95,7 @@ export default async function handler(req, res) {
       const phonesSetKey = "rsvp:beach:phones";
       const entryKey = `rsvp:beach:entry:${normPhone}`;
 
-      // 🔍 Bisherigen Eintrag für diese Nummer laden (falls vorhanden)
+      // 🔍 Bestehenden Eintrag laden (falls vorhanden)
       let existing = null;
       try {
         const raw = await redis.get(entryKey);
@@ -92,15 +113,12 @@ export default async function handler(req, res) {
       const id = hasExisting ? existing.id : makeId();
       const createdAt = hasExisting
         ? existing.createdAt || existing.ts || now
-        : now; // ursprüngliche Erstellzeit
+        : now;
       const version = hasExisting ? Number(existing.version || "1") + 1 : 1;
       const updatedAt = now;
-      const changed = hasExisting; // true, wenn es eine Änderung ist
+      const changed = hasExisting;
 
-      // ✅ Zusage/Absage konsistent bestimmen:
-      // - Wenn attend explizit "no" ist → Absage
-      // - Sonst: wenn personsNum === 0 → Absage
-      // - sonst Zusage
+      // Zusage/Absage konsistent
       const attendNorm = attend === "no" || personsNum === 0 ? "no" : "yes";
       const status = attendNorm === "no" ? "cancelled" : "confirmed";
 
@@ -118,7 +136,6 @@ export default async function handler(req, res) {
         allergies: allergies || "",
         message: message || "",
         extraNames: extraList,
-        // für Abwärtskompatibilität: ts = erste Erstellung
         ts: createdAt,
         createdAt,
         updatedAt,
@@ -134,10 +151,7 @@ export default async function handler(req, res) {
         ? extraList.map((n, i) => `• Person ${i + 2}: ${n}`).join("\n")
         : "— keine weiteren Namen angegeben —";
 
-      const statusText = changed
-        ? "AKTUALISIERTE Anmeldung"
-        : "Neue Anmeldung";
-
+      const statusText = changed ? "AKTUALISIERTE Anmeldung" : "Neue Anmeldung";
       const attendText = attendNorm === "no" ? "ABSAGE" : "ZUSAGE";
 
       // 📝 Text-Body
@@ -164,21 +178,21 @@ ${entry.message || "— keine Nachricht —"}
 
 Meta
 ────
-Erstellt am:    ${new Date(createdAt).toLocaleString("de-DE", {
+Erstellt am:      ${new Date(createdAt).toLocaleString("de-DE", {
         timeZone: "Europe/Berlin",
       })}
 Zuletzt geändert: ${tsDisplay}
-Status:         ${entry.status}
-Attend:         ${entry.attend}
-Version:        ${version}
-ID:             ${entry.id}
+Status:           ${entry.status}
+Attend:           ${entry.attend}
+Version:          ${version}
+ID:               ${entry.id}
 `.trim();
 
-      // ✨ HTML-Version – hübsch formatiert
+      // ✨ HTML-Version
       const htmlBody = `
 <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.5; color: #111827;">
   <h2 style="margin-bottom: 0.5rem;">
-    ${statusText} (${attendText}) für die Beach Wedding 🎉
+    ${statusText} (${attendText}) für die Beach Wedding
   </h2>
   <p style="margin-top: 0; color: #6b7280; font-size: 0.9rem;">
     Erstellt: ${new Date(createdAt).toLocaleString("de-DE", {
@@ -257,36 +271,38 @@ ID:             ${entry.id}
         console.error("Fehler beim Speichern in Redis:", err);
       }
 
-      // 🔹 E-Mail senden via Resend (wie gehabt)
+      // 🔹 E-Mail senden via Gmail SMTP
       try {
-        if (
-          process.env.RESEND_API_KEY &&
-          process.env.MAIL_FROM &&
-          process.env.MAIL_TO
-        ) {
-          const resend = new Resend(process.env.RESEND_API_KEY);
-          await resend.emails.send({
-            from: process.env.MAIL_FROM,
-            to: process.env.MAIL_TO,
-            subject: `${statusText} (${attendText}): ${entry.name} (${entry.persons})`,
+        const user = envOrEmpty(process.env.EMAIL_USER);
+        const to = envOrEmpty(process.env.EMAIL_TO);
+        const from =
+          envOrEmpty(process.env.EMAIL_FROM) || `Beach Wedding <${user}>`;
+
+        if (!user || !to) {
+          console.warn("EMAIL_USER oder EMAIL_TO fehlen – keine Mail versendet.");
+        } else {
+          const transporter = createMailer();
+
+          const subject = `${statusText} (${attendText}): ${entry.name} (${entry.persons})`;
+
+          await transporter.sendMail({
+            from,
+            to,
+            subject,
             text: textBody,
             html: htmlBody,
           });
-        } else {
-          console.warn(
-            "RESEND_API_KEY oder MAIL_FROM/MAIL_TO fehlen – keine Mail versendet."
-          );
         }
       } catch (err) {
-        console.error("Fehler beim Senden der E-Mail:", err);
+        console.error("Fehler beim Senden der E-Mail (Gmail SMTP):", err);
       }
 
-      // ✅ Antwort an Frontend
-      return res.status(201).json({ ok: true, id, changed, status, attend: attendNorm });
+      return res
+        .status(201)
+        .json({ ok: true, id, changed, status, attend: attendNorm });
     }
 
     // ------------------------------------------------------------------
-     // ------------------------------------------------------------------
     // DELETE  → Eintrag per Telefonnummer löschen (nur Admin)
     // ------------------------------------------------------------------
     if (req.method === "DELETE") {
@@ -348,12 +364,7 @@ ID:             ${entry.id}
             try {
               rows.push(JSON.parse(raw));
             } catch (err) {
-              console.error(
-                "Konnte Eintrag nicht parsen, überspringe:",
-                phone,
-                "raw=",
-                raw
-              );
+              console.error("Konnte Eintrag nicht parsen, überspringe:", phone);
             }
           }
         } catch (err) {
@@ -361,7 +372,7 @@ ID:             ${entry.id}
         }
       }
 
-      // 🔽 Neueste zuerst (nach updatedAt oder createdAt oder ts)
+      // 🔽 Neueste zuerst
       rows.sort((a, b) => {
         const ta = new Date(a.updatedAt || a.createdAt || a.ts || 0).getTime();
         const tb = new Date(b.updatedAt || b.createdAt || b.ts || 0).getTime();
