@@ -286,6 +286,7 @@ ID:             ${entry.id}
     }
 
     // ------------------------------------------------------------------
+     // ------------------------------------------------------------------
     // DELETE  → Eintrag per Telefonnummer löschen (nur Admin)
     // ------------------------------------------------------------------
     if (req.method === "DELETE") {
@@ -319,7 +320,7 @@ ID:             ${entry.id}
     if (req.method === "GET") {
       if (!requireAdmin()) return;
 
-      // nur zum Login-Test:
+      // 🔐 nur zum Login-Test (Admin-Login-Seite)
       if (req.query.authCheck) {
         return res.status(200).json({ ok: true });
       }
@@ -360,7 +361,7 @@ ID:             ${entry.id}
         }
       }
 
-      // Neueste zuerst (nach updatedAt oder ts)
+      // 🔽 Neueste zuerst (nach updatedAt oder createdAt oder ts)
       rows.sort((a, b) => {
         const ta = new Date(a.updatedAt || a.createdAt || a.ts || 0).getTime();
         const tb = new Date(b.updatedAt || b.createdAt || b.ts || 0).getTime();
