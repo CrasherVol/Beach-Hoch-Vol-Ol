@@ -68,7 +68,7 @@ const faqs = [
   // Drinks & Organisation
 
   {
-    question: "Wie lange geht die Feier?",
+    question: "Wie lange geht die Hochzeits-Feier?",
     answer:
       "Geplant ist der Abend von 18:00 Uhr bis etwa 02:00 Uhr. Wann ihr kommt und geht, ist natürlich euch überlassen – wir freuen uns über jede gemeinsame Minute mit euch.",
     icon: "⏰",

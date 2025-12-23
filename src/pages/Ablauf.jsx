@@ -27,14 +27,15 @@ export default function Ablauf() {
       time: "19:00",
       timeLabel: "ab 19:00",
       title:
-        "weiter gehts mit Musik, Drinks & Strandfeeling und leckeren Getränken ",
+        "weiter gehts mit Musik, Drinks & Strandfeeling und leckeren Getränken ...  ",
+        
       icon: "🎵",
       color: "from-pink-400 to-rose-400",
     },
     {
       time: "19:30",
       timeLabel: "ca. 19:30",
-      title: "Fotos, Beachvolleyball & Feiern – wer mag, spielt im Sand",
+      title: "Fotos, Beachvolleyball & Feiern – wer mag, spielt im Sand. Hier habt ihr die Möglichkeit das Brautpaar einzeln oder als perfektes Team zu schlagen -  also nicht wörtlich ;-) und erhofft euch nicht allzuviele Chancen",
       icon: "🏐",
       color: "from-cyan-400 to-sky-400",
     },
@@ -123,10 +124,10 @@ export default function Ablauf() {
               </li>
               <li>
                 Wir sorgen für kühle Drinks – mit &amp; ohne Alkohol: Bier,
-                Wein, Longdrinks, Softdrinks &amp; Wasser.
+                Wein, Longdrinks, Softdrinks &amp; Wasser, Cocktails, Shots und alles was die Seele an Drinks begehrt. Wir haben reichlich aufgefahren und jeder sollte was Leckeres zu trinken finden...
               </li>
               <li>
-                Am entspanntesten ist es, wenn ihr davor etwas esst.
+                Am entspanntesten ist es, wenn ihr davor etwas esst. <b>Aber eine Kleinigkeit werden wir uns noch einfallen lassen</b>.
               </li>
             </ul>
           </Card>

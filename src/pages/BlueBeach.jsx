@@ -18,7 +18,7 @@ export default function BlueBeach() {
             Location
           </p>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-3">
-            BlueBeach Witten – Feiern wie im Urlaub
+            BlueBeach Witten – Feiern wie im Urlaub - nur diesmal Hochzeit
           </h1>
 
           {/* kleine Story-Box */}
@@ -32,7 +32,7 @@ export default function BlueBeach() {
               Aus der Bar kommt Musik, die Stimmung ist entspannt, Menschen
               lachen, stoßen an. Und mittendrin unsere Gruppe –{" "}
               <strong>barfuß, lachend, wie im Urlaub</strong>. Genau dieses
-              Gefühl holen wir uns mit der Feier im BlueBeach.
+              Gefühl holen wir uns mit der Hochzeit im BlueBeach.
             </p>
           </div>
 
@@ -128,7 +128,7 @@ export default function BlueBeach() {
                     Bar & Drinks – Strandfeeling + Musik
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-700 mt-1">
-                    An der Bar bekommt ihr Drinks & Snacks. Mit Musik im
+                    An der Bar bekommt ihr Drinks. Mit Musik im
                     Hintergrund entsteht die typische Strandbar-Stimmung – erst
                     quatschen, dann feiern.
                   </p>
@@ -158,7 +158,7 @@ export default function BlueBeach() {
                 <div className="text-2xl sm:text-3xl">🎉</div>
                 <div>
                   <h3 className="font-semibold text-sm md:text-base">
-                    Party im Sand – zusammen feiern
+                    Party im Sand – zusammen die Hochzeit feiern
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-700 mt-1">
                     Nach den Spielen geht es in den entspannten Partymodus über:

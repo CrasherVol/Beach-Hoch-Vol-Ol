@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Card from "../components/Card.jsx";
 import SEO from "../components/SEO.jsx";
 
@@ -8,29 +8,30 @@ const SWATCHES = [
   { name: "Türkis", hex: "#38bdf8" },
   { name: "See", hex: "#60a5fa" },
   { name: "Weiß", hex: "#ffffff" },
+    { name: "alles ist erlaubt", hex: "#120101ff" },
 ];
 
 const MOOD = [
   { alt: "Hängematte & Sunset", src: "/assets/hero-hammock.jpg" },
   { alt: "Feiern mit Drinks", src: "/assets/party-drinks.png" },
   { alt: "BlueBeach außen", src: "/assets/bb-outdoor.webp" },
-  { alt: "Beach-Details", src: "/assets/beach-details.jpg" }, // Platzhalter ok
+  { alt: "Beach-Details", src: "/assets/beach-details.jpg" },
 ];
 
 const IDEAS_SHE = [
   {
-    title: "Leichtes Sommerkleid",
-    note: "Leinen/Chiffon, Midi/Maxi, gern schwingend",
+    title: "Leichtes Sommerkleid (oder Zweiteiler)",
+    note: "Leinen/Chiffon, Midi/Maxi – elegant, aber tanz- & sandtauglich",
     icon: "👗",
   },
   {
-    title: "Elegante Sandalen",
-    note: "flach oder Keil – sicher im Sand",
+    title: "Sand-geeignete Schuhe",
+    note: "flach oder Keil – Absatz im Sand ist ein Abenteuer (muss man wollen)",
     icon: "🩴",
   },
   {
-    title: "Feine Accessoires",
-    note: "z. B. Perlen, Gold, Tuch, Statement-Ohrringe",
+    title: "Schmuck: „Urlaub trifft Hochzeit“",
+    note: "Perlen/Gold, Muschel-Details, Tuch, Statement-Ohrringe",
     icon: "💍",
   },
 ];
@@ -38,50 +39,87 @@ const IDEAS_SHE = [
 const IDEAS_HE = [
   {
     title: "Leinenhemd / lockeres Hemd",
-    note: "weiß, ecru oder pastell – gern leicht gekrempelt",
+    note: "weiß, ecru oder pastell – gern leicht gekrempelt, aber sauber",
     icon: "👔",
   },
   {
-    title: "Chino/Leinenhose",
-    note: "hell; je nach Wohlfühlen auch Shorts okay",
+    title: "Chino/Leinenhose (Shorts: ja, wenn’s edel bleibt)",
+    note: "hell, luftig – bitte „Sommerparty“, nicht „Supermarkt“",
     icon: "🩳",
   },
   {
-    title: "Leichte Loafer/Sneaker",
-    note: "sauber, sandtauglich – gern Slip-Ons",
+    title: "Loafer/Sneaker (sandfreundlich)",
+    note: "sauber, schlicht, gerne Slip-Ons – barfuß ist erlaubt",
     icon: "👟",
   },
 ];
 
 const IDEAS_UNI = [
   {
-    title: "Pastell & Naturtöne",
-    note: "Sand, Koralle, Türkis, See-Blau, Weiß",
+    title: "Sportlich elegant = smart & bequem & sexy",
+    note: "Beach Chic mit Hochzeitstouch: bequem, aber nicht beliebig",
+    icon: "🏝️",
+  },
+  {
+    title: "Farben, die sofort Urlaub schreien",
+    note: "Sand, Koralle, Türkis, See-Blau, Weiß – Pastell & Naturtöne",
     icon: "🎨",
   },
   {
-    title: "Sonnenhut / Shades",
-    note: "praktisch, fotogen & very beachy",
+    title: "Accessoires mit Augenzwinkern",
+    note: "Sonnenhut/Shades, Haarband, Leinenblazer, Kimono, Tuch",
     icon: "🕶️",
   },
-  {
-    title: "Leichte Layer",
-    note: "Leinenblazer, Kimono, Strickjacke für später",
-    icon: "🧥",
-  },
 ];
+
+const DO_LIST = [
+"Wechselkleidung erlaubt -  erst zocken dann mit kühelen Drinks erfrischen", "Oder einfach Kleidung die für alles geeignet ist..."
+];
+
+const DONT_LIST = [
+  "Sehr hohe, spitze Absätze (im Sand wirklich unpraktisch)",
+  "Zu sportlich: Jogginghose, Trikots o. Ä. – das ist eher Training als Trauung",
+  "Super-empfindliche Stoffe, die bei Sand/Drinks nacher mimimi verursachen...",
+];
+
+function Badge({ children }) {
+  return (
+    <span className="px-2.5 py-1 rounded-full bg-white/80 shadow-soft border border-slate-200 text-[10px] sm:text-[11px] text-slate-700">
+      {children}
+    </span>
+  );
+}
+
+function Pill({ title, children }) {
+  return (
+    <div className="px-3 py-2 rounded-2xl bg-white/85 backdrop-blur border border-slate-200 shadow-soft text-xs sm:text-sm text-slate-700">
+      <div className="uppercase tracking-wide text-[10px] sm:text-[11px] text-slate-500 font-semibold">
+        {title}
+      </div>
+      <div className="mt-0.5 text-slate-900 font-semibold">{children}</div>
+    </div>
+  );
+}
 
 export default function Dresscode() {
   const [tab, setTab] = useState("uni");
 
-  const ideaList =
-    tab === "she" ? IDEAS_SHE : tab === "he" ? IDEAS_HE : IDEAS_UNI;
+  const ideaList = useMemo(
+    () => (tab === "she" ? IDEAS_SHE : tab === "he" ? IDEAS_HE : IDEAS_UNI),
+    [tab]
+  );
+
+  const tagline = useMemo(() => {
+    if (tab === "she") return "Elegant, luftig, tanzbar – und sandtauglich.";
+    if (tab === "he") return "Hemd ja. Anzugpflicht nein. Sand kann was ab.";
+    return "Sportlich elegant: bequem genug für Sand, edel genug für Hochzeit.";
+  }, [tab]);
 
   return (
     <div className="page py-6 sm:py-8 px-4 sm:px-5 md:px-6 bg-slate-50">
       <SEO
-        title="Dresscode – Elegant & Beachy"
-        description="Inspirationen für elegante Strandoutfits im BlueBeach: Farben, Moodboard, Do/Don't und Outfitideen."
+        title="Dresscode – Sportlich elegant (Beach Wedding)"
+        description="Sportlich elegant im Sand: Farben, Moodboard, Do/Don't und kreative Outfitideen für eine Hochzeit mit Beachfeeling."
       />
 
       <div className="max-w-6xl mx-auto">
@@ -103,19 +141,34 @@ export default function Dresscode() {
             <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold mb-1">
               DRESSCODE
             </p>
+
             <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
-              Elegant & beachy –{" "}
-              <span className="grad-text">leicht, luftig, fotogen</span>
+              Sportlich elegant –{" "}
+              <span className="grad-text">Hawaii trifft Hochzeit</span>
             </h2>
-            <p className="mt-2 text-slate-700 max-w-[900px] text-sm md:text-base">
-              Wir feiern im <strong>Sand des BlueBeach</strong> – mit Palmen,
-              Lichterkette und Strandbar-Feeling. Denkt an{" "}
-              <strong>Sommerstoffe</strong> (Leinen, Chiffon),
-              <strong> helle Töne</strong> (Sand, Türkis, Koralle) und
-              <strong> bequeme Schuhe</strong> für den Sand. Es geht um{" "}
-              <strong>Beach Chic</strong>: entspannt, sommerlich, gerne etwas
-              schicker – aber kein Kostümzwang.
+
+            <p className="mt-2 text-slate-700 max-w-[920px] text-sm md:text-base">
+              Ja, wir feiern <strong>im Sand des BlueBeach</strong>. Ja, es ist{" "}
+              <strong>eine Hochzeit</strong>. Und ja: Man fragt sich sofort
+              „Was zieh ich bloß an?“
+              <br />
+              Die Antwort ist: <strong>sportlich Elegant</strong> mit einem Hauch{" "}
+              <strong>Hochzeit</strong> –{" "}
+              <strong>bequem genug zum Beachen</strong>,{" "}
+              <strong>edel genug zum Feiern</strong>. Wer mag, darf gern ein
+              bisschen <strong>Hawaii</strong> reinmogeln. Kein Kostümzwang –
+              aber ein kleines bisschen „ich hab mir Gedanken gemacht“ wäre
+              großartig.
             </p>
+
+            {/* Motto / Punchlines */}
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Badge>🏝️ Motto: sportlich elegant</Badge>
+              <Badge>🩴 Sandtauglich statt Absatzdrama</Badge>
+              <Badge>🍹 Party-ready</Badge>
+              <Badge>🌺 Ein Hauch Hawaii</Badge>
+              <Badge>💍 Hochzeit – aber mit Urlaubsmodus</Badge>
+            </div>
 
             {/* Farbswatches */}
             <div className="mt-4 flex flex-wrap gap-2 sm:gap-3">
@@ -133,22 +186,22 @@ export default function Dresscode() {
               ))}
             </div>
 
-            {/* Kurz & Knapp */}
+            {/* Kurz & Knackig */}
             <div className="mt-4 grid gap-3 md:grid-cols-3 text-xs md:text-sm">
               <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-100">
                 <div className="font-semibold text-emerald-800 mb-1">
-                  Kurz & knapp
+                  Kurz & knackig
                 </div>
                 <p className="text-emerald-900">
-                  Sommerlich schick, strandtauglich, gern farbig. Eher
-                  „Beach-Party“ als „Ballkleid/Anzugspflicht“.
+                  <strong>Sommerlich schick</strong>, sandtauglich, gern farbig.
+                  Eher „Beach-Party“ als „Anzugpflicht“.
                 </p>
               </div>
               <div className="p-3 rounded-2xl bg-sky-50 border border-sky-100">
-                <div className="font-semibold text-sky-800 mb-1">Level</div>
+                <div className="font-semibold text-sky-800 mb-1">Faustregel</div>
                 <p className="text-sky-900">
-                  <strong>Smart Casual / Beach Chic</strong>: Du kannst danach
-                  genauso noch in eine Strandbar gehen.
+                  <strong>Bequem + gepflegt</strong>: Du kannst damit am Strand
+                  sitzen und später entspannt feiern.
                 </p>
               </div>
               <div className="p-3 rounded-2xl bg-rose-50 border border-rose-100">
@@ -156,15 +209,32 @@ export default function Dresscode() {
                   Wichtigste Regel
                 </div>
                 <p className="text-rose-900">
-                  Ihr sollt euch wohlfühlen – lieber entspannt & beachy als
-                  overdressed.
+                  Ihr sollt euch wohlfühlen – lieber{" "}
+                  <strong>beachy & smart</strong> als verkleidet oder
+                  verkrampft.
                 </p>
               </div>
+            </div>
+
+            {/* Mini-Guide als Mehrwert */}
+            <div className="mt-5 grid gap-3 md:grid-cols-3">
+              <Pill title="Wenn du unsicher bist">
+                freundliche Farben + luftiges Oberteil + bequeme Schuhe. Damit bist du
+                fast immer „richtig“.
+              </Pill>
+              <Pill title="Wenn du kreativ sein willst">
+                Hawaii-Detail (Blüte, Muster, Tuch -  aber nicht zu viel Hawai - wir sind ja nicht auf Hawai) + elegantes Basic. So wirkt’s
+                gewollt, nicht verkleidet.
+              </Pill>
+              <Pill title="Wenn du maximal clever sein willst">
+                Layer dabei: Leinenblazer/Kimono/Strick. Tagsüber Beach, später
+                Hochzeit.
+              </Pill>
             </div>
           </div>
         </section>
 
-        {/* kleines Mood-Strip mit vorhandenen MOOD-Bildern */}
+        {/* kleines Mood-Strip */}
         <section className="mt-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-1 sm:gap-2">
             <h3 className="text-base sm:text-lg font-semibold">
@@ -193,15 +263,15 @@ export default function Dresscode() {
           </div>
         </section>
 
-        {/* Moodboard – Outfit-Inspiration */}
+        {/* Moodboard */}
         <section className="mt-8">
           <h3 className="text-base sm:text-lg font-semibold mb-2">
             Moodboard – Outfit-Inspiration
           </h3>
           <p className="text-slate-600 text-xs sm:text-sm mb-3">
-            Hier ein buntes Moodboard aus Strand-, Sommer- und
-            Beach-Party-Looks. Lass dich einfach inspirieren – du musst nichts
-            1:1 so tragen.
+            Strand, Sommer, Beach-Party – aber mit einem kleinen „Hochzeit“-Twist.
+            Such dir einfach Elemente raus: Farbe, Stoff, Accessoire. Der Rest
+            ergibt sich.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
@@ -211,7 +281,7 @@ export default function Dresscode() {
                 src={`/Stil-${i + 1}.jpg`}
                 alt={`Beach Wedding Stil ${i + 1}`}
                 onError={(e) => {
-                  e.currentTarget.src = "/assets/sunset-palm.jpg"; // Fallback
+                  e.currentTarget.src = "/assets/sunset-palm.jpg";
                 }}
                 className="w-full h-[190px] sm:h-[210px] md:h-[230px] object-cover object-top rounded-2xl shadow-soft hover:scale-[1.03] hover:rotate-[0.5deg] transition-transform duration-300 cursor-pointer"
               />
@@ -219,19 +289,13 @@ export default function Dresscode() {
           </div>
         </section>
 
-        {/* Tabs: Für Sie / Für Ihn / Unisex */}
+        {/* Tabs */}
         <section className="mt-8">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center justify-between">
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setTab("uni")}
                 className={`tab ${tab === "uni" ? "tab-active" : ""}`}
-              >
-                Unisex-Ideen
-              </button>
-              <button
-                onClick={() => setTab("she")}
-                className={`tab ${tab === "she" ? "tab-active" : ""}`}
               >
                 Für Sie
               </button>
@@ -242,10 +306,7 @@ export default function Dresscode() {
                 Für Ihn
               </button>
             </div>
-            <p className="text-[11px] text-slate-500">
-              Nur Beispiele – kombiniert gerne frei und so, wie es zu euch
-              passt.
-            </p>
+            <p className="text-[11px] text-slate-500">{tagline}</p>
           </div>
 
           <div className="grid gap-3 md:gap-4 md:grid-cols-3 mt-4">
@@ -254,19 +315,62 @@ export default function Dresscode() {
                 key={i}
                 className="idea-card flex gap-3 p-3 rounded-2xl bg-white shadow-soft border border-slate-100"
               >
-                <div className="text-2xl sm:text-3xl shrink-0">
-                  {it.icon}
-                </div>
+                <div className="text-2xl sm:text-3xl shrink-0">{it.icon}</div>
                 <div>
                   <h4 className="font-semibold text-sm md:text-base">
                     {it.title}
                   </h4>
-                  <p className="text-slate-600 text-xs md:text-sm">
-                    {it.note}
-                  </p>
+                  <p className="text-slate-600 text-xs md:text-sm">{it.note}</p>
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Kreativ-Kombis */}
+        <section className="mt-8">
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card title="3-Teile-Formel (funktioniert immer)">
+              <ul className="list-disc pl-5 sm:pl-6 space-y-1 text-xs sm:text-sm text-slate-700">
+                <li>
+                  <strong>1 elegantes Teil</strong> (Hemd, Blazer, Kleid, Rock)
+                </li>
+                <li>
+                  <strong>1 bequemes Teil</strong> (Leinenhose, sandtaugliche Schuhe)
+                </li>
+                <li>
+                  <strong>1 Hawaii/Beach-Detail</strong> (Farbe, Blüte, Tuch, Muster)
+                </li>
+              </ul>
+              <p className="mt-2 text-[11px] sm:text-xs text-slate-500">
+                Ergebnis: beachy, aber „Hochzeit-geeignet“ – ohne verkleidet zu wirken.
+              </p>
+            </Card>
+
+            <Card title="Wenn du gerne spielst">
+              <p className="text-xs sm:text-sm text-slate-700">
+                Es gibt Sand. Es gibt Drinks. Es gibt Beachgames.
+                Deshalb: <strong>beweglich</strong>, <strong>atmungsaktiv</strong>,{" "}
+                <strong>tanzbar</strong>. Du sollst feiern – nicht leiden.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2 text-[11px] sm:text-xs">
+                <span className="chip">Leinen</span>
+                <span className="chip">Chiffon</span>
+                <span className="chip">Slip-Ons</span>
+                <span className="chip">Keil</span>
+              </div>
+            </Card>
+
+            <Card title="Wenn du noch zweifelst">
+              <p className="text-xs sm:text-sm text-slate-700">
+                Stell dir vor: <strong>Sommerparty am Strand</strong> – nur dass
+                jemand heiratet. Also: <strong>ein Tick schicker</strong> als Alltag,
+                aber <strong>weit weg</strong> von „Ballkleid/Anzugpflicht“.
+              </p>
+              <p className="mt-2 text-[11px] sm:text-xs text-slate-500">
+                Und ja: Barfuß ist erlaubt. Schuhe sind aber genauso okay.
+              </p>
+            </Card>
           </div>
         </section>
 
@@ -274,64 +378,52 @@ export default function Dresscode() {
         <section className="mt-8 grid gap-4 md:grid-cols-2">
           <Card title="Do ✅">
             <ul className="list-disc pl-5 sm:pl-6 space-y-1 text-xs sm:text-sm text-slate-700">
-              <li>Leichte Stoffe (Leinen, Seide, Viskose, Chiffon)</li>
-              <li>
-                Helle, sommerliche Farben (Sand, Weiß, Koralle, Türkis,
-                Pastelltöne)
-              </li>
-              <li>Bequeme Schuhe – flach oder Keil, die im Sand funktionieren</li>
-              <li>
-                Accessoires: Sonnenhut, Sonnenbrille, zarter oder „beachy“
-                Schmuck
-              </li>
-              <li>Leichte Layer für später (Strick, Leinenblazer, Kimono)</li>
-              <li>
-                Smart-Casual-Kombis: z. B. helle Hose + Hemd / luftiges Kleid +
-                Sandalen
-              </li>
+              {DO_LIST.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
             </ul>
           </Card>
           <Card title="Don't ❌">
             <ul className="list-disc pl-5 sm:pl-6 space-y-1 text-xs sm:text-sm text-slate-700">
-              <li>Sehr schwere Stoffe & komplett dunkle Vollschwarz-Looks</li>
-              <li>Sehr hohe, spitze Absätze (im Sand wirklich unpraktisch)</li>
-              <li>
-                Große Rucksäcke oder voluminöse Taschen (stören beim Feiern &
-                Spielen)
-              </li>
-              <li>
-                Zu sportlich: Jogginghose, Trikots o. Ä. passen weniger zum
-                Beach Chic
-              </li>
-              <li>
-                Allzu empfindliche Stoffe, die bei Sand/Drinks sofort Drama
-                machen 😉
-              </li>
+              {DONT_LIST.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
             </ul>
           </Card>
         </section>
 
-        {/* Mini-FAQ / Unsicherheiten nehmen */}
+        {/* Mini-FAQ */}
         <section className="mt-8 grid gap-4 md:grid-cols-3">
           <Card title="Wie schick soll ich kommen?">
             <p className="text-xs sm:text-sm text-slate-700">
-              Stell dir vor, du gehst auf eine schöne{" "}
-              <strong>Sommerparty am Strand</strong>: schicker als Alltagslook,
-              lockerer als Hochzeit/Abiball.
+              Stell dir eine schöne <strong>Sommerparty im Sand</strong> vor:
+              schicker als Alltag, lockerer als Abiball.{" "}
+              <strong>Sportlich elegant</strong> ist perfekt.
             </p>
           </Card>
           <Card title="Barfuß erlaubt?">
             <p className="text-xs sm:text-sm text-slate-700">
-              Unbedingt! Barfuß oder mit Sandalen – ganz wie ihr mögt. Im Sand
-              fühlt sich vieles automatisch entspannter an.
+              Barfuß oder mit Schuhen, wie ihr mögt. Immer im Kopf behalten, alles ist im Sand.
+               Im Sand fühlt sich vieles automatisch entspannter an, aber denk dran das die Füße auch kalt werden können.
             </p>
           </Card>
           <Card title="Was, wenn ich unsicher bin?">
             <p className="text-xs sm:text-sm text-slate-700">
-              Dann liegst du mit <strong>hellen Farben</strong>, einem
-              <strong> luftigen Oberteil</strong> und
-              <strong> bequemen Schuhen</strong> eigentlich nie falsch. Im
-              Zweifel lieber sommerlich & entspannt statt zu schick.
+              Wir trauen dir zu ein bisschen <strong>kreativ</strong> zu sein und dann findest du schon ein Outfit... 
+              <strong>luftiges Oberteil</strong> und{" "}
+              <strong>bequemen Schuhen</strong> sind eigentlich nie falsch. Im Zweifel
+              lieber beachy & smart statt overdressed.
+            </p>
+          </Card>
+        </section>
+
+        {/* Abschluss */}
+        <section className="mt-8">
+          <Card title="Kurz gesagt: Wir wollen euch genauso sehen, wie ihr seid – nur in Beach-Edition.">
+            <p className="text-xs sm:text-sm text-slate-700">
+              Kommt bequem, kommt schick, kommt farbig – und wenn ihr beim Outfit
+              kurz grinst, weil es „Beachvolleyball trifft Hochzeit“ ist, dann seid ihr
+              genau richtig.
             </p>
           </Card>
         </section>

@@ -1,8 +1,25 @@
-export default function Card({title, children}){
+export default function Card({
+  title,
+  children,
+  className = "",
+  titleClassName = "",
+  bodyClassName = "",
+  as: Component = "div",
+}) {
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl3 p-5 shadow-soft">
-      {title && <h3 className="text-lg font-semibold mb-2">{title}</h3>}
-      {children}
-    </div>
-  )
+    <Component
+      className={[
+        "bg-white/80 backdrop-blur-sm rounded-xl3 p-5 shadow-soft",
+        className,
+      ].join(" ")}
+    >
+      {title ? (
+        <div className={["text-lg font-semibold mb-2", titleClassName].join(" ")}>
+          {title}
+        </div>
+      ) : null}
+
+      <div className={bodyClassName}>{children}</div>
+    </Component>
+  );
 }

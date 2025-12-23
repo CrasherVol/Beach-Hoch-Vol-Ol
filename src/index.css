@@ -2,102 +2,284 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom utilities */
-.cursor-none { cursor: none; }
-.cursor-ball { position: fixed; left:0; top:0; translate:-50% -50%; font-size:26px; z-index:100; pointer-events:none; filter:drop-shadow(0 4px 10px rgba(0,0,0,.2)) }
-.palms { position: fixed; bottom: 8px; inset-inline: 12px; display:flex; justify-content:space-between; opacity:.25; pointer-events:none; z-index:5; font-size:64px }
-.hero-logo { @apply max-w-[220px] w-[40%] min-w-[120px] rounded-2xl shadow-soft; }
-@media (prefers-reduced-motion: reduce) {
-  .cursor-none { cursor:auto; }
-  .cursor-ball { display:none; }
+/* =========================
+   BASE
+   ========================= */
+@layer base {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-none {
+      cursor: auto;
+    }
+    .cursor-ball {
+      display: none;
+    }
+  }
 }
 
-/* Mobile Fix: Palmen dürfen kein horizontales Scrollen erzeugen */
-@media (max-width: 640px) {
+/* =========================
+   COMPONENTS (UI-Bausteine)
+   ========================= */
+@layer components {
+  /* Chips, Buttons, UI */
+  .chip {
+    @apply bg-white/80 text-slate-900 px-3 py-1 rounded-full shadow-soft;
+  }
+
+  .btn-primary {
+    @apply px-5 py-3 rounded-xl text-white bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-soft hover:scale-[1.02] transition;
+  }
+
+  .btn-white {
+    @apply px-5 py-3 rounded-xl bg-white text-slate-900 shadow-soft hover:scale-[1.02] transition;
+  }
+
+  /* Glass & Gradient Text */
+  .glass {
+    backdrop-filter: blur(8px);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.22),
+      rgba(255, 255, 255, 0.08)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.35);
+  }
+
+  .grad-text {
+    background: linear-gradient(to right, #22d3ee, #fbbf24);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Hero Logo */
+  .hero-logo {
+    @apply max-w-[220px] w-[40%] min-w-[120px] rounded-2xl shadow-soft;
+  }
+
+  /* Dresscode UI */
+  .swatch {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-soft border;
+  }
+  .swatch-dot {
+    @apply w-4 h-4 inline-block rounded-full border;
+  }
+
+  .tab {
+    @apply px-4 py-2 rounded-xl bg-white shadow-soft border text-slate-900 hover:scale-[1.02] transition;
+  }
+  .tab-active {
+    @apply text-white border-transparent bg-gradient-to-tr from-emerald-500 to-orange-400;
+  }
+
+  .idea-card {
+    @apply flex items-center gap-3 p-4 rounded-2xl bg-white/80 backdrop-blur-sm shadow-soft hover:scale-[1.01] transition;
+  }
+}
+
+/* =========================
+   UTILITIES (Effekte/Helper)
+   ========================= */
+@layer utilities {
+  /* Cursor */
+  .cursor-none {
+    cursor: none;
+  }
+  .cursor-ball {
+    position: fixed;
+    left: 0;
+    top: 0;
+    translate: -50% -50%;
+    font-size: 26px;
+    z-index: 100;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+  }
+
+  /* Palmen Deko */
   .palms {
-    inset-inline: 0;       /* ganz an die Kante */
-    font-size: 40px;       /* kleiner fürs Handy */
-    width: 100vw;          /* zwingt sie in die Bildschirmbreite */
-    overflow: hidden;      /* Sicherheit */
+    position: fixed;
+    bottom: 8px;
+    inset-inline: 12px;
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 5;
+    font-size: 64px;
   }
-}
 
-
-/* Globaler Sand-Hintergrund */
-.bg-sand{background-image:url('/assets/bg-sand.jpg');background-size:cover;background-position:center;background-attachment:fixed}
-.hero-logo{max-width:220px;width:40%;min-width:120px;border-radius:1rem;box-shadow:0 10px 30px rgba(0,0,0,.15)}
-.hero-logo.glow{animation:logoGlow 3.2s ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(56,189,248,.55)) drop-shadow(0 0 10px rgba(251,191,36,.6))}
-@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(56,189,248,.35)) drop-shadow(0 0 4px rgba(251,191,36,.35))}50%{filter:drop-shadow(0 0 20px rgba(56,189,248,.75)) drop-shadow(0 0 16px rgba(251,191,36,.8))}}
-
-@media (max-width: 640px) {
+  /* Globaler Sand-Hintergrund */
   .bg-sand {
-    background-attachment: scroll !important;
+    background-image: url("/assets/bg-sand.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+
+  /* Hero Logo Glow */
+  .hero-logo.glow {
+    animation: logoGlow 3.2s ease-in-out infinite;
+    filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.55))
+      drop-shadow(0 0 10px rgba(251, 191, 36, 0.6));
+  }
+
+  /* Countdown Pulse */
+  .animate-pulse-slow {
+    animation: pulseSlow 2.5s ease-in-out infinite;
+  }
+
+  .count-pulse {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .count-pulse:hover {
+    transform: scale(1.06);
+    box-shadow: 0 10px 28px rgba(251, 191, 36, 0.3);
+  }
+
+  /* Dresscode Floating */
+  .float-slow {
+    animation: floatY 6s ease-in-out infinite;
+  }
+  .float-slower {
+    animation: floatY 8s ease-in-out infinite;
+  }
+  .delay-150 {
+    animation-delay: 0.15s;
+  }
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+
+  /* Hover Helper */
+  .hover\:tilt-slight:hover {
+    transform: rotate(0.6deg) scale(1.01);
+  }
+
+  /* Logo Pop */
+  .animate-logoPop {
+    animation: logoPop 1.4s ease-out forwards;
+  }
+
+  /* Mobile Menü ohne Scrollbalken */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Krabbe */
+  .crab-runner {
+    position: fixed;
+    bottom: 14px;
+    font-size: 2.4rem;
+    z-index: 50;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+  }
+
+  .crab-anim {
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  .crab-footprint {
+    position: fixed;
+    bottom: 8px;
+    font-size: 1.2rem;
+    opacity: 0.9;
+    transform: translateX(-50%);
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.25);
+    filter: blur(0.5px);
+    z-index: 40;
+    animation: footprintFade 3s forwards;
+  }
+
+  /* Mobile Fixes gegen horizontalen Overflow */
+  @media (max-width: 640px) {
+    .bg-sand {
+      background-attachment: scroll !important;
+    }
+
+    .palms {
+      inset-inline: 0;
+      font-size: 40px;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    .sun {
+      box-shadow: none !important;
+      filter: blur(2px) brightness(1) !important;
+    }
   }
 }
 
-/* Chips, Buttons, Glass, Gradient-Text */
-.chip{ @apply bg-white/80 text-slate-900 px-3 py-1 rounded-full shadow-soft; }
+/* =========================
+   KEYFRAMES
+   ========================= */
+@keyframes logoGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.35))
+      drop-shadow(0 0 4px rgba(251, 191, 36, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.75))
+      drop-shadow(0 0 16px rgba(251, 191, 36, 0.8));
+  }
+}
 
-.btn-primary{ @apply px-5 py-3 rounded-xl text-white bg-gradient-to-tr from-emerald-500 to-orange-400 shadow-soft hover:scale-[1.02] transition; }
-.btn-white{   @apply px-5 py-3 rounded-xl bg-white text-slate-900 shadow-soft hover:scale-[1.02] transition; }
-
-.glass{ backdrop-filter: blur(8px); background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.08)); border: 1px solid rgba(255,255,255,.35); }
-.grad-text{ background: linear-gradient(90deg, #22d3ee, #fbbf24); -webkit-background-clip: text; background-clip: text; color: transparent; }
-
-/* Countdown Pulse Effekt */
 @keyframes pulseSlow {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.85; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
 }
-.animate-pulse-slow {
-  animation: pulseSlow 2.5s ease-in-out infinite;
-}
-
-.count-pulse {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.count-pulse:hover {
-  transform: scale(1.06);
-  box-shadow: 0 10px 28px rgba(251, 191, 36, 0.3);
-}
-
-/* Dresscode Animations & UI */
-.float-slow   { animation: floatY 6s ease-in-out infinite; }
-.float-slower { animation: floatY 8s ease-in-out infinite; }
-.delay-150    { animation-delay: .15s; }
-.delay-300    { animation-delay: .3s; }
 
 @keyframes floatY {
-  0%,100% { transform: translateY(0) }
-  50%     { transform: translateY(-10px) }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
-
-.swatch { @apply inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white shadow-soft border; }
-.swatch-dot { @apply w-4 h-4 inline-block rounded-full border; }
-
-.tab { @apply px-4 py-2 rounded-xl bg-white shadow-soft border text-slate-900 hover:scale-[1.02] transition; }
-.tab-active { @apply text-white border-transparent bg-gradient-to-tr from-emerald-500 to-orange-400; }
-
-.idea-card { @apply flex items-center gap-3 p-4 rounded-2xl bg-white/80 backdrop-blur-sm shadow-soft hover:scale-[1.01] transition; }
-.hover\:tilt-slight:hover { transform: rotate(.6deg) scale(1.01); }
 
 @keyframes logoPop {
-  0% { transform: scale(0.8); opacity: 0; filter: brightness(0.6); }
-  60% { transform: scale(1.05); opacity: 1; filter: brightness(1.2); }
-  100% { transform: scale(1); filter: brightness(1); }
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+    filter: brightness(0.6);
+  }
+  60% {
+    transform: scale(1.05);
+    opacity: 1;
+    filter: brightness(1.2);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
 }
 
-.animate-logoPop {
-  animation: logoPop 1.4s ease-out forwards;
-}
-
-.grad-text {
-  background: linear-gradient(to right, #22d3ee, #fbbf24);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 @keyframes sunPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.95;
     filter: brightness(1);
@@ -108,97 +290,153 @@
     filter: brightness(1.15);
   }
 }
-@media (max-width: 640px) {
-  .sun {
-    filter: blur(2px) brightness(1) !important;
-    box-shadow: none !important;
-  }
-}
-html, body {
-  overflow-x: hidden;
-}
-/* ===== MOBILE FIXES GEGEN HORIZONTALEN OVERFLOW ===== */
 
-/* Hintergrund-Fix für Smartphones */
-@media (max-width: 640px) {
-  .bg-sand {
-    background-attachment: scroll !important;
-  }
-}
-
-/* Palmen dürfen die Seite nicht verbreitern */
-@media (max-width: 640px) {
-  .palms {
-    inset-inline: 0;
-    font-size: 40px;
-    width: 100vw;
-    overflow: hidden;
-  }
-}
-
-/* Sonne entschärfen */
-@media (max-width: 640px) {
-  .sun {
-    box-shadow: none !important;
-    filter: blur(2px) brightness(1) !important;
-  }
-}
-
-/* Sicherheit: Kein Horizontal-Scroll global */
-html, body {
-  overflow-x: hidden;
-}
-/* Mobile Menü ohne Scrollbalken */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-/* 🦀 Krabbe läuft quer über den Bildschirm */
+/* Krabbe läuft quer */
 @keyframes crabWalkLeftToRight {
-  0%   { transform: translateX(-120px) scaleX(1); }
-  100% { transform: translateX(100vw) scaleX(1); }
+  0% {
+    transform: translateX(-120px) scaleX(1);
+  }
+  100% {
+    transform: translateX(100vw) scaleX(1);
+  }
 }
 
 @keyframes crabWalkRightToLeft {
-  0%   { transform: translateX(calc(100vw + 120px)) scaleX(-1); }
-  100% { transform: translateX(-120px) scaleX(-1); }
-}
-
-.crab-runner {
-  position: fixed;
-  bottom: 14px;
-  font-size: 2.4rem;
-  z-index: 50;
-  pointer-events: none;
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
-}
-
-.crab-anim {
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-}
-/* 🐾 Fußstapfen der Krabbe */
-.crab-footprint {
-  position: fixed;
-  bottom: 8px;
-  font-size: 1.2rem;
-  opacity: 0.9;
-  transform: translateX(-50%);
-  pointer-events: none;
-  color: rgba(0, 0, 0, 0.25); /* leicht eingebrückt im Sand */
-  filter: blur(0.5px);
-  z-index: 40;
-  animation: footprintFade 3s forwards;
+  0% {
+    transform: translateX(calc(100vw + 120px)) scaleX(-1);
+  }
+  100% {
+    transform: translateX(-120px) scaleX(-1);
+  }
 }
 
 @keyframes footprintFade {
-  0%   { opacity: 0.9; }
-  60%  { opacity: 0.6; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0.9;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+/* ===== Divi Menü: Underline fährt von links nach rechts (robust) ===== */
+
+/* Ziel: Header-Menü Links in Divi (verschiedene Header-Layouts) */
+.et_pb_menu__menu > nav > ul > li > a,
+#top-menu > li > a,
+.et-menu > li > a {
+  position: relative !important;
+  display: inline-block !important;
+  padding-bottom: 8px !important; /* Platz für die Linie */
+}
+
+/* Linie */
+.et_pb_menu__menu > nav > ul > li > a::after,
+#top-menu > li > a::after,
+.et-menu > li > a::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 2px !important;
+  background: #111827 !important; /* sichtbar (Tailwind slate-900) */
+  transform: scaleX(0) !important;
+  transform-origin: left !important;
+  transition: transform 240ms ease !important;
+  z-index: 1 !important;
+}
+
+/* Hover: Linie fährt rein */
+.et_pb_menu__menu > nav > ul > li > a:hover::after,
+#top-menu > li > a:hover::after,
+.et-menu > li > a:hover::after {
+  transform: scaleX(1) !important;
+}
+
+/* Aktiv: Linie bleibt sichtbar */
+.et_pb_menu__menu > nav > ul > li.current-menu-item > a::after,
+.et_pb_menu__menu > nav > ul > li.current_page_item > a::after,
+.et_pb_menu__menu > nav > ul > li.current-menu-ancestor > a::after,
+#top-menu > li.current-menu-item > a::after,
+#top-menu > li.current_page_item > a::after,
+#top-menu > li.current-menu-ancestor > a::after,
+.et-menu > li.current-menu-item > a::after,
+.et-menu > li.current_page_item > a::after,
+.et-menu > li.current-menu-ancestor > a::after {
+  transform: scaleX(1) !important;
+}
+/* ===== Navbar Underline: fährt von links nach rechts ===== */
+.nav-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 12px;               /* passt zu px-3 */
+  right: 12px;              /* passt zu px-3 */
+  bottom: 6px;              /* sitzt optisch im Button */
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor; /* nimmt Textfarbe (z. B. slate/indigo) */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Hover: Linie reinfahren */
+.nav-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Active: Linie bleibt sichtbar */
+.nav-underline.is-active::after {
+  transform: scaleX(1);
+}
+
+/* Optional: beim CTA ("Anmeldung") keine Linie */
+.nav-underline.no-underline::after {
+  display: none;
+}
+/* ===== Navbar Underline: fährt von links nach rechts ===== */
+.nav-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 12px;               /* passt zu px-3 */
+  right: 12px;              /* passt zu px-3 */
+  bottom: 6px;              /* sitzt optisch im Button */
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor; /* nimmt Textfarbe (z. B. slate/indigo) */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* Hover: Linie reinfahren */
+.nav-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Active: Linie bleibt sichtbar */
+.nav-underline.is-active::after {
+  transform: scaleX(1);
+}
+
+/* Optional: beim CTA ("Anmeldung") keine Linie */
+.nav-underline.no-underline::after {
+  display: none;
 }

@@ -1,28 +1,17 @@
 const cocktails = [
-  {
-    name: 'Beach Breeze',
-    emoji: '🍹',
-    desc: 'Fruchtig-frischer Signature-Drink für unseren Tag im Sand.',
-    note: 'Mit und ohne Alkohol möglich.'
-  },
-  {
-    name: 'Sunny Hugo',
-    emoji: '🥂',
-    desc: 'Leichter Spritz mit Holunder, Minze & einem Hauch Strandgefühl.',
-    note: 'Perfekt für den Empfang.'
-  },
-  {
-    name: 'Tropical Mocktail',
-    emoji: '🍍',
-    desc: 'Ananas, Maracuja & Limette – komplett alkoholfrei, aber 100% Beach.',
-    note: 'Ideal für Fahrer:innen & Kids.'
-  },
-  {
-    name: 'BlueBeach Spritz',
-    emoji: '💙',
-    desc: 'Unser BlueBeach-Drink in Hochzeitsedition.',
-    note: 'Nur vor Ort erhältlich 😉'
-  }
+  { name: "Swimming Pool", emoji: "🏊‍♂️🍹", desc: "Cremig-fruchtiger Klassiker mit Urlaubsfeeling pur." },
+  { name: "Sex on the Beach", emoji: "🏖️🍑", desc: "Fruchtig, süß & absoluter Strandklassiker." },
+  { name: "Mojito", emoji: "🌿🍋", desc: "Frische Minze, Limette & Eis – perfekt im Sand." },
+  { name: "Vodka Orange", emoji: "🍊", desc: "Absolut Vodka | Vaihinger Orange" },
+  { name: "Vodka Energy", emoji: "⚡", desc: "Absolut Vodka | Effect Energy" },
+  { name: "Jägermeister Energy", emoji: "🦌⚡", desc: "Jägermeister | Energy" },
+  { name: "Cuba Libre", emoji: "🇨🇺🥃", desc: "Havana Club 3 Años | Coca-Cola" },
+  { name: "Likör 43 mit Milch", emoji: "🥛✨", desc: "Cremig & süß – der Klassiker" },
+  { name: "Campari Orange", emoji: "🍊🍷", desc: "Herb & fruchtig" },
+  { name: "Aperol Spritz", emoji: "🧡🥂", desc: "Sommerlich, leicht & prickelnd" },
+  { name: "Lillet Wildberry", emoji: "🍓🥂", desc: "Fruchtig & elegant" },
+  { name: "Whiskey Cola", emoji: "🥃", desc: "Jim Beam | Coca-Cola" },
+  { name: "Gin Tonic", emoji: "🍸", desc: "Bombay Sapphire | Thomas Henry" }
 ];
 
 export default function CocktailList() {
@@ -33,34 +22,33 @@ export default function CocktailList() {
         <span>Cocktailkarte am Strand</span>
       </div>
 
-      <h2 className="mt-4 text-2xl md:text-3xl font-semibold grad-text">
-        Drinks, die nach Strandurlaub schmecken
-      </h2>
+<h2 className="mt-6 text-center text-2xl md:text-3xl font-extrabold grad-text tracking-tight">
+  Drinks, die nach Strandurlaub schmecken
+</h2>
 
-      <p className="mt-2 text-sm md:text-base text-slate-700/80 max-w-xl">
-        An der Beachbar bekommt ihr eine kleine Auswahl an sommerlichen Drinks.
-        Mit und ohne Alkohol – Hauptsache good vibes.
-      </p>
+<p className="mt-2 text-center text-sm md:text-base text-slate-700/80 max-w-xl mx-auto">
+  An der Beachbar bekommt ihr eine kleine Auswahl an sommerlichen Drinks.
+  Mit und ohne Alkohol – Hauptsache Spaß.
+</p>
+
+<p className="mt-3 text-center text-sm md:text-base font-semibold text-emerald-700">
+  Hier eine kleine Auswahl, die eure Vorfreude höher schlagen lässt ✨
+</p>
+
+<p className="mt-1 text-center text-xs md:text-sm text-slate-600">
+  Damit ihr nicht in Versuchung geratet, lasst euer Auto besser zu Hause 🚗😉
+</p>
+
+
+
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
         {cocktails.map((c) => (
-          <div
-            key={c.name}
-            className="idea-card hover:tilt-slight"
-          >
-            <div className="text-3xl md:text-4xl">
-              {c.emoji}
-            </div>
+          <div key={c.name} className="idea-card hover:tilt-slight">
+            <div className="text-3xl md:text-4xl">{c.emoji}</div>
             <div>
-              <h3 className="font-semibold text-lg">
-                {c.name}
-              </h3>
-              <p className="text-sm text-slate-700/90 mt-1">
-                {c.desc}
-              </p>
-              <p className="text-xs text-emerald-700/80 mt-2">
-                {c.note}
-              </p>
+              <h3 className="font-semibold text-lg">{c.name}</h3>
+              <p className="text-sm text-slate-700/90 mt-1">{c.desc}</p>
             </div>
           </div>
         ))}

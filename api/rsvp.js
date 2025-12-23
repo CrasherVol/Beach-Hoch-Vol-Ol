@@ -50,8 +50,15 @@ export default async function handler(req, res) {
     // POST  → speichern / aktualisieren (öffentlich)
     // ------------------------------------------------------------------
     if (req.method === "POST") {
-      const { name, phone, persons, allergies, message, extraNames } =
-        req.body || {};
+      const {
+        attend, // "yes" | "no" (optional, aber wird vom Frontend gesendet)
+        name,
+        phone,
+        persons,
+        allergies,
+        message,
+        extraNames,
+      } = req.body || {};
 
       // 0 Personen (Absage) ist erlaubt → wir prüfen nur, ob es überhaupt gesetzt ist
       const personsNum = Number(persons);
@@ -90,12 +97,21 @@ export default async function handler(req, res) {
       const updatedAt = now;
       const changed = hasExisting; // true, wenn es eine Änderung ist
 
+      // ✅ Zusage/Absage konsistent bestimmen:
+      // - Wenn attend explizit "no" ist → Absage
+      // - Sonst: wenn personsNum === 0 → Absage
+      // - sonst Zusage
+      const attendNorm = attend === "no" || personsNum === 0 ? "no" : "yes";
+      const status = attendNorm === "no" ? "cancelled" : "confirmed";
+
       const extraList = Array.isArray(extraNames)
         ? extraNames.filter(Boolean)
         : [];
 
       const entry = {
         id,
+        attend: attendNorm,
+        status,
         name,
         phone: normPhone,
         persons: personsNum,
@@ -122,9 +138,11 @@ export default async function handler(req, res) {
         ? "AKTUALISIERTE Anmeldung"
         : "Neue Anmeldung";
 
+      const attendText = attendNorm === "no" ? "ABSAGE" : "ZUSAGE";
+
       // 📝 Text-Body
       const textBody = `
-${statusText} für die Beach Wedding
+${statusText} (${attendText}) für die Beach Wedding
 
 Basisdaten
 ──────────
@@ -150,6 +168,8 @@ Erstellt am:    ${new Date(createdAt).toLocaleString("de-DE", {
         timeZone: "Europe/Berlin",
       })}
 Zuletzt geändert: ${tsDisplay}
+Status:         ${entry.status}
+Attend:         ${entry.attend}
 Version:        ${version}
 ID:             ${entry.id}
 `.trim();
@@ -158,14 +178,15 @@ ID:             ${entry.id}
       const htmlBody = `
 <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.5; color: #111827;">
   <h2 style="margin-bottom: 0.5rem;">
-    ${statusText} für die Beach Wedding 🎉
+    ${statusText} (${attendText}) für die Beach Wedding 🎉
   </h2>
   <p style="margin-top: 0; color: #6b7280; font-size: 0.9rem;">
     Erstellt: ${new Date(createdAt).toLocaleString("de-DE", {
       timeZone: "Europe/Berlin",
     })}<br/>
     Zuletzt geändert: ${tsDisplay}<br/>
-    ID: ${entry.id}<br/>
+    Status: ${escapeHtml(entry.status)}<br/>
+    ID: ${escapeHtml(entry.id)}<br/>
     Version: ${version}
   </p>
 
@@ -247,7 +268,7 @@ ID:             ${entry.id}
           await resend.emails.send({
             from: process.env.MAIL_FROM,
             to: process.env.MAIL_TO,
-            subject: `${statusText}: ${entry.name} (${entry.persons})`,
+            subject: `${statusText} (${attendText}): ${entry.name} (${entry.persons})`,
             text: textBody,
             html: htmlBody,
           });
@@ -261,7 +282,7 @@ ID:             ${entry.id}
       }
 
       // ✅ Antwort an Frontend
-      return res.status(201).json({ ok: true, id, changed });
+      return res.status(201).json({ ok: true, id, changed, status, attend: attendNorm });
     }
 
     // ------------------------------------------------------------------
@@ -309,10 +330,7 @@ ID:             ${entry.id}
       try {
         phones = await redis.smembers(phonesSetKey);
       } catch (err) {
-        console.error(
-          "Fehler beim Lesen der Telefonliste aus Redis:",
-          err
-        );
+        console.error("Fehler beim Lesen der Telefonliste aus Redis:", err);
       }
 
       const rows = [];

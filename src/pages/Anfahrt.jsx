@@ -3,6 +3,7 @@ import Card from "../components/Card.jsx";
 import SEO from "../components/SEO.jsx";
 
 const DEST_NAME = "BlueBeach Witten";
+const DEST_ADDR = "Luhnsmühle 2, 58455 Witten";
 const DEST_QUERY = "BlueBeach+Witten+Luhnsm%C3%BChle+2+58455+Witten";
 
 const ORIGINS = {
@@ -16,12 +17,22 @@ const ORIGINS = {
 };
 
 const MODES = {
-  drive: { label: "Auto", param: "driving" },
-  transit: { label: "ÖPNV", param: "transit" },
+  drive: { label: "Auto", param: "driving", apple: "d" },
+  transit: { label: "ÖPNV", param: "transit", apple: "r" },
 };
 
-function routeUrl(originQuery, modeParam) {
+function googleRouteUrl(originQuery, modeParam) {
   return `https://www.google.com/maps/dir/?api=1&origin=${originQuery}&destination=${DEST_QUERY}&travelmode=${modeParam}`;
+}
+
+function appleMapsUrl({ originQuery, appleMode }) {
+  // Apple Maps akzeptiert daddr/saddr als Freitext
+  const daddr = encodeURIComponent(`${DEST_NAME}, ${DEST_ADDR}`);
+  const dirflg = appleMode || "d";
+
+  // saddr: wenn gesetzt, wird es als Startpunkt genutzt; sonst „aktueller Standort“
+  const saddr = originQuery ? `&saddr=${originQuery}` : "";
+  return `https://maps.apple.com/?daddr=${daddr}${saddr}&dirflg=${dirflg}`;
 }
 
 export default function Anfahrt() {
@@ -40,7 +51,15 @@ export default function Anfahrt() {
   const mapsUrl = useMemo(() => {
     const m = MODES[mode]?.param || MODES.drive.param;
     if (!originQuery) return "#";
-    return routeUrl(originQuery, m);
+    return googleRouteUrl(originQuery, m);
+  }, [originQuery, mode]);
+
+  const appleUrl = useMemo(() => {
+    const appleMode = MODES[mode]?.apple || MODES.drive.apple;
+    // Apple bekommt (falls vorhanden) originQuery als bereits encoded string (passt für URL)
+    // Wenn custom leer ist, lassen wir saddr weg -> aktueller Standort
+    const saddr = originQuery || "";
+    return appleMapsUrl({ originQuery: saddr, appleMode });
   }, [originQuery, mode]);
 
   const routeDisabled = origin === "custom" && !customOrigin.trim();
@@ -115,9 +134,9 @@ export default function Anfahrt() {
               </label>
             </div>
 
-            {/* Route öffnen */}
+            {/* Route öffnen (Desktop / generell Google Maps) */}
             <a
-              className={`inline-flex justify-center items-center px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-white shadow-soft text-sm sm:text-base transition
+              className={`hidden sm:inline-flex justify-center items-center px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-white shadow-soft text-sm sm:text-base transition
                         ${
                           routeDisabled
                             ? "bg-slate-300 cursor-not-allowed"
@@ -125,7 +144,7 @@ export default function Anfahrt() {
                         }`}
               href={mapsUrl}
               target={routeDisabled ? "_self" : "_blank"}
-              rel="noreferrer"
+              rel="noopener noreferrer"
               onClick={(e) => {
                 if (routeDisabled) e.preventDefault();
               }}
@@ -137,7 +156,60 @@ export default function Anfahrt() {
             >
               Route in Google&nbsp;Maps öffnen
             </a>
+
+            {/* Mobile: Zwei Buttons (Apple Maps + Google Maps) */}
+            <div className="sm:hidden grid gap-2">
+              <a
+                className={`inline-flex justify-center items-center px-4 py-3 rounded-xl text-white shadow-soft text-sm transition
+                          ${
+                            routeDisabled
+                              ? "bg-slate-300 cursor-not-allowed"
+                              : "bg-black/80 hover:brightness-110"
+                          }`}
+                href={appleUrl}
+                target={routeDisabled ? "_self" : "_blank"}
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (routeDisabled) e.preventDefault();
+                }}
+                title={
+                  routeDisabled
+                    ? "Bitte zuerst einen Ort eingeben"
+                    : "In Apple Karten öffnen"
+                }
+              >
+                In Apple Karten öffnen
+              </a>
+
+              <a
+                className={`inline-flex justify-center items-center px-4 py-3 rounded-xl text-white shadow-soft text-sm transition
+                          ${
+                            routeDisabled
+                              ? "bg-slate-300 cursor-not-allowed"
+                              : "bg-gradient-to-tr from-emerald-500 to-orange-400 hover:scale-[1.01]"
+                          }`}
+                href={mapsUrl}
+                target={routeDisabled ? "_self" : "_blank"}
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  if (routeDisabled) e.preventDefault();
+                }}
+                title={
+                  routeDisabled
+                    ? "Bitte zuerst einen Ort eingeben"
+                    : "In Google Maps öffnen"
+                }
+              >
+                In Google Maps öffnen
+              </a>
+            </div>
           </div>
+
+          {/* Mini-Hinweis */}
+          <p className="mt-4 text-xs text-slate-500">
+            Tipp: Wenn du „Eigener Ort …“ nutzt, gib am besten etwas Eindeutiges
+            ein (z. B. „Münster Hbf“ oder eine Straße).
+          </p>
         </Card>
 
         {/* Karte + Adresse */}
@@ -146,16 +218,17 @@ export default function Anfahrt() {
             <p className="text-sm sm:text-base">
               {DEST_NAME}
               <br />
-              Luhnsmühle 2
+              {DEST_ADDR.split(",")[0]}
               <br />
-              58455 Witten
+              {DEST_ADDR.split(",").slice(1).join(",").trim()}
             </p>
+
             <div className="mt-3 flex flex-wrap gap-2">
               <a
                 className="px-3 py-2 rounded-xl bg-white shadow-soft text-sm"
                 target="_blank"
                 href={`https://www.google.com/maps/search/?api=1&query=${DEST_QUERY}`}
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 Standort in Maps
               </a>
@@ -163,9 +236,17 @@ export default function Anfahrt() {
                 className="px-3 py-2 rounded-xl bg-white shadow-soft text-sm"
                 target="_blank"
                 href="https://www.openstreetmap.org/search?query=Luhnsm%C3%BChle%202%2058455%20Witten"
-                rel="noreferrer"
+                rel="noopener noreferrer"
               >
                 OpenStreetMap
+              </a>
+              <a
+                className="px-3 py-2 rounded-xl bg-white shadow-soft text-sm sm:hidden"
+                target="_blank"
+                href={appleMapsUrl({ originQuery: "", appleMode: "d" })}
+                rel="noopener noreferrer"
+              >
+                Apple Karten
               </a>
             </div>
 
@@ -228,8 +309,11 @@ export default function Anfahrt() {
                 Ab <b>Witten Hbf</b> bzw. regional mit Bus/Bahn; je nach Startort
                 variieren Verbindungen.
               </li>
-              <li>Plane tagesaktuell über VRR/DB oder Google Maps (ÖPNV-Modus).</li>
+              <li>
+                Plane tagesaktuell über VRR/DB oder Google Maps (ÖPNV-Modus).
+              </li>
             </ul>
+
             <div className="mt-3 flex flex-wrap gap-2">
               {[
                 "duesseldorf",
@@ -243,16 +327,18 @@ export default function Anfahrt() {
                   key={key}
                   className="px-3 py-2 rounded-xl bg-white shadow-soft text-xs sm:text-sm"
                   target="_blank"
-                  rel="noreferrer"
-                  href={routeUrl(
-                    ORIGINS[key].query || "Witten",
-                    MODES.transit.param
-                  )}
+                  rel="noopener noreferrer"
+                  href={
+                    ORIGINS[key]?.query
+                      ? googleRouteUrl(ORIGINS[key].query, MODES.transit.param)
+                      : "#"
+                  }
                 >
                   ÖPNV ab {ORIGINS[key].label}
                 </a>
               ))}
             </div>
+
             <p className="text-slate-600 text-xs sm:text-sm mt-2">
               Hinweis: exakte Linien/Fahrzeiten tagesaktuell prüfen
               (VRR/DB/Google Maps).
@@ -262,14 +348,14 @@ export default function Anfahrt() {
           <Card title="Noch hilfreich">
             <ul className="list-disc pl-5 sm:pl-6 text-xs sm:text-sm">
               <li>
-                <b>Adresse fürs Navi:</b> Luhnsmühle 2, 58455 Witten
+                <b>Adresse fürs Navi:</b> {DEST_ADDR}
               </li>
               <li>
                 <b>Taxi/Rideshare:</b> Abholung am Parkplatz „BlueBeach“ (gut
                 beschildert).
               </li>
               <li>
-                <b>Weg im Gelände:</b> Den Sandwegen und Palmen folgen 🌴
+                <b>Weg im Gelände:</b> Den Sandwegen und Palmen folgen.
               </li>
             </ul>
           </Card>
