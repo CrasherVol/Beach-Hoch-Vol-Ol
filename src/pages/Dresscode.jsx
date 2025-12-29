@@ -1,3 +1,23 @@
+const MOOD_IMAGES = [
+  "/Stil-1.jpg",
+  "/Stil-2.jpg",
+  "/Stil-3.jpg",
+  "/Stil-4.jpg",
+  "/Stil-5.png",
+  "/Stil-6.jpeg",
+  "/Stil-7.jpeg",
+  "/Stil-8.jpg",
+  "/Stil-9.jpg",
+  "/Stil-10.jpg",
+  "/Stil-11.jpeg",
+  "/Stil-12.jpg",
+  "/Stil-13.jpeg",
+  "/Stil-14.jpg",
+  "/Stil-15.jpg",
+  "/Stil-16.jpg",
+];
+
+
 import { useMemo, useState } from "react";
 import Card from "../components/Card.jsx";
 import SEO from "../components/SEO.jsx";
@@ -88,7 +108,7 @@ function Pill({ title, children }) {
 }
 
 export default function Dresscode() {
-  const [tab, setTab] = useState("uni");
+  const [tab, setTab] = useState("he");
 
   const ideaList = useMemo(
     () => (tab === "she" ? IDEAS_SHE : tab === "he" ? IDEAS_HE : IDEAS_UNI),
@@ -231,19 +251,20 @@ export default function Dresscode() {
             ergibt sich.
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {[...Array(16)].map((_, i) => (
-              <img
-                key={i}
-                src={`/Stil-${i + 1}.jpg`}
-                alt={`Beach Wedding Stil ${i + 1}`}
-                onError={(e) => {
-                  e.currentTarget.src = "/assets/sunset-palm.jpg";
-                }}
-                className="w-full h-[190px] sm:h-[210px] md:h-[230px] object-cover object-top rounded-2xl shadow-soft hover:scale-[1.03] hover:rotate-[0.5deg] transition-transform duration-300 cursor-pointer"
-              />
-            ))}
-          </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+  {MOOD_IMAGES.map((src, i) => (
+    <img
+      key={i}
+      src={src}
+      alt={`Beach Wedding Stil ${i + 1}`}
+      onError={(e) => {
+        e.currentTarget.src = "/assets/sunset-palm.jpg";
+      }}
+      className="w-full h-[190px] sm:h-[210px] md:h-[230px] object-cover object-top rounded-2xl shadow-soft hover:scale-[1.03] hover:rotate-[0.5deg] transition-transform duration-300 cursor-pointer"
+    />
+  ))}
+</div>
+
         </section>
 
         {/* Tabs */}
@@ -251,12 +272,7 @@ export default function Dresscode() {
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center justify-between">
             <div className="flex flex-wrap gap-2">
               <button
-                onClick={() => setTab("uni")}
-                className={`tab ${tab === "uni" ? "tab-active" : ""}`}
-              >
-                Für Sie
-              </button>
-              <button
+      
                 onClick={() => setTab("he")}
                 className={`tab ${tab === "he" ? "tab-active" : ""}`}
               >

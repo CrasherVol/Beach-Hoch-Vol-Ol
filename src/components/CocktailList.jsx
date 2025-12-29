@@ -19,7 +19,7 @@ export default function CocktailList() {
     <section className="mt-10 mb-12">
       <div className="inline-flex items-center gap-2 chip">
         <span role="img" aria-hidden="true">🍸</span>
-        <span>Cocktailkarte am Strand</span>
+        <span>Was euch so erwartet...</span>
       </div>
 
 <h2 className="mt-6 text-center text-2xl md:text-3xl font-extrabold grad-text tracking-tight">

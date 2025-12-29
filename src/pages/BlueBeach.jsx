@@ -83,51 +83,7 @@ export default function BlueBeach() {
             Was dich im BlueBeach erwartet
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <div className="flex items-start gap-3">
-                <div className="text-2xl sm:text-3xl">🏖️</div>
-                <div>
-                  <h3 className="font-semibold text-sm md:text-base">
-                    Feiner Sand – echtes Urlaubsgefühl
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-700 mt-1">
-                    Du stehst, spielst und feierst direkt im Sand. Schuhe aus,
-                    Zehen im Sand – schon fühlt sich alles eher nach
-                    Strandurlaub als nach „Eventhalle“ an.
-                  </p>
-                </div>
-              </div>
-            </Card>
-            <Card>
-              <div className="flex items-start gap-3">
-                <div className="text-2xl sm:text-3xl">🌴</div>
-                <div>
-                  <h3 className="font-semibold text-sm md:text-base">
-                    Palmen, Licht & Beach-Vibes
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-700 mt-1">
-                    Palmen, Stranddeko und Lichterketten sorgen für eine
-                    gemütliche, sommerliche Atmosphäre – perfekt für Fotos,
-                    Gespräche und entspanntes Zusammensitzen.
-                  </p>
-                </div>
-              </div>
-            </Card>
-            <Card>
-              <div className="flex items-start gap-3">
-                <div className="text-2xl sm:text-3xl">🍹</div>
-                <div>
-                  <h3 className="font-semibold text-sm md:text-base">
-                    Bar & Drinks – Strandfeeling + Musik
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-700 mt-1">
-                    An der Bar bekommt ihr Drinks. Mit Musik im
-                    Hintergrund entsteht die typische Strandbar-Stimmung – erst
-                    quatschen, dann feiern.
-                  </p>
-                </div>
-              </div>
-            </Card>
+  
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 mt-4">
