@@ -1,8 +1,8 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
-import { Navigate } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react' // ✅ NEU
 
 import App from './App.jsx'
 import Home from './pages/Home.jsx'
@@ -14,8 +14,6 @@ import Anmeldung from './pages/Anmeldung.jsx'
 import Hotels from './pages/Hotels.jsx'
 import Admin from './pages/admin.jsx'
 import Faq from './pages/Faq.jsx'
-
-// ✅ NEU: Sandhochzeit-Unterseite
 import Sandhochzeit from './pages/Sandhochzeit.jsx'
 
 import './index.css'
@@ -43,11 +41,11 @@ const router = createBrowserRouter([
   },
 ])
 
-
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HelmetProvider>
       <RouterProvider router={router} />
+      <Analytics /> {/* ✅ DAS aktiviert Vercel Analytics */}
     </HelmetProvider>
   </React.StrictMode>
 )
