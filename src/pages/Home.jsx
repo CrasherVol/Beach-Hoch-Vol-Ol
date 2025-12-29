@@ -117,7 +117,7 @@ export default function Home() {
   </div>
 
   <p className="text-center leading-relaxed">
-    Wir haben uns <b>beim Beachen im Sand</b> kennengelernt und wir waren schon damals in einem Team (und ja, auch damals waren wir nicht immer bei allen Sachen gleicher Meinung)
+    Wir haben uns <b>beim Beachen im Sand</b> kennengelernt und wir waren schon damals in einem Team (und ja, auch damals waren wir nicht immer bei allen Sachen gleicher Meinung).  
     <br className="hidden sm:block" />
     Und genau dort geht’s bei unserer Hochzeit weiter: 
     <span className="font-semibold"> {" "}
@@ -400,7 +400,7 @@ export default function Home() {
         </span>
         <br />
         Wir heiraten gleich zweimal (keine Sorge – <b>zweimal dieselbe Person</b> 😉):
-        einmal in Georgien und einmal hier in Witten.
+        einmal in Georgien und einmal hier in Witten.{" "}
         <br className="hidden sm:block" />
         Unser Konto bekommt dabei gerade ordentlich Sonnenbrand 🤵☀️ –
         deshalb freuen wir uns am meisten über einen

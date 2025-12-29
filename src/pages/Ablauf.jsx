@@ -32,8 +32,8 @@ export default function Ablauf() {
       color: "from-cyan-400 to-sky-400",
     },
     {
-      time: "20:00–02:00",
-      timeLabel: "20:00 – 02:00",
+      time: "22:00–02:00",
+      timeLabel: "22:00 – 02:00",
       title: "Wenn ihr fertig seit mit dem anstrengenden Teil des Abends, ab geht die Hochzeitsparty",
       icon: "🏖️",
       color: "from-sky-400 to-emerald-400",

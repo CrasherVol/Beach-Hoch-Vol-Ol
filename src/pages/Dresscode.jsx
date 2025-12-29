@@ -79,7 +79,7 @@ const IDEAS_UNI = [
 ];
 
 const DO_LIST = [
-"Wechselkleidung erlaubt -  erst zocken dann mit kühelen Drinks erfrischen", "Oder einfach Kleidung die für alles geeignet ist..."
+"Wechselkleidung erlaubt -  erst zocken dann mit kühlen Drinks erfrischen", "Oder einfach Kleidung die für alles geeignet ist..."
 ];
 
 const DONT_LIST = [
