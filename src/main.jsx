@@ -2,6 +2,7 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+import { Navigate } from 'react-router-dom'
 
 import App from './App.jsx'
 import Home from './pages/Home.jsx'
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home /> },
+
+      // 🔥 WhatsApp Preview Alias
+      { path: 'Einladung', element: <Navigate to="/" replace /> },
+
       { path: 'anfahrt', element: <Anfahrt /> },
       { path: 'bluebeach', element: <BlueBeach /> },
       { path: 'dresscode', element: <Dresscode /> },
@@ -33,12 +38,11 @@ const router = createBrowserRouter([
       { path: 'hotels', element: <Hotels /> },
       { path: 'faq', element: <Faq /> },
       { path: 'admin', element: <Admin /> },
-
-      // 🌴 HOCHZEIT IM SAND
       { path: 'sandhochzeit', element: <Sandhochzeit /> },
     ],
   },
 ])
+
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
