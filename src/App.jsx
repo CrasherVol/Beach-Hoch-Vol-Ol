@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 // import Sun from './components/Sun.jsx' // Alte Sonne deaktiviert
 import { useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import CursorBall from './components/CursorBall.jsx'
 import Palms from './components/Palms.jsx'
 import CrabRunner from "./components/CrabRunner.jsx";
@@ -154,6 +155,8 @@ export default function App() {
           © 2026 Volker & Olga · BlueBeach Witten
         </div>
       </footer>
+
+      <Analytics />
     </div>
   )
 }
