@@ -1,10 +1,17 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 // import Sun from './components/Sun.jsx' // Alte Sonne deaktiviert
+import { useEffect } from 'react'
 import CursorBall from './components/CursorBall.jsx'
 import Palms from './components/Palms.jsx'
 import CrabRunner from "./components/CrabRunner.jsx";
 
 export default function App() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname]);
+
   return (
     <div className="min-h-screen bg-sand relative cursor-none overflow-x-hidden">
       {/* Sonnen-Deko oben rechts – etwas kleiner + näher am Rand */}
@@ -47,6 +54,7 @@ export default function App() {
           </a>
 
           {/* ⭐️ Mobile-Scroller */}
+
           <nav className="flex gap-2 items-center overflow-x-auto whitespace-nowrap no-scrollbar max-w-[65vw] md:max-w-none">
             <NavLink
               to="/"
