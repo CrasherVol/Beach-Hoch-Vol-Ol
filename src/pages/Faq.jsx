@@ -5,7 +5,7 @@ import SEO from "../components/SEO.jsx";
 const faqs = [
   // Geschenke
   {
-    question: "Geschenke",
+    question: "Was soll ich mitbringen?",
     answer:
       'Wir heiraten zweimal (Keine Angst - zweitmal die selbe Person, nur einmal in Georgien und einmal in Deutschland).. unser Konto bekommt gerade Sonnenbrand – 🤵 Daher freuen wir uns am meisten über einen eleganten Umschlag, der unsere Hochzeitsfonds mit ein paar Strandtaler ergänzt.“',
     icon: "",
@@ -16,14 +16,14 @@ const faqs = [
   {
     question: "Was soll ich anziehen?",
     answer:
-      'Ich sage immer: Sportlich Elegant ;-) Denkt an eine Mischung aus „schön“ und „bequem im Sand“. Gerne sommerliche. Hohe Hacken sind im Sand eher unpraktisch – flache Schuhe oder Sandalen sind perfekt. Barfuß ist auch eine Alternative.',
+      'Ich sage immer: Sportlich Elegant ;-) Denkt an eine Mischung aus „schön“ und „bequem im Sand“. Gerne sommerliche. Hohe Hacken sind im Sand eher unpraktisch – flache Schuhe oder Sandalen sind perfekt. Barfuß ist auch eine Alternative, wenn die Füße nicht zu kalt werden.',
     icon: "👗",
     tag: "Outfit & Sand",
   },
   {
     question: "Gibt es einen Dresscode?",
     answer:
-      'Es gibt keinen strengen Dresscode. Sportlich elegantes Auftreten. Sei Kreativ und wir schauen mal ob wir dich reinlassen.',
+      'Es gibt keinen strengen Dresscode. Sportlich elegantes Auftreten. Sei Kreativ und wir schauen mal, ob wir dich reinlassen.',
     icon: "🌴",
     tag: "Outfit & Sand",
   },
@@ -60,7 +60,7 @@ const faqs = [
   {
     question: "Welche anderen Spiele gibt es?",
     answer:
-      "Neben Beachvolleyball wird es kleinere Spiele geben. Alles ganz locker und freiwillig – ihr entscheidet selbst, ob ihr spielt, tanzt oder einfach chillt.",
+      "Neben Beachvolleyball wird es kleinere Spiele geben. Alles ganz locker und freiwillig – ihr entscheidet selbst, ob ihr spielt, tanzt oder einfach Hochzeit feiert.",
     icon: "🎯",
     tag: "Beachvolleyball & Spiele",
   },
@@ -93,21 +93,21 @@ const faqs = [
   {
     question: "Sind Kinder willkommen?",
     answer:
-      "Da es sich um eine abendliche Veranstaltung mit alkoholischen Getränken handelt, bitte die Kinder bei Oma/Opa oder Kindermädchen lassen",
+      "Da es sich um eine abendliche Veranstaltung mit alkoholischen Getränken handelt, bitte die Kinder bei Oma/Opa oder Kindermädchen lassen.",
     icon: "🧸",
     tag: "Sonstiges",
   },
   {
     question: "Darf ich meinen Hund mitbringen?",
     answer:
-      "Nein, Hunde oder andere Haustiere sind auf der Veranstaltung nicht erwünscht",
+      "Nein, Hunde oder andere Haustiere sind auf der Veranstaltung nicht erwünscht.",
     icon: "🐾",
     tag: "Sonstiges",
   },
   {
     question: "Was ist, wenn das Wetter schlecht ist?",
     answer:
-      "Es findet alles drinnen in der Halle statt. Wir holen das Beach/Sand Feeling in die Halle",
+      "Es findet alles drinnen in der Halle statt. Wir holen das Beach/Sand Feeling in die Halle.",
     icon: "🌦️",
     tag: "Sonstiges",
   },

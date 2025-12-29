@@ -24,26 +24,19 @@ export default function BlueBeach() {
           {/* kleine Story-Box */}
           <div className="rounded-3xl bg-white shadow-soft border border-emerald-50 p-4 md:p-5 mb-4">
             <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.16em] text-emerald-600 font-semibold mb-1">
-              Stell es dir so vor
+              Ab gehts
             </p>
             <p className="text-sm md:text-base text-slate-700 leading-relaxed">
-              Stell dir vor: Du kommst rein –{" "}
-              <strong>warmer Sand unter den Füßen</strong>, Palmen neben dir.
-              Aus der Bar kommt Musik, die Stimmung ist entspannt, Menschen
-              lachen, stoßen an. Und mittendrin unsere Gruppe –{" "}
-              <strong>barfuß, lachend, wie im Urlaub</strong>. Genau dieses
-              Gefühl holen wir uns mit der Hochzeit im BlueBeach.
-            </p>
-          </div>
-
-          <p className="text-slate-600 text-sm md:text-base max-w-3xl">
-            Das <strong>BlueBeach in Witten</strong> ist eine
+  Das <strong>BlueBeach in Witten</strong> ist eine
             Strand-Eventlocation mit feinem Sand, Palmen,
             Beachvolleyballfeldern und einer Strandbar. Wir haben für unsere
             Veranstaltung einen Teil des <strong>Sandbereichs exklusiv</strong>{" "}
             gemietet, sodass wir im eigenen „Privatstrand“ feiern, spielen und
             chillen können.
-          </p>
+            </p>
+          </div>
+
+    
         </section>
 
         <CocktailList />
@@ -53,7 +46,7 @@ export default function BlueBeach() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <figure className="relative rounded-2xl overflow-hidden shadow-soft">
               <img
-                src="/assets/bb-outdoor.webp"
+                src="/assets/bb-outdoor2.webp"
                 alt="BlueBeach Außenbereich"
                 className="w-full h-[190px] sm:h-[210px] md:h-[220px] object-cover"
               />
@@ -63,7 +56,7 @@ export default function BlueBeach() {
             </figure>
             <figure className="relative rounded-2xl overflow-hidden shadow-soft">
               <img
-                src="/assets/bb-indoor.webp"
+                src="/assets/bb-party.jpg"
                 alt="BlueBeach Indoorhalle"
                 className="w-full h-[190px] sm:h-[210px] md:h-[220px] object-cover"
               />
@@ -194,8 +187,7 @@ export default function BlueBeach() {
                 Strandlounge mit Tischen, Bänken, Liegen & Deko im Beach-Style.
               </li>
               <li>
-                Genug Platz zum Sitzen, Spielen, Tanzen und einfach „Urlaub
-                machen“.
+                Genug Platz zum Sitzen, Spielen, Tanzen und einfach <b>„VolOl Hochzeit feiern“</b>.
               </li>
             </ul>
             <p className="text-xs sm:text-sm text-slate-700 mt-3">

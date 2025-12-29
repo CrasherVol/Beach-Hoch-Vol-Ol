@@ -41,9 +41,9 @@ export default function Home() {
   const gallery = [
     {
       alt: "BlueBeach – Außenbereich bei Abendlicht",
-      src: "/assets/bb-outdoor.webp",
+      src: "/assets/bb-outdoor.jpg",
     },
-    { alt: "Indoorhalle im BlueBeach", src: "/assets/bb-indoor.webp" },
+    { alt: "Indoorhalle im BlueBeach", src: "/assets/bb-indoor.jpg" },
     { alt: "Feier mit Drinks", src: "/assets/party-drinks.png" },
     { alt: "Feiern am Beach – edel", src: "/assets/party-drinks-2.png" },
   ];
@@ -108,6 +108,24 @@ export default function Home() {
                 Kommt so, wie ihr euch wohlfühlt, und bringt einfach gute Laune
                 mit.
               </p>
+<div className="mt-4 max-w-[760px] rounded-2xl bg-white/15 border border-white/30 px-5 py-4
+                text-white/95 text-xs sm:text-sm md:text-base backdrop-blur
+                shadow-[0_8px_30px_rgba(0,0,0,.25)]">
+
+  <div className="flex items-center justify-center gap-2 mb-2 text-sm sm:text-base font-semibold">
+    🏖️ Unsere Geschichte im Sand
+  </div>
+
+  <p className="text-center leading-relaxed">
+    Wir haben uns <b>beim Beachen im Sand</b> kennengelernt und wir waren schon damals in einem Team (und ja, auch damals waren wir nicht immer bei allen Sachen gleicher Meinung)
+    <br className="hidden sm:block" />
+    Und genau dort geht’s bei unserer Hochzeit weiter: 
+    <span className="font-semibold"> {" "}
+       im Sand mit viel Herz.
+    </span>
+  </p>
+</div>
+
 
               {/* Badges */}
               <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
@@ -122,7 +140,7 @@ export default function Home() {
                   📅 {date}
                 </button>
 
-                <span className="chip">🍹 Drinks</span>
+                <span className="chip">🍹 Drinks und Fingerfood</span>
                 <span className="chip">🏐 Beachvolleyball · wer mag</span>
                 <span className="chip">💛 Dresscode: sportlich Elegant</span>
               </div>
@@ -131,7 +149,7 @@ export default function Home() {
               {/* FIX: Auf Mobile skaliert + kein Überlaufen; Desktop bleibt unverändert */}
               <div className="mt-5 sm:mt-6 glass px-5 sm:px-6 py-4 sm:py-5 rounded-2xl w-full max-w-[420px] overflow-hidden">
                 <div className="text-xs sm:text-sm text-white/80 mb-1">
-                  Countdown bis zu unserem Abend wie Urlaub
+                 Hochzeits-Countdown bis zur unserem Abend wie Urlaub
                 </div>
 
                 {/* Wrapper verhindert "rauslaufen" auf kleinen Screens */}
@@ -142,15 +160,39 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* CTAs */}
-              <div className="mt-5 sm:mt-6 flex flex-wrap gap-3 justify-center">
-                <a href="/anmeldung" className="btn-primary">
-                  Jetzt anmelden
-                </a>
-                <a href="/anfahrt" className="btn-white">
-                  Anfahrt & Infos
-                </a>
-              </div>
+            {/* CTAs */}
+<div className="mt-5 sm:mt-6 flex flex-wrap gap-3 justify-center">
+  <a href="/anmeldung" className="btn-primary">
+    Jetzt anmelden
+  </a>
+
+  <a href="/anfahrt" className="btn-white">
+    Anfahrt & Infos
+  </a>
+</div>
+
+{/* Deadline-Hinweis – immer darunter */}
+<div className="mt-4 max-w-xl mx-auto">
+  <div className="rounded-3xl bg-white shadow-soft border border-sky-200 px-4 py-2 w-full">
+    <div className="border-2 border-sky-300 rounded-2xl px-4 py-2 text-center text-sky-800 text-xs sm:text-sm
+                    bg-gradient-to-b from-sky-50 to-white
+                    shadow-[0_0_0_4px_rgba(56,189,248,0.08)]">
+                       <span className="inline-flex items-center gap-2 px-2 py-0.5 rounded-full bg-white border border-sky-200 text-sky-800 font-semibold mr-2">
+        ⏰ Frist
+      </span>
+      Anmeldung bitte bis zum <b>15.01.2026</b> ⏰
+    </div>
+  </div>
+</div>
+
+<div className="mt-3 max-w-xl mx-auto w-full">
+  <div className="rounded-3xl bg-white shadow-soft border border-sky-100 px-4 py-2 w-full">
+    <div className="border-2 border-sky-200 rounded-2xl px-4 py-2 text-center text-slate-700 text-xs sm:text-sm bg-sky-50">
+      🌙 Abendveranstaltung: Wir feiern ohne Kinder – bitte organisiert eine Betreuung, damit wir ordentlich feiern können!
+    </div>
+  </div>
+</div>
+
 
               {/* Sandhochzeit-Teaser direkt unter den CTAs (breit & klickbar) */}
               <Link
@@ -184,7 +226,7 @@ export default function Home() {
                       <div className="mt-2 flex flex-wrap gap-2 text-[11px] sm:text-xs">
                         <span className="chip">Tanzfläche: Sand</span>
                         <span className="chip">Theke: Sand</span>
-                        <span className="chip">Spielwiese Sand</span>
+                        <span className="chip">Spielwiese: Sand</span>
                       </div>
                     </div>
 
@@ -216,8 +258,7 @@ export default function Home() {
             <p className="text-xs sm:text-sm text-slate-700 mb-4">
               Stell dir eine Mischung aus <strong>Strandbar</strong>,{" "}
               <strong>Beachvolleyballcourt</strong> und{" "}
-              <strong>Sommerparty</strong> vor – ohne Flug, aber mit ganz viel
-              Sand.
+              <strong>Sommerparty</strong> vor...
             </p>
 
             <div className="space-y-3">
@@ -228,8 +269,7 @@ export default function Home() {
                     Feiner Sand – echtes Urlaubsgefühl
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-600">
-                    Wir stehen, sitzen und tanzen im Sand. Barfuß ist ausdrücklich
-                    erlaubt aber kein Muss.
+                    Wir stehen und tanzen im Sand und wer nicht mehr kann, setzt sich in die gemütlichen Sitzgelegenheiten.
                   </p>
                 </div>
               </div>
@@ -242,7 +282,7 @@ export default function Home() {
                   </div>
                   <p className="text-[11px] sm:text-xs text-slate-600">
                     Palmen, Lichterketten und Strandambiente – perfekt für Fotos
-                    und dieses „Urlaub-ohne-Flug“-Gefühl.
+                    und dieses „Urlaub-ohne-Flug“-Gefühl. Chill-Area mit Liegestühlen  🏖️
                   </p>
                 </div>
               </div>
@@ -259,6 +299,21 @@ export default function Home() {
                   </p>
                 </div>
               </div>
+
+              <div className="flex gap-3">
+  <div className="text-2xl">🍢</div>
+  <div>
+    <div className="font-semibold text-xs sm:text-sm">
+      Kleine Snacks & Fingerfood – für zwischendurch
+    </div>
+    <p className="text-[11px] sm:text-xs text-slate-600">
+      Kleine Leckereien zum Teilen und Snacken – perfekt zwischen Drinks,
+      Tanzfläche und Strandfeeling. Kein großes Menü, aber genau richtig,
+      um Energie zu tanken.
+    </p>
+  </div>
+</div>
+
 
               <div className="flex gap-3">
                 <div className="text-2xl">🎉</div>
@@ -285,9 +340,11 @@ export default function Home() {
               <div className="relative">
                 <div className="border-2 border-sky-300 rounded-2xl p-3 md:p-4">
                   <div className="border-t border-dashed border-sky-300 my-3 md:my-4 relative">
-                    <div className="absolute left-1/2 -top-5 -translate-x-1/2 bg-sky-100 text-sky-800 text-[11px] sm:text-xs px-3 py-1 rounded-full shadow-soft flex items-center gap-1">
-                      🏐 Netz & Start des tollen Abends
-                    </div>
+<div className="absolute left-1/2 -top-5 -translate-x-1/2 inline-flex items-center gap-1 whitespace-nowrap bg-sky-100 text-sky-800 text-[11px] sm:text-xs px-3 py-1 rounded-full shadow-soft">
+  🏐 Netz & Start des tollen Abends
+</div>
+
+
                   </div>
 
                   <div className="grid grid-rows-3 gap-3 text-[11px] sm:text-xs md:text-sm">
@@ -333,6 +390,29 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+<section className="mt-8 max-w-3xl mx-auto">
+  <div className="rounded-3xl bg-white shadow-soft border border-slate-200 px-5 py-4 text-center">
+    <div className="border border-slate-200 rounded-2xl px-4 py-4 bg-slate-50">
+      <div className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+        <span className="font-medium">
+          Noch ein Wort zu Geschenken 💛
+        </span>
+        <br />
+        Wir heiraten gleich zweimal (keine Sorge – <b>zweimal dieselbe Person</b> 😉):
+        einmal in Georgien und einmal hier in Witten.
+        <br className="hidden sm:block" />
+        Unser Konto bekommt dabei gerade ordentlich Sonnenbrand 🤵☀️ –
+        deshalb freuen wir uns am meisten über einen
+        <span className="font-medium"> eleganten Umschlag</span>, der unsere Hochzeitsfonds
+        mit ein paar Strandtalern ergänzt.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
 
         {/* Divider zwischen Hauptblöcken */}
         <div className="my-10 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />

@@ -387,10 +387,18 @@ export default function Anmeldung() {
             </Card>
           ) : (
             <>
-              <h2 className="text-xl sm:text-2xl font-bold mb-3 text-center sm:text-left">
-                Anmeldung
-              </h2>
-              <Card>
+           <div className="mb-3 flex justify-center sm:justify-start">
+  <div className="flex items-center justify-center gap-2 px-4 py-1 rounded-full bg-sky-100 border border-sky-300 text-sky-800 text-xs sm:text-sm shadow-soft w-fit text-center">
+    ⏰ Anmeldung bitte bis zum <b>15.01.2026</b> ⏰
+  </div>
+</div>
+
+
+  <h2 className="text-xl sm:text-2xl font-bold mb-3 text-center sm:text-left">
+    Anmeldung
+  </h2>
+
+  <Card>
                 <form onSubmit={onSubmit} className="grid gap-3 w-full">
                   {/* Zusage / Absage Auswahl */}
                   <fieldset className="grid gap-2 mb-1">

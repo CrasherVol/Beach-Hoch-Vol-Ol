@@ -39,37 +39,23 @@ const IDEAS_SHE = [
 const IDEAS_HE = [
   {
     title: "Leinenhemd / lockeres Hemd",
-    note: "weiß, ecru oder pastell – gern leicht gekrempelt, aber sauber",
+    note: "gern leicht gekrempelt, aber sauber",
     icon: "👔",
   },
   {
     title: "Chino/Leinenhose (Shorts: ja, wenn’s edel bleibt)",
-    note: "hell, luftig – bitte „Sommerparty“, nicht „Supermarkt“",
+    note: "bitte „Sommerparty“, nicht „Supermarkt“",
     icon: "🩳",
   },
   {
     title: "Loafer/Sneaker (sandfreundlich)",
-    note: "sauber, schlicht, gerne Slip-Ons – barfuß ist erlaubt",
+    note: "sauber, schlicht",
     icon: "👟",
   },
 ];
 
 const IDEAS_UNI = [
-  {
-    title: "Sportlich elegant = smart & bequem & sexy",
-    note: "Beach Chic mit Hochzeitstouch: bequem, aber nicht beliebig",
-    icon: "🏝️",
-  },
-  {
-    title: "Farben, die sofort Urlaub schreien",
-    note: "Sand, Koralle, Türkis, See-Blau, Weiß – Pastell & Naturtöne",
-    icon: "🎨",
-  },
-  {
-    title: "Accessoires mit Augenzwinkern",
-    note: "Sonnenhut/Shades, Haarband, Leinenblazer, Kimono, Tuch",
-    icon: "🕶️",
-  },
+  
 ];
 
 const DO_LIST = [
@@ -223,7 +209,7 @@ export default function Dresscode() {
                 fast immer „richtig“.
               </Pill>
               <Pill title="Wenn du kreativ sein willst">
-                Hawaii-Detail (Blüte, Muster, Tuch -  aber nicht zu viel Hawai - wir sind ja nicht auf Hawai) + elegantes Basic. So wirkt’s
+                Hawaii-Detail (Blüte, Muster, Tuch -  aber nicht zu viel Hawaii - wir sind ja nicht auf Hawaii) + elegantes Basic. So wirkt’s
                 gewollt, nicht verkleidet.
               </Pill>
               <Pill title="Wenn du maximal clever sein willst">
@@ -231,35 +217,6 @@ export default function Dresscode() {
                 Hochzeit.
               </Pill>
             </div>
-          </div>
-        </section>
-
-        {/* kleines Mood-Strip */}
-        <section className="mt-6">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-1 sm:gap-2">
-            <h3 className="text-base sm:text-lg font-semibold">
-              Feeling: So ungefähr darf es aussehen
-            </h3>
-            <span className="text-[11px] text-slate-500">
-              Keine Pflicht, nur Inspiration – alles darf, nichts muss.
-            </span>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {MOOD.map((m, i) => (
-              <figure
-                key={i}
-                className="relative rounded-2xl overflow-hidden shadow-soft bg-slate-100"
-              >
-                <img
-                  src={m.src}
-                  alt={m.alt}
-                  className="w-full h-[140px] sm:h-[160px] object-cover hover:scale-[1.03] transition-transform duration-300"
-                />
-                <figcaption className="absolute inset-x-0 bottom-0 bg-black/40 text-[10px] sm:text-[11px] text-white px-2 py-1">
-                  {m.alt}
-                </figcaption>
-              </figure>
-            ))}
           </div>
         </section>
 
@@ -353,12 +310,7 @@ export default function Dresscode() {
                 Deshalb: <strong>beweglich</strong>, <strong>atmungsaktiv</strong>,{" "}
                 <strong>tanzbar</strong>. Du sollst feiern – nicht leiden.
               </p>
-              <div className="mt-3 flex flex-wrap gap-2 text-[11px] sm:text-xs">
-                <span className="chip">Leinen</span>
-                <span className="chip">Chiffon</span>
-                <span className="chip">Slip-Ons</span>
-                <span className="chip">Keil</span>
-              </div>
+              
             </Card>
 
             <Card title="Wenn du noch zweifelst">
@@ -368,7 +320,7 @@ export default function Dresscode() {
                 aber <strong>weit weg</strong> von „Ballkleid/Anzugpflicht“.
               </p>
               <p className="mt-2 text-[11px] sm:text-xs text-slate-500">
-                Und ja: Barfuß ist erlaubt. Schuhe sind aber genauso okay.
+                Und ja: Barfuß ist erlaubt. Schuhe sind aber genauso okay, denn für manche ist der Sand kühler als gedacht auf die Dauer.
               </p>
             </Card>
           </div>
@@ -389,31 +341,6 @@ export default function Dresscode() {
                 <li key={i}>{t}</li>
               ))}
             </ul>
-          </Card>
-        </section>
-
-        {/* Mini-FAQ */}
-        <section className="mt-8 grid gap-4 md:grid-cols-3">
-          <Card title="Wie schick soll ich kommen?">
-            <p className="text-xs sm:text-sm text-slate-700">
-              Stell dir eine schöne <strong>Sommerparty im Sand</strong> vor:
-              schicker als Alltag, lockerer als Abiball.{" "}
-              <strong>Sportlich elegant</strong> ist perfekt.
-            </p>
-          </Card>
-          <Card title="Barfuß erlaubt?">
-            <p className="text-xs sm:text-sm text-slate-700">
-              Barfuß oder mit Schuhen, wie ihr mögt. Immer im Kopf behalten, alles ist im Sand.
-               Im Sand fühlt sich vieles automatisch entspannter an, aber denk dran das die Füße auch kalt werden können.
-            </p>
-          </Card>
-          <Card title="Was, wenn ich unsicher bin?">
-            <p className="text-xs sm:text-sm text-slate-700">
-              Wir trauen dir zu ein bisschen <strong>kreativ</strong> zu sein und dann findest du schon ein Outfit... 
-              <strong>luftiges Oberteil</strong> und{" "}
-              <strong>bequemen Schuhen</strong> sind eigentlich nie falsch. Im Zweifel
-              lieber beachy & smart statt overdressed.
-            </p>
           </Card>
         </section>
 

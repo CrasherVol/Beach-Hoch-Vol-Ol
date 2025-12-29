@@ -81,7 +81,7 @@ export default function SandhochzeitUnterseite() {
         {/* Main Text Block (vom User übernommen) */}
         <div className="mt-8 rounded-3xl bg-white/60 p-6 shadow-sm ring-1 ring-black/5 md:p-8">
           <h2 className="text-xl font-semibold text-black md:text-2xl">
-            Warum das Ganze so unfassbar cool ist
+            Warum das Ganze so unfassbar cool ist?
           </h2>
 
           <div className="mt-4 space-y-4 text-[15px] leading-relaxed text-black/80 md:text-base">
@@ -160,7 +160,7 @@ export default function SandhochzeitUnterseite() {
   <div>
     <p className="text-sm font-medium text-black/70">Bereit für die Sandhochzeit?</p>
     <p className="mt-1 text-base font-semibold text-black">
-      Komm rein, schmeiß die Schuhe in die Ecke und tanz dich glücklich. 💃
+      Komm rein und tanz dich glücklich. 💃
     </p>
   </div>
 

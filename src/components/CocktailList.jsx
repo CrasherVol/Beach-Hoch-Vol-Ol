@@ -27,8 +27,7 @@ export default function CocktailList() {
 </h2>
 
 <p className="mt-2 text-center text-sm md:text-base text-slate-700/80 max-w-xl mx-auto">
-  An der Beachbar bekommt ihr eine kleine Auswahl an sommerlichen Drinks.
-  Mit und ohne Alkohol – Hauptsache Spaß.
+   Wir sorgen für kühle Drinks – mit & ohne Alkohol: Bier, Wein, Longdrinks, Softdrinks & Wasser, Cocktails, Shots und alles was die Seele an Drinks begehrt. Wir haben reichlich aufgefahren und jeder sollte was Leckeres zu trinken finden...
 </p>
 
 <p className="mt-3 text-center text-sm md:text-base font-semibold text-emerald-700">

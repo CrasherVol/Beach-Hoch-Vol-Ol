@@ -17,21 +17,13 @@ export default function Ablauf() {
       color: "from-emerald-400 to-cyan-400",
     },
     {
-      time: "18:30",
-      timeLabel: "ca. 18:30",
-      title: "Begrüßung von Olga & Volker – ein paar Worte & Cheers",
+      time: "19:00",
+      timeLabel: "ca. 19:00",
+      title: "Begrüßung von Volker & Olga – ein paar Worte & Cheers",
       icon: "💍",
       color: "from-orange-400 to-pink-400",
     },
-    {
-      time: "19:00",
-      timeLabel: "ab 19:00",
-      title:
-        "weiter gehts mit Musik, Drinks & Strandfeeling und leckeren Getränken ...  ",
-        
-      icon: "🎵",
-      color: "from-pink-400 to-rose-400",
-    },
+
     {
       time: "19:30",
       timeLabel: "ca. 19:30",
@@ -42,7 +34,7 @@ export default function Ablauf() {
     {
       time: "20:00–02:00",
       timeLabel: "20:00 – 02:00",
-      title: "Beachen, chillen, quatschen – einfach Zeit miteinander",
+      title: "Wenn ihr fertig seit mit dem anstrengenden Teil des Abends, ab geht die Hochzeitsparty",
       icon: "🏖️",
       color: "from-sky-400 to-emerald-400",
     },
@@ -73,10 +65,7 @@ export default function Ablauf() {
           <span className="font-semibold">Sonne im Herzen</span>, Lachen &
           Musik.
           <br />
-          <span className="font-semibold">
-            Es gibt kein Essen vor Ort, nur Drinks – plant gern ein, vorher
-            etwas zu essen oder euch ggf. etwas Kleines mitzubringen.
-          </span>
+
         </p>
 
         {/* Timeline */}
@@ -115,32 +104,7 @@ export default function Ablauf() {
           ))}
         </div>
 
-        {/* Getränke & Stimmung */}
-        <div className="mt-10 sm:mt-12 grid gap-4 lg:grid-cols-2">
-          <Card title="🍹 Drinks und komplett gemietete Beachfelder statt Dinner">
-            <ul className="list-disc pl-5 sm:pl-6 text-slate-700 leading-relaxed text-sm sm:text-base">
-              <li>
-                Es gibt an diesem Abend <b>kein Menü</b>.
-              </li>
-              <li>
-                Wir sorgen für kühle Drinks – mit &amp; ohne Alkohol: Bier,
-                Wein, Longdrinks, Softdrinks &amp; Wasser, Cocktails, Shots und alles was die Seele an Drinks begehrt. Wir haben reichlich aufgefahren und jeder sollte was Leckeres zu trinken finden...
-              </li>
-              <li>
-                Am entspanntesten ist es, wenn ihr davor etwas esst. <b>Aber eine Kleinigkeit werden wir uns noch einfallen lassen</b>.
-              </li>
-            </ul>
-          </Card>
-
-          <Card title="🎶 Stimmung & Highlights">
-            <ul className="list-disc pl-5 sm:pl-6 text-slate-700 leading-relaxed text-sm sm:text-base">
-              <li>Fotospots unter Palmen & im Sand 📸</li>
-              <li>Chill-Area mit Liegestühlen & Lichterketten 🏖️</li>
-              <li>Beachvolleyball & kleine Spiele – wer mag, macht mit 🏐</li>
-              <li>Sommer-Playlist, Bar-Feeling & gute Gespräche 🎵</li>
-            </ul>
-          </Card>
-        </div>
+       
 
         {/* Deko-Welle unten */}
         <div className="mt-10 sm:mt-12">
