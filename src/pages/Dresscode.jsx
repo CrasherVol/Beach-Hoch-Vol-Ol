@@ -6,7 +6,7 @@ const MOOD_IMAGES = [
   "/Stil-5.png",
   "/Stil-6.jpeg",
   "/Stil-7.jpeg",
-  "/Stil-8.jpg",
+  "/Stil-8.jpeg",
   "/Stil-9.jpg",
   "/Stil-10.jpg",
   "/Stil-11.jpeg",
@@ -14,7 +14,7 @@ const MOOD_IMAGES = [
   "/Stil-13.jpeg",
   "/Stil-14.jpg",
   "/Stil-15.jpg",
-  "/Stil-16.jpg",
+  "/Stil-16.png",
 ];
 
 
