@@ -395,7 +395,7 @@ export default function Anmeldung() {
 
 
   <h2 className="text-xl sm:text-2xl font-bold mb-3 text-center sm:text-left">
-    Anmeldung
+    Anmeldung für den 13. März 2026
   </h2>
 
   <Card>
