@@ -638,15 +638,10 @@ export default function Admin() {
                             <td className="p-2 align-top">
                               {r.allergies ? r.allergies : "–"}
                             </td>
-                            <td className="p-2 align-top max-w-xs">
-                              {r.message ? (
-                                <span className="line-clamp-3">
-                                  {r.message}
-                                </span>
-                              ) : (
-                                "–"
-                              )}
-                            </td>
+                           <td className="p-2 align-top max-w-md whitespace-pre-wrap break-words">
+  {r.message ? r.message : "–"}
+</td>
+
                             <td className="p-2 align-top">
                               {formatDate(created)}
                             </td>
